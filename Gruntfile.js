@@ -6,7 +6,7 @@
 
 module.exports = function(grunt) {
 
-  var _APP_NAME_ = "CHANGE ME IN Gruntfile.js";
+  var _APP_NAME_ = "PhotoFrameApp";
 
   // initial grunt configuration
   grunt.initConfig({
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
     			port: 9001,
     			base: '<%= appDir %>',
     			open: true,
-    			livereload: true
+    			livereload: 35732
     		}
     	}
     },
@@ -159,7 +159,7 @@ module.exports = function(grunt) {
       },
       fonts: {
         files: [
-          { expand: true, cwd: '<%= srcDir %>/font/', src: ['**'], dest: '<%= appDir %>/font' }
+          { expand: true, cwd: '<%= srcDir %>/fonts/', src: ['**'], dest: '<%= appDir %>/fonts' }
         ]
       },
       tmp_to_build: {
@@ -184,15 +184,14 @@ module.exports = function(grunt) {
       options: {
         paths: [
           // add any additional paths to LESS components here
-          "<%= bowerDir %>/lesshat",
-          "<%= srcDir %>/css/config"
+//          "<%= bowerDir %>/lesshat",
+          "<%= srcDir %>/css"
         ]
       },
       development: {
         files: {
           // put app.css directly into the build directory for development
           "<%= appDir %>/css/app.css": [
-            "<%= srcDir %>/css/common/*.less",
             "<%= srcDir %>/css/*.less"
           ]
         }
@@ -201,7 +200,6 @@ module.exports = function(grunt) {
         files: {
           // put app.css in tmp dir in production, so we can run cssmin on it after
           "<%= tmpDir %>/css/app.css": [
-            "<%= srcDir %>/css/common/*.less",
             "<%= srcDir %>/css/*.less"
           ]
         }
@@ -248,7 +246,7 @@ module.exports = function(grunt) {
             '<%= appDir %>/js/application.js'
           ]
         }
-      },
+      }
     },
 
     // minify css for production
@@ -266,7 +264,10 @@ module.exports = function(grunt) {
     // watch files, build on the fly for development
     watch: {
       options: {
-        livereload: true
+        livereload: {
+          port: 35732
+        },
+        spawn: false // for grunt-contrib-watch v0.5.0+, "nospawn: true" for lower versions. Without this option specified express won't be reloaded
       },
       root: {
         files: ['<%= srcDir %>/*'],
@@ -310,7 +311,7 @@ module.exports = function(grunt) {
 
     layouts: {
       options: {
-        layout: '<%= srcDir %>/html/layouts/application.tmpl',
+        layout: '<%= srcDir %>/html/layouts/application.tmpl'
       },
       development: {
         options: {
