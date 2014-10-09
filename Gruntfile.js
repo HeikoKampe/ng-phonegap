@@ -33,8 +33,7 @@ module.exports = function(grunt) {
         vendor: [
 
           // Add additional Bower components here
-          '<%= bowerDir %>/bootstrap/dist/css/bootstrap.css',
-          '<%= bowerDir %>/font-awesome/css/font-awesome.css'
+//          '<%= bowerDir %>/bootstrap/dist/css/bootstrap.css',
 
         ],
         // shouldn't need to touch this
@@ -48,7 +47,8 @@ module.exports = function(grunt) {
           // add any Bower components here.
           '<%= bowerDir %>/angular/angular.js',
           '<%= bowerDir %>/angular-route/angular-route.js',
-          '<%= bowerDir %>/angular-touch/angular-touch.js'
+          '<%= bowerDir %>/angular-touch/angular-touch.js',
+          '<%= bowerDir %>/angular-touch/angular-animate.js'
         ],
         // shouldn't need to touch this.
         src: [
@@ -80,7 +80,6 @@ module.exports = function(grunt) {
           '<%= tmpDir %>/js/controllers.js' : ['<%= srcDir %>/js/controllers/*.js', '<%= srcDir %>/js/controllers/**/*.js'],
           '<%= tmpDir %>/js/directives.js'  : ['<%= srcDir %>/js/directives/*.js', '<%= srcDir %>/js/directives/**/*.js'],
           '<%= tmpDir %>/js/filters.js'     : ['<%= srcDir %>/js/filters/*.js', '<%= srcDir %>/js/filters/**/*.js'],
-          '<%= tmpDir %>/js/modules.js'     : ['<%= srcDir %>/js/modules/*.js', '<%= srcDir %>/js/modules/**/*.js'],
           '<%= tmpDir %>/js/services.js'    : ['<%= srcDir %>/js/services/*.js', '<%= srcDir %>/js/services/**/*.js']
         }
       },
@@ -108,7 +107,7 @@ module.exports = function(grunt) {
         force: true
       },
       tmp: {
-        src: ['<%= tmpDir %>'],
+        src: ['<%= tmpDir %>']
       },
       development: {
         src: ['<%= tmpDir %>', '<%= appDir %>']
@@ -125,7 +124,7 @@ module.exports = function(grunt) {
       img: {
         src: ['<%= appDir %>/img']
       },
-      img: {
+      font: {
         src: ['<%= appDir %>/fonts']
       },
       partials: {
@@ -160,7 +159,7 @@ module.exports = function(grunt) {
       },
       fonts: {
         files: [
-          { expand: true, cwd: '<%= bowerDir %>/font-awesome/fonts/', src: ['**'], dest: '<%= appDir %>/fonts/' }
+          { expand: true, cwd: '<%= srcDir %>/font/', src: ['**'], dest: '<%= appDir %>/font' }
         ]
       },
       tmp_to_build: {
@@ -259,7 +258,7 @@ module.exports = function(grunt) {
           '<%= appDir %>/css/app.css': [
             '<%= tmpDir %>/css/vendor.css',
             '<%= tmpDir %>/css/app.css'
-          ],
+          ]
         }
       }
     },
@@ -267,7 +266,7 @@ module.exports = function(grunt) {
     // watch files, build on the fly for development
     watch: {
       options: {
-        livereload: true,
+        livereload: true
       },
       root: {
         files: ['<%= srcDir %>/*'],
