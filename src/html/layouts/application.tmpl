@@ -26,12 +26,14 @@
    } %>
 
 </head>
-<body>
+<body data-ng-controller="mainController">
+
+  <div data-ng-repeat="message in messages">
+    <div data-message-directive data-message="message" data-message-type="{{message.type}}"></div>
+  </div>
 
   <div id="container" class="container">
-    <div
-      id="main"
-      ng-view></div>
+    <div data-ng-class="{'show-ctrls': showCtrls}" class="page {{ animationClass }} {{ pageClass }}  " ng-view></div>
   </div>
 
   <script type="text/javascript">
