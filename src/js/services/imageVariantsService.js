@@ -6,15 +6,18 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
     IMAGE_VARIANTS = {
       thumbnail: {
         width: 240,
-        height: 240
+        height: 240,
+        quality: 0.7
       },
       main: {
         width: 2048,
-        height: 1536
+        height: 1536,
+        quality: 0.9
       },
       main2: {
         width: 1280,
-        height: 800
+        height: 800,
+        quality: 0.9
       }
     },
     IMAGE_FILE_TYPE = 'image/jpeg';
@@ -49,7 +52,7 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
           canvasMain.height = IMAGE_VARIANTS.main.height;
           ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
         }
-        importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.5);
+        importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.7);
         importObj.photoObj.mainDataURI = canvasMain.toDataURL(IMAGE_FILE_TYPE, 0.9);
         delete importObj.photoObj.originalDataURI;
         deferredPhotoObject.resolve(importObj);
