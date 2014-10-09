@@ -1,0 +1,46 @@
+<!-- slideshow view-->
+<div class="top">
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="go('/edit-gallery', 'slide-right')"></span>
+  </div>
+</div>
+
+<div class="center" data-ng-click="onCenterClick()">
+
+  <div data-ng-class="{'slideshow': true, 'slideshow--show-thumbs': showThumbnails}">
+
+    <div class="slideshow-thumbs">
+      <div class="slideshow-thumbs__thumb"
+           data-ng-repeat="photo in gallery.photos"
+           data-ng-class="{ 'thumb': true, 'slideshow-thumbs__thumb--active': activePhotoArrayIndex === $index }"
+           data-ng-click="onThumbnailClick(photo.id, $index)">
+        <img class="slideshow-thumbs__thumb-img"
+             data-ng-src="{{ thumbnails[photo.id] }}"
+             data-ng-show="thumbnails[photo.id]"
+             title="{{photo.name}}"/>
+      </div>
+    </div>
+
+    <div class="slideshow-main">
+      <img class="slideshow__img"
+           data-ng-repeat="photo in gallery.photos"
+           data-ng-src="{{ photoBuffer[photo.id] }}"
+           data-ng-show="photo.id === activePhotoId"/>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="bottom">
+  <div class="bottom__background"></div>
+  <div class="bottom__inner">
+    <p>
+      <button data-ng-click="startSlideshow()">play</button>
+      <button data-ng-click="stopSlideshow()">stop</button>
+      <button data-ng-click="showPrevPhoto()">prev</button>
+      <button data-ng-click="showNextPhoto()">next</button>
+      <button data-ng-click="toggleThumbnails()">toggle Thumbs</button>
+    </p>
+  </div>
+</div>

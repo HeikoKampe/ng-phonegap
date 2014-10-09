@@ -1,0 +1,51 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="icon icon--back" data-ng-click="go('/edit-gallery', 'slide-right')"></span>
+  </div>
+</div>
+
+<div class="center">
+  <div class="center__inner text-center">
+
+    <h1>Gallery sharing</h1>
+
+
+    <div data-ng-if="!gallery.dateOfUpload">
+      <p><button data-ng-click="onShareGalleryBtnClick()">Share your gallery</button></p>
+    </div>
+
+    <div data-ng-if="gallery.dateOfUpload">
+      <p>
+        <span>Gallery key:</span><br>
+        <span class="text-large">{{gallery.galleryId}}</span>
+      </p>
+
+      <p>
+        <span>Upload key:</span><br>
+        <span class="text-large">{{gallery.uploadPassword}}</span>
+      </p>
+
+      <p>
+        <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="true" data-ng-change="onSettingsChange()">  enabled
+        <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="false" data-ng-change="onSettingsChange()"> disabled <br/>
+      </p>
+    </div>
+
+
+      
+    </div>
+
+  </div>
+</div>
+
+
+<div class="bottom">
+  <div class="bottom__background"></div>
+  <div class="bottom__inner">
+
+  </div>
+</div>
+

@@ -1,0 +1,20 @@
+<section class="message message-show">
+  <div class="message__background"></div>
+  <div class="message__inner">
+    <button class="message__close-btn btn"><i class="icon--close"></i></button>
+    <div class="message__header">
+      <h2 class="message__title">{{message.title}}</h2>
+    </div>
+    <div class="message__body">
+      <div class="message__body-inner">
+        <p data-ng-if="message.content">adding ({{message.progressIndex}} / {{message.totalLength}}) {{message.content}}</p>
+        <ul>
+          <li data-ng-repeat="result in message.results">{{result}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="message__footer">
+      <span>Footer</span>
+    </div>
+  </div>
+</section>

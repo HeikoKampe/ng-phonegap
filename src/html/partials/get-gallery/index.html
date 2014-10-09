@@ -1,0 +1,31 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="go('/home', 'slide-right')"></span>
+  </div>
+</div>
+
+<div class="center">
+  <div class="center__inner text-center">
+
+    <form class="form vertical-center" data-ng-submit="importGallery()">
+      <p class="form__label">Enter a gallery key</p>
+      <span class="form__text-input-outer">
+        <input class="form__text-input"
+               type="text"
+               data-ng-model="galleryId"
+               placeholder="x8HLo7-f"/>
+      </span>
+
+      <p class="text-right">
+        <button class="btn--white" type="submit">Continue</button>
+      </p>
+      <p style="margin-top:100px;">Each gallery has its own unique gallery key. To view someones gallery, no login account is required. Just type
+        the gallery key in the above field and press continue. If you do not know the gallery key, ask the gallery´s
+        owner to send it to you.</p>
+    </form>
+
+  </div>
+</div>

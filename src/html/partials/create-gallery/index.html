@@ -1,0 +1,28 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="go('/home', 'slide-right')"></span>
+  </div>
+</div>
+
+<div class="center">
+  <div class="center__inner text-center">
+
+    <div class="form vertical-center">
+      <p class="form__label">Enter a gallery title</p>
+      <span class="form__text-input-outer">
+        <input class="form__text-input"
+               type="text"
+               data-ng-model="titleOfNewGallery"
+               placeholder="YOUR TITLE"/>
+      </span>
+
+      <p class="text-right">
+        <button class="btn--white" data-ng-click="createGallery(titleOfNewGallery)">Continue</button>
+      </p>
+    </div>
+
+  </div>
+</div>
