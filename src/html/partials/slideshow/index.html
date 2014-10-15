@@ -33,13 +33,21 @@
 </div>
 
 <div class="bottom bottom--dark">
-  <div class="bottom__inner">
-    <p>
-      <button data-ng-click="startSlideshow()">play</button>
-      <button data-ng-click="stopSlideshow()">stop</button>
-      <button data-ng-click="showPrevPhoto()">prev</button>
-      <button data-ng-click="showNextPhoto()">next</button>
-      <button data-ng-click="toggleThumbnails()">toggle Thumbs</button>
-    </p>
+  <div class="bottom__inner text-center">
+    <ul class="bottom-ctrl bottom-ctrl--center">
+      <li class="bottom-ctrl__item">
+        <div  data-ng-click="showPrevPhoto()" class="bottom-ctrl__icon icon-backward"></div>
+      </li>
+      <li class="bottom-ctrl__item">
+        <div data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()" class="bottom-ctrl__icon icon-play2"></div>
+        <div data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()" class="bottom-ctrl__icon icon-pause"></div>
+      </li>
+      <li class="bottom-ctrl__item">
+        <div  data-ng-click="showNextPhoto()" class="bottom-ctrl__icon icon-forward"></div>
+      </li>
+      <li class="bottom-ctrl__item bottom-ctrl__item--left">
+        <div  data-ng-click="toggleThumbnails()" class="bottom-ctrl__icon icon-thumbs"></div>
+      </li>
+    </ul>
   </div>
 </div>

@@ -5,6 +5,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   var
     appData = {
       userId: 0,
+      userName:'',
       galleryId: -1,
       activeGalleryId: -1,
       photoId: 0,
@@ -58,7 +59,12 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   function addGallery(confObj) {
     var newGallery = {};
 
-    newGallery.galleryId = (confObj != undefined && confObj.shortId != undefined) ? confObj.shortId : createGalleryId();
+    if (!appData.galleries) {
+      appData.galleries = {};
+    }
+
+    newGallery.galleryId = (confObj != undefined && confObj._id != undefined) ? confObj._id : createGalleryId();
+    newGallery.galleryKey = (confObj != undefined && confObj.shortId != undefined) ? confObj.shortId : undefined;
     newGallery.ownerId = (confObj != undefined && confObj.ownerId != undefined) ? confObj.ownerId : appData.userId;
     newGallery.title = (confObj != undefined && confObj.title != undefined) ? confObj.title : undefined;
     newGallery.dateOfUpload = (confObj != undefined && confObj.dateOfUpload != undefined) ? confObj.dateOfUpload : undefined;
@@ -89,6 +95,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     if (appData.galleries[resultData.localGalleryId] && !appData.galleries[resultData.remoteGalleryId]) {
       appData.galleries[resultData.remoteGalleryId] = appData.galleries[resultData.localGalleryId];
       appData.galleries[resultData.remoteGalleryId].galleryId = resultData.remoteGalleryId;
+      appData.galleries[resultData.remoteGalleryId].galleryKey = resultData.shortId;
       appData.galleries[resultData.remoteGalleryId].dateOfUpload = resultData.dateOfUpload;
       appData.activeGalleryId = resultData.remoteGalleryId;
       delete appData.galleries[resultData.localGalleryId];
@@ -224,7 +231,6 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
           resetOwnerIdsOfGalleryPhotos(gallery.photos, newUserId);
         }
       });
-      eventService.broadcast("GALLERY-UPDATE");
     }
   }
 
@@ -234,7 +240,6 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
 
   function setUserToken(token) {
     appData.userToken = token;
-    eventService.broadcast("GALLERY-UPDATE");
   }
 
   function getUserToken() {
@@ -256,6 +261,21 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     }
 
     return appData.galleries[galleryId].uploadToken;
+  }
+
+  function setUserName(username) {
+    appData.userName = username;
+  }
+
+  function getUserName() {
+    return appData.userName;
+  }
+
+  function setUserData(userData){
+    setUserId(userData.userId);
+    setUserToken(userData.userToken);
+    setUserName(userData.userName);
+    eventService.broadcast("GALLERY-UPDATE");
   }
 
   function isOwner(_galleryId) {
@@ -300,7 +320,10 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     setUserToken: setUserToken,
     getUserToken: getUserToken,
     setUploadToken: setUploadToken,
-    getUploadToken: getUploadToken
+    getUploadToken: getUploadToken,
+    setUserName: setUserName,
+    getUserName: getUserName,
+    setUserData: setUserData
   };
 
 });

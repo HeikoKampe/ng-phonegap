@@ -10,19 +10,52 @@
 <div class="center center--show-top">
   <div class="center__inner text-center">
 
-    <form class="form vertical-center" data-ng-submit="importGallery()">
-      <p class="form__label">Enter a gallery key</p>
-      <span class="form__text-input-outer">
-        <input class="form__text-input"
-               type="text"
-               data-ng-model="galleryId"
-               placeholder="x8HLo7-f"/>
-      </span>
+    <form class="form vertical-center" data-ng-submit="onContinueBtnClick()">
+      <div class="form__fieldset">
+        <h3 class="form__fieldset-title">Gallery import</h3>
 
-      <p class="text-right">
-        <button class="btn--white" type="submit">Continue</button>
-      </p>
-      <p style="margin-top:100px;">Each gallery has its own unique gallery key. To view someones gallery, no login account is required. Just type
+        <p class="form__label">Username of gallery author</p>
+
+        <div class="form__text-input-outer push--bottom">
+          <input class="form__text-input"
+                 type="text"
+                 data-ng-model="galleryOwnerName"
+                 placeholder="x8HLo7-f"/>
+        </div>
+
+        <p class="form__label">Gallery key</p>
+
+        <div class="input-segments">
+          <div class="input-segments__segment form__text-input-outer">
+            <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                   data-ng-model="galleryKeySegments[0]"
+                   placeholder="XXXX"/>
+          </div>
+          <span class="input-segments__div">-</span>
+
+          <div class="input-segments__segment form__text-input-outer">
+            <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                   data-ng-model="galleryKeySegments[1]"
+                   placeholder="XXXX"/>
+          </div>
+          <span class="input-segments__div">-</span>
+
+          <div class="input-segments__segment form__text-input-outer">
+            <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                   data-ng-model="galleryKeySegments[2]"
+                   placeholder="XXXX"/>
+          </div>
+        </div>
+
+        <p class="text-right push--top clear">
+          <button class="btn--white" type="submit">Continue</button>
+        </p>
+
+      </div>
+
+
+      <p style="margin-top:50px;">Each gallery has its own unique gallery key. To view someones gallery, no login
+        account is required. Just type
         the gallery key in the above field and press continue. If you do not know the gallery key, ask the gallery´s
         owner to send it to you.</p>
     </form>

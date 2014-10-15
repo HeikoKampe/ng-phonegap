@@ -14,10 +14,18 @@ angular.module(_CONTROLLERS_).controller('authController', function (
   }
 
   $scope.signinSubmit = function () {
-    serverAPI.signin({'username': $scope.username, 'password': $scope.password}).then(function (result) {
+    var credentials = {};
+
+    credentials.username = $scope.username;
+    credentials.email = $scope.email;
+    credentials.password = $scope.password;
+    serverAPI.signin(credentials).then(function (result) {
       console.log("signin result:", result);
-      appDataService.setUserToken(result.data.token);
-      appDataService.setUserId(result.data.id);
+      appDataService.setUserData({
+        userToken: result.data.token,
+        userId: result.data.id,
+        userName: credentials.username
+      });
       $rootScope.back();
     }, error);
   };

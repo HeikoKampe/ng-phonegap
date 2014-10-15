@@ -1,9 +1,8 @@
 <!--home view-->
 
 <div class="top">
-  <div class="top__background"></div>
   <div class="top__inner">
-    <span class="icon icon--back" data-ng-click="go('/edit-gallery', 'slide-right')"></span>
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
   </div>
 </div>
 
@@ -19,8 +18,13 @@
 
     <div data-ng-if="gallery.dateOfUpload">
       <p>
+        <span>Your username:</span><br>
+        <span class="text-large">{{userName}}</span>
+      </p>
+
+      <p>
         <span>Gallery key:</span><br>
-        <span class="text-large">{{gallery.galleryId}}</span>
+        <span class="text-large">{{gallery.galleryKey}}</span>
       </p>
 
       <p>
@@ -34,17 +38,7 @@
       </p>
     </div>
 
-
-      
     </div>
-
-  </div>
-</div>
-
-
-<div class="bottom">
-  <div class="bottom__background"></div>
-  <div class="bottom__inner">
 
   </div>
 </div>

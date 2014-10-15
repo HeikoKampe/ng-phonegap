@@ -9,6 +9,8 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function (
 
   $scope.pageClass = 'page--get-gallery';
   $scope.showCtrls = true;
+  $scope.galleryKeySegments = [];
+  $scope.galleryOwnerName = '';
 
   function success(data) {
     console.log("success: ", data);
@@ -18,8 +20,10 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function (
     console.log("error: ", e.message);
   }
 
-  $scope.importGallery = function () {
-    serverAPI.getGallery($scope.galleryId).then(function (result) {
+  $scope.onContinueBtnClick = function () {
+    var galleryKey = $scope.galleryKeySegments[0] + $scope.galleryKeySegments[1] + $scope.galleryKeySegments[2];
+
+    serverAPI.getGallery($scope.galleryOwnerName, galleryKey).then(function (result) {
       console.log("received gallery from API:", result);
       appDataService.addGallery(result.data);
       messageService.startProgressMessage({title: 'Importing gallery'});

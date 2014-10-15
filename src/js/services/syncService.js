@@ -88,7 +88,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       var
         localGallery = appDataService.getGallery(galleryId);
 
-      return serverAPI.getGallery(localGallery.galleryId)
+      return serverAPI.getGalleryById(localGallery.galleryId)
         .then(setSyncId)
         .then(setGallerySettings)
         .then(compareGalleries)

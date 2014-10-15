@@ -3,30 +3,32 @@
 <div class="top">
   <div class="top__background"></div>
   <div class="top__inner">
-    <span class="icon icon--back" data-ng-click="go('/home', 'slide-right')"></span>
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
   </div>
 </div>
 
-<div class="center">
+<div class="center center--show-top">
   <div class="center__inner text-center">
 
-    <form data-ng-submit="signinSubmit()">
-      <p><input data-ng-model="username"/></p>
+    <form class="form vertical-center" data-ng-submit="signinSubmit()">
+      <p class="form__label">Sign in</p>
 
-      <p><input data-ng-model="password"/></p>
+      <span class="form__text-input-outer">
+        <input data-ng-model="username" class="form__text-input" placeholder="magic-mike"/>
+      </span>
 
-      <p>
-        <button type="submit">Submit</button>
+      <span class="form__text-input-outer">
+      <input data-ng-model="email" class="form__text-input" placeholder="mike@somedomain.com"/>
+      </span>
+
+      <span class="form__text-input-outer">
+        <input data-ng-model="password" class="form__text-input" placeholder="a!s,F2l0"/>
+      </span>
+
+      <p class="text-right">
+        <button class="btn--white" type="submit">Continue</button>
       </p>
     </form>
-  </div>
-</div>
-
-
-<div class="bottom">
-  <div class="bottom__background"></div>
-  <div class="bottom__inner">
-
   </div>
 </div>
 

@@ -43,7 +43,17 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
 
-  function getGallery(galleryId) {
+  function getGallery(galleryOwnerName, galleryKey) {
+    return $http.get('http://localhost:3000/api/users/' + galleryOwnerName + '/galleries/'  + galleryKey)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false}
+      });
+  }
+
+  function getGalleryById(galleryId) {
     return $http.get('http://localhost:3000/api/galleries/' + galleryId)
       .success(function (data, status, headers, config) {
         return data;
@@ -117,6 +127,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
 
   return {
     getGallery: getGallery,
+    getGalleryById: getGalleryById,
     uploadPhoto: uploadPhoto,
     removePhoto: removePhoto,
     createGallery: createGallery,

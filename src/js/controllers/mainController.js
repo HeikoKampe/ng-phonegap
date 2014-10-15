@@ -26,7 +26,7 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
   };
 
   $rootScope.back = function () {
-    $scope.slide = 'slide-left';
+    $scope.animationClass = 'slide-right';
     $window.history.back();
   };
 

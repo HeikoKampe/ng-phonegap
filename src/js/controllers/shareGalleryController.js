@@ -5,7 +5,9 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
                                                                              authService) {
 
 
+    $scope.pageClass = 'page--share-gallery';
     $scope.gallery = appDataService.getGallery();
+    $scope.userName = appDataService.getUserName();
 
     $scope.onShareGalleryBtnClick = function () {
       if (authService.isAuthorized()) {

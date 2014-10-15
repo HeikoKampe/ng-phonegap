@@ -1,15 +1,14 @@
-angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope, $rootScope, $window, appDataService, fileSystemAPI, storageService) {
+angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope, $rootScope, $interval, appDataService, fileSystemAPI, storageService) {
 
   var
     SLIDESHOW_DELAY = 2000,
     BUFFER_DELTA = 2,
     BUFFER_MAX_LENGTH = 5,
-    slideshowInterval,
     photoBufferHistory = [];
 
   $scope.pageClass = 'page--slideshow';
 
-
+  $scope.slideshowInterval = undefined;
   $scope.thumbnails = {};
   $scope.photoBuffer = {};
   $scope.activePhotoId = -1;
@@ -66,19 +65,16 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   $scope.startSlideshow = function () {
     $rootScope.hideCtrls();
     $scope.showThumbnails = false;
-    if (!slideshowInterval) {
-      slideshowInterval = $window.setInterval(function () {
-        $scope.$apply(function () {
-          $scope.showNextPhoto();
-        });
-
+    if (!$scope.slideshowInterval) {
+      $scope.slideshowInterval = $interval(function () {
+        $scope.showNextPhoto();
       }, SLIDESHOW_DELAY);
     }
   };
 
   $scope.stopSlideshow = function () {
-    $window.clearInterval(slideshowInterval);
-    slideshowInterval = undefined;
+    $interval.cancel($scope.slideshowInterval);
+    $scope.slideshowInterval = undefined;
   };
 
   function removeOldestEntryFromBuffer() {
