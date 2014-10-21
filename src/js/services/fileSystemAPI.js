@@ -1,40 +1,64 @@
-angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, html5FileSystem, phoneGapFileSystem) {
+angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, html5FileSystem, phoneGapFileSystem) {
   'use strict';
 
-  var fs = html5FileSystem;
-//  var fs = phoneGapFileSystem;
+  //Filesystem (checkDir, createDir, checkFile, creatFile, removeFile, writeFile, readFile)
 
-  function requestFileSystem (quota) {
-    return fs.requestFileSystem(quota);
+//  var fs = html5FileSystem;
+  var fs = $cordovaFile;
+
+//  if ($window.webkitRequestFileSystem) {
+//    fs = html5FileSystem2;
+//  } else {
+//    fs = $cordovaFile;
+//  }
+//
+
+  function checkDir (directory) {
+    return fs.checkDir(directory);
   }
 
-  function writeFile (name, content) {
-    return fs.writeFile (name, content);
+  function createDir (directory, replaceBOOL) {
+    return fs.createDir(directory, replaceBOOL);
   }
 
-  function readFile (name, returnType) {
-    return fs.readFile(name, returnType);
+  function checkFile (filePath) {
+    return fs.checkFile(filePath);
   }
 
-  function deleteFile (fullPath) {
-    return fs.deleteFile (fullPath);
+  function createFile (filePath, replaceBOOL) {
+    return fs.createFile(filePath, replaceBOOL);
   }
+
+  function removeFile (filePath) {
+    return fs.removeFile(filePath);
+  }
+
+  function writeFile (filePath, data) {
+    return fs.writeFile(filePath, data, {});
+  }
+
+  function readFile (filePath) {
+    return fs.readAsText(filePath);
+  }
+
+
+
 
   function renameFile (dir, oldFileName, newFileName) {
-    return fs.renameFile (dir, oldFileName, newFileName);
+    return fs.renameFile(dir, oldFileName, newFileName);
   }
 
-  function createFolder (path) {
-    return fs.createFolder (path);
-  }
+
 
   return {
-    requestFileSystem: requestFileSystem,
+    checkDir: checkDir,
+    createDir: createDir,
+    checkFile: checkFile,
+    createFile: createFile,
+    removeFile: removeFile,
     writeFile: writeFile,
     readFile: readFile,
-    deleteFile: deleteFile,
-    renameFile: renameFile,
-    createFolder: createFolder
+    renameFile: renameFile
   }
 
 });

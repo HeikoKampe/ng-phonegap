@@ -14,34 +14,14 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         newPhotos = $filter('notUploadedPhotosFilter')($scope.gallery.photos);
 
       $scope.showUploadBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
-      $scope.showUpdateBtn =
-        ((deletedPhotos.length > 0 || newPhotos.length > 0) && !$scope.showUploadBtn) ||
-        (deletedPhotos.length > 0 && $scope.showUploadBtn);
+      $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
+
+      $log.info("$scope.showUpdateBtn", $scope.showUpdateBtn);
     }
 
     function uploadGallery() {
       exportService.uploadGallery();
     }
-
-
-    //function updateGallery() {
-    //  // if gallery was uploaded to the server, check for remote updates first before applying local changes
-    //  if ($scope.gallery.dateOfUpload) {
-    //    syncService.getRemoteUpdatesForGallery()
-    //      .then($log.info)
-    //      .then(exportService.uploadGalleryPhotos)
-    //      .then($log.info)
-    //      .then(exportService.removeGalleryPhotos)
-    //      .then(function () {
-    //        eventService.broadcast('GALLERY-UPDATE');
-    //      });
-    //  } else {
-    //    // if gallery was not not uploaded, just remove deleted photos
-    //    removeDeletedAndNotUploadedPhotos();
-    //    eventService.broadcast('GALLERY-UPDATE');
-    //  }
-    //}
-    //
 
     function updateGallery() {
       if ($scope.gallery.dateOfUpload) {
@@ -71,7 +51,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
     $scope.togglePhoto = function () {
       appDataService.toggleMarkPhotoAsDeleted(this.photo.id);
-      console.log("this.thumb", this.photo.id);
       checkForLocalChanges();
     };
 
@@ -92,6 +71,14 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     };
 
+    $scope.onShareBtnClick = function () {
+      if (authService.isAuthorized()) {
+        $rootScope.go('share-gallery', 'slide-left');
+      } else {
+        $rootScope.go('signin', 'slide-left');
+      }
+    };
+
 
     $scope.$on('GALLERY-UPDATE', function () {
       if ($scope.gallery) {
@@ -101,7 +88,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         $scope.gallery = appDataService.getGallery();
         init();
       }
-
     });
 
 
@@ -109,7 +95,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if ($scope.gallery) {
         updateThumbnails();
         checkForLocalChanges();
-        checkForRemoteChanges();
+//        checkForRemoteChanges();
       }
     }
 

@@ -10,17 +10,21 @@
 <div class="center center--show-top">
   <div class="center__inner text-center">
 
-    <form class="form vertical-center" data-ng-submit="signinSubmit()">
-      <p class="form__label">Sign in</p>
+    <form class="form" data-ng-submit="signinSubmit()">
+      <h1 style="line-height:1em;">Signin,<br>
+      <span class="text-large">to share your photos with others.</span></h1>
 
+      <span class="form__label">Pic a username</span>
       <span class="form__text-input-outer">
         <input data-ng-model="username" class="form__text-input" placeholder="magic-mike"/>
       </span>
 
+      <span class="form__label">Enter your email</span>
       <span class="form__text-input-outer">
       <input data-ng-model="email" class="form__text-input" placeholder="mike@somedomain.com"/>
       </span>
 
+      <span class="form__label">Choose a password</span>
       <span class="form__text-input-outer">
         <input data-ng-model="password" class="form__text-input" placeholder="a!s,F2l0"/>
       </span>

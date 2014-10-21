@@ -27,16 +27,20 @@ angular.module(_APP_, [
   // to use it!
   'ngTouch',
   'ngRoute',
-  'ngAnimate'
+  'ngAnimate',
+  'ngCordova'
 
 
 ]);
 
 angular.module(_APP_).run([
-  '$rootScope',
-  function($rootScope) {
+  '$log',
+  'storageService',
+  function($log, storageService) {
 
     // intial run code here
+    $log.info('angular app ready');
+    storageService.initStorage();
 
   }
 ]);

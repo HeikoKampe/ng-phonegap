@@ -2,30 +2,56 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
   'use strict';
 
-  var thumbnailsDirectory = 'thumbnails/'; // todo: move to settings
+  var
+    THUMBNAILS_DIR = 'thumbnails',
+    DATA_FILE = 'appData.txt'; // todo: move to settings
 
-  function saveAppData() {
-    fileSystemAPI.writeFile('appData.txt', angular.toJson(appDataService.getAppData())).then(function () {
-      $log.log("app data saved");
-    }, function (e) {
-      throw new Error("saving app data", e);
-    })
+  function checkIfFirstRun() {
+    var deferred = $q.defer();
+
+    fileSystemAPI.checkFile(DATA_FILE).then(function (result) {
+      deferred.resolve(false);
+    }, function (err) {
+      deferred.resolve(true);
+    });
+
+    return deferred.promise;
   }
 
   function restoreAppData() {
-    fileSystemAPI.readFile('appData.txt').then(function (content) {
+    fileSystemAPI.readFile(DATA_FILE).then(function (content) {
       appDataService.setAppData(angular.fromJson(content, true));
     }, function (e) {
       console.log("Error: restoring app data failed", e);
     });
   }
 
+  function initStorage() {
+    checkIfFirstRun().then(function (isFirstRun) {
+      console.log('checkIfFirstRun', isFirstRun);
+      if (isFirstRun) {
+        fileSystemAPI.createDir(THUMBNAILS_DIR, true);
+        saveAppData();
+      } else {
+      restoreAppData();
+      }
+    });
+  }
+
+  function saveAppData() {
+    fileSystemAPI.writeFile(DATA_FILE, angular.toJson(appDataService.getAppData()), {}).then(function () {
+      $log.log("app data saved", angular.toJson(appDataService.getAppData()));
+    }, function (e) {
+      throw new Error("saving app data", e);
+    })
+  }
+
   function saveThumbnailImage(importObj) {
     var
       deferredImportObj = $q.defer();
 
-    fileSystemAPI.writeFile(thumbnailsDirectory + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
-    //fileSystemAPI.writeFile('xxx' +thumbnailsDirectory + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
+    fileSystemAPI.writeFile(THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
+      //fileSystemAPI.writeFile('xxx' +thumbnailsDirectory + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
       .then(function () {
         delete importObj.photoObj.thumbDataURI;
         deferredImportObj.resolve(importObj);
@@ -42,7 +68,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferredImportObj = $q.defer();
 
-      fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
+    fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
       .then(function () {
         delete importObj.photoObj.mainDataURI;
         deferredImportObj.resolve(importObj);
@@ -64,14 +90,14 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferredImage = $q.defer();
 
-      fileSystemAPI.readFile(photoId).then(
-        function (imgDataSrc) {
-          deferredImage.resolve(imgDataSrc);
-        },
-        function (e) {
-          deferredImage.reject(new Error('unable to read file: ', e));
-        }
-      );
+    fileSystemAPI.readFile(photoId).then(
+      function (imgDataSrc) {
+        deferredImage.resolve(imgDataSrc);
+      },
+      function (e) {
+        deferredImage.reject(new Error('unable to read file: ', e));
+      }
+    );
     return deferredImage.promise;
   }
 
@@ -86,7 +112,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       var deferred = $q.defer();
 
       // Fixme: thumb directory as global constant
-      fileSystemAPI.readFile(thumbnailsDirectory + photo.id).then(
+      fileSystemAPI.readFile(THUMBNAILS_DIR + '/' + photo.id).then(
         function (imgDataSrc) {
           // add image src to photo object
           thumbs[photo.id] = imgDataSrc;
@@ -111,8 +137,8 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   function removePhoto(photoId) {
     var promises = [];
 
-    promises.push(fileSystemAPI.deleteFile(thumbnailsDirectory + photoId));
-    promises.push(fileSystemAPI.deleteFile(photoId));
+    promises.push(fileSystemAPI.removeFile(THUMBNAILS_DIR + '/' + photoId));
+    promises.push(fileSystemAPI.removeFile(photoId));
 
     return $q.all(promises);
   }
@@ -124,7 +150,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       deferred = $q.defer();
 
     // rename thumbnail
-    fileSystemAPI.renameFile(thumbnailsDirectory, thumbnailsDirectory + oldName, newName).then(function () {
+    fileSystemAPI.renameFile(THUMBNAILS_DIR, oldName, newName).then(function () {
       // rename main image
       fileSystemAPI.renameFile('', oldName, newName).then(function () {
         deferred.resolve(uploadObj);
@@ -142,6 +168,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
 
   return {
+    initStorage: initStorage,
     saveAppData: saveAppData,
     restoreAppData: restoreAppData,
     saveImageVariants: saveImageVariants,

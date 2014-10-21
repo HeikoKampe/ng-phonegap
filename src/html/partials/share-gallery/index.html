@@ -11,35 +11,54 @@
 
     <h1>Gallery sharing</h1>
 
+    <h2>{{gallery.name}}</h2>
 
     <div data-ng-if="!gallery.dateOfUpload">
-      <p><button data-ng-click="onShareGalleryBtnClick()">Share your gallery</button></p>
+      <p>Upload your photos.</p>
+      <p>
+        <button class="btn--white" data-ng-click="onShareGalleryBtnClick()">Upload</button>
+      </p>
     </div>
 
     <div data-ng-if="gallery.dateOfUpload">
-      <p>
-        <span>Your username:</span><br>
-        <span class="text-large">{{userName}}</span>
-      </p>
+      <div class="details">
+        <div class="details__group">
+          <p class="details__info">Give access to your gallery by sharing your username and gallery key with others.</p>
 
-      <p>
-        <span>Gallery key:</span><br>
-        <span class="text-large">{{gallery.galleryKey}}</span>
-      </p>
+          <p>
+            <span class="details__label">Your username</span><br>
+            <span class="details__value">{{userName}}</span>
+          </p>
 
-      <p>
-        <span>Upload key:</span><br>
-        <span class="text-large">{{gallery.uploadPassword}}</span>
-      </p>
+          <span class="details__label">Gallery key</span><br>
 
-      <p>
-        <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="true" data-ng-change="onSettingsChange()">  enabled
-        <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="false" data-ng-change="onSettingsChange()"> disabled <br/>
-      </p>
-    </div>
+          <p class="details__value">
+            {{galleryKeySegments[0]}} - {{galleryKeySegments[1]}} - {{galleryKeySegments[2]}}
+          </p>
+        </div>
 
+        <div class="details__group">
+          <p class="details__info">Allow others to edit (add/delete photos) your gallery</p>
+
+          <p>
+            <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="true"
+                   data-ng-change="onSettingsChange()"> enabled
+            <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="false"
+                   data-ng-change="onSettingsChange()"> disabled <br/>
+          </p>
+
+          <p data-ng-if="gallery.settings.allowForeignUploads">
+            <span class="details__label">Upload key</span><br>
+            <span class="details__value">{{gallery.uploadPassword}}</span>
+          </p>
+
+        </div>
+
+      </div>
     </div>
 
   </div>
+
+</div>
 </div>
 

@@ -217,7 +217,9 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       storageService.removePhoto(deletedPhotos[i]);
       appDataService.removePhoto(deletedPhotos[i]);
     }
-    eventService.broadcast('GALLERY-UPDATE');
+    if (deletedPhotos.length) {
+      eventService.broadcast('GALLERY-UPDATE');
+    }
   }
 
   function removeDeletedGalleryPhotos() {

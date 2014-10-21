@@ -26,7 +26,7 @@ angular.module(_CONTROLLERS_).controller('authController', function (
         userId: result.data.id,
         userName: credentials.username
       });
-      $rootScope.back();
+      $rootScope.go('share-gallery', 'slide-left');
     }, error);
   };
 

@@ -26,11 +26,11 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     };
 
   function createGalleryId() {
-    return ++appData.galleryId;
+    return (++appData.galleryId).toString();
   }
 
   function createPhotoId() {
-    return ++appData.photoId;
+    return (++appData.photoId).toString();
   }
 
   function setAppData(_appData) {
@@ -66,6 +66,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     newGallery.galleryId = (confObj != undefined && confObj._id != undefined) ? confObj._id : createGalleryId();
     newGallery.galleryKey = (confObj != undefined && confObj.shortId != undefined) ? confObj.shortId : undefined;
     newGallery.ownerId = (confObj != undefined && confObj.ownerId != undefined) ? confObj.ownerId : appData.userId;
+    newGallery.ownerName = (confObj != undefined && confObj.ownerName != undefined) ? confObj.ownerName : appData.userName;
     newGallery.title = (confObj != undefined && confObj.title != undefined) ? confObj.title : undefined;
     newGallery.dateOfUpload = (confObj != undefined && confObj.dateOfUpload != undefined) ? confObj.dateOfUpload : undefined;
     newGallery.syncId = (confObj != undefined && confObj.syncId != undefined) ? confObj.syncId : 0;
@@ -211,27 +212,30 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     appData.galleries[galleryId].syncId++;
   }
 
-  function resetOwnerIdsOfGalleryPhotos(galleryPhotos, newOwnerId) {
+  function resetOwnerOfGalleryPhotos(galleryPhotos, userData) {
     angular.forEach(galleryPhotos, function (photo) {
-      photo.ownerId = newOwnerId;
+      photo.ownerId = userData.userId;
+      photo.ownerName = userData.userName;
     });
   }
 
-  function setUserId(userId) {
-    var
-      oldUserId = appData.userId,
-      newUserId = userId;
+  function resetUserDataForExistingGalleries(oldUserId, userData) {
 
-    if (newUserId != oldUserId) {
-      appData.userId = newUserId;
-      // set owner ids of own galleries to new user id
+    // check if user data is really new because this needs only to be done once
+    if (userData.userId != oldUserId) {
+      // set owner data of own galleries to new user data (received after signin)
       angular.forEach(appData.galleries, function (gallery, key) {
         if (gallery.ownerId === oldUserId) {
-          gallery.ownerId = newUserId;
-          resetOwnerIdsOfGalleryPhotos(gallery.photos, newUserId);
+          gallery.ownerId = userData.userId;
+          gallery.ownerName = userData.userName;
+          resetOwnerOfGalleryPhotos(gallery.photos, userData);
         }
       });
     }
+  }
+
+  function setUserId(userId) {
+    appData.userId = userId;
   }
 
   function getUserId() {
@@ -272,9 +276,13 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   }
 
   function setUserData(userData){
+    var
+      oldUserId = appData.userId;
+
     setUserId(userData.userId);
     setUserToken(userData.userToken);
     setUserName(userData.userName);
+    resetUserDataForExistingGalleries(oldUserId, userData);
     eventService.broadcast("GALLERY-UPDATE");
   }
 
@@ -285,6 +293,12 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
       userId = appData.userId;
 
     return galleryOwnerId === userId;
+  }
+
+  function getGalleryKey (_galleryId) {
+    var galleryId = _galleryId || appData.activeGalleryId;
+
+    return appData.galleries[galleryId].galleryKey;
   }
 
 
@@ -304,6 +318,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     setSyncId: setSyncId,
     incrSyncId: incrSyncId,
     setGallerySettings: setGallerySettings,
+    getGalleryKey: getGalleryKey,
 
     createPhotoId: createPhotoId,
     getPhotos: getPhotos,

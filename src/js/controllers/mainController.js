@@ -3,13 +3,16 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
   $scope,
   $location,
   $window,
+  $log,
+  $cordovaFile,
   storageService,
   fileSystemAPI,
   messageService) {
 
   var
     ctrlsInterval,
-    HIDE_CTRLS_DELAY = 2000;
+    HIDE_CTRLS_DELAY = 2000,
+    THUMBNAILS_DIR = 'thumbnails';
 
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;
@@ -51,18 +54,6 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
 
     }, HIDE_CTRLS_DELAY)
   };
-
-  fileSystemAPI.requestFileSystem()
-    .then(function (fs) {
-      console.log('got filesystem', fs.name);
-      fileSystemAPI.createFolder('thumbnails');
-      storageService.restoreAppData();
-    },
-    function (e) {
-      // todo: initial app start causes always an error
-      console.log("ERROR: ", e.text);
-    }
-  );
 
 
 });

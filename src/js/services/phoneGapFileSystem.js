@@ -146,13 +146,70 @@ angular.module(_SERVICES_).factory('phoneGapFileSystem', function ($window, $q, 
     return def.promise;
   }
 
+  function createFolder(path) {
+    //remove leading slash if present
+    path = path.replace(/^\//, "");
+
+    var def = $q.defer();
+
+    console.log("createFolder path: ", path);
+    console.log("createFolder rootDir: ", rootDir);
+
+    function createDir(rootDir, folders) {
+      rootDir.getDirectory(folders[0], {create: true}, function (dirEntry) {
+        if (folders.length) {
+          createDir(dirEntry, folders.slice(1));
+        } else {
+          safeResolve(def, dirEntry);
+        }
+      }, function (e) {
+        safeReject(def, {text: "Error creating directory", obj: e});
+      });
+    }
+
+    fsDefer.promise.then(function (fs) {
+      createDir(fs.root, path.split('/'));
+    }, function (err) {
+      def.reject(err);
+    });
+
+    return def.promise;
+  }
+
+  function renameFile(dir, fullPath, newName) {
+    var def = $q.defer();
+
+    fsDefer.promise.then(function (fs) {
+
+      fs.root.getDirectory(dir, {}, function (dirEntry) {
+        fs.root.getFile(fullPath, {create: false}, function (fileEntry) {
+          fileEntry.moveTo(dirEntry, newName, function () {
+            safeResolve(def, "");
+          }, function (e) {
+            safeReject(def, {text: "Error renaming file", obj: e});
+          });
+        }, function (e) {
+          safeReject(def, {text: "Error getting file", obj: e});
+        });
+      }, function (e) {
+        safeReject(def, {text: "Error getting directory", obj: e});
+      });
+
+    }, function (err) {
+      def.reject(err);
+    });
+
+    return def.promise;
+  }
 
 
   return {
     requestFileSystem: requestFileSystem,
     writeFile: writeFile,
     readFile: readFile,
-    deleteFile: deleteFile
+    deleteFile: deleteFile,
+    createFolder: createFolder,
+    renameFile: renameFile
   };
 
 });
