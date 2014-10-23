@@ -3,8 +3,8 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, 
 
   //Filesystem (checkDir, createDir, checkFile, creatFile, removeFile, writeFile, readFile)
 
-//  var fs = html5FileSystem;
-  var fs = $cordovaFile;
+  var fs = html5FileSystem;
+//  var fs = $cordovaFile;
 
 //  if ($window.webkitRequestFileSystem) {
 //    fs = html5FileSystem2;

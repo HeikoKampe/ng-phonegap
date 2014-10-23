@@ -1,6 +1,10 @@
 angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   'use strict';
 
+  var API_BASE_URL = 'http://localhost/api/';
+//  var API_BASE_URL = 'http://localhost:3000/api/';
+//  var API_BASE_URL = 'http://cdp.grus.uberspace.de/photoframe-api/api/';
+
   function registerClient() {
   }
 
@@ -20,7 +24,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
    * @returns serverGallerieId
    */
   function createGallery(confObj) {
-    return $http.post('http://localhost:3000/api/galleries', confObj)
+    return $http.post(API_BASE_URL + 'galleries', confObj)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -33,7 +37,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
    * @returns serverPhotoId
    */
   function uploadPhoto(photoObj, galleryId) {
-    return $http.post('http://localhost:3000/api/galleries/' + galleryId + '/photo', photoObj)
+    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/photo', photoObj)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -44,7 +48,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
 
 
   function getGallery(galleryOwnerName, galleryKey) {
-    return $http.get('http://localhost:3000/api/users/' + galleryOwnerName + '/galleries/'  + galleryKey)
+    return $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/'  + galleryKey)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -54,7 +58,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function getGalleryById(galleryId) {
-    return $http.get('http://localhost:3000/api/galleries/' + galleryId)
+    return $http.get(API_BASE_URL + 'galleries/' + galleryId)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -64,7 +68,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function getGalleryStatus(galleryId) {
-    return $http.get('http://localhost:3000/api/galleries/' + galleryId + '/status')
+    return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/status')
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -74,7 +78,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function removePhoto(photoId, galleryId) {
-    return $http.delete('http://localhost:3000/api/galleries/' + galleryId + '/photo/' + photoId)
+    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photo/' + photoId)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -89,7 +93,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
    */
   function signin(credentials) {
 
-    return $http.post('http://localhost:3000/api/signin/', credentials)
+    return $http.post(API_BASE_URL + 'signin/', credentials)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -104,7 +108,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
    */
   function uploadAuth(credentials) {
 
-    return $http.post('http://localhost:3000/api/auth/upload', credentials)
+    return $http.post(API_BASE_URL + 'auth/upload', credentials)
       .success(function (data, status, headers, config) {
         return data;
       })
@@ -116,7 +120,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
 
   function setGallerySettings (galleryId, gallerySettings) {
 
-    return $http.post('http://localhost:3000/api/galleries/' + galleryId + '/settings', gallerySettings)
+    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/settings', gallerySettings)
       .success(function (data, status, headers, config) {
         return data;
       })

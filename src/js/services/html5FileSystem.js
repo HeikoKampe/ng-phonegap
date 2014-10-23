@@ -9,6 +9,8 @@
 
 angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $timeout, $log) {
 
+  var DEFAULT_QUOTA_MB = 100;
+
   return {
     checkDir: function (dir) {
       return getDirectory(dir, {create: false});
@@ -314,10 +316,14 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * with the device's persistent file system and with 1MB of storage reserved for it,
    * or rejected if an error occurs while trying to accessing the FileSystem
    */
-  function getFilesystem() {
-    var q = $q.defer();
+  function getFilesystem(quota) {
+    var
+      q = $q.defer(),
+      quota = (typeof quota == 'undefined' ? DEFAULT_QUOTA_MB : quota);
 
-    $window.webkitRequestFileSystem($window.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
+    navigator.webkitPersistentStorage.requestQuota(quota * 1024 * 1024, function (grantedBytes) {
+      $window.webkitRequestFileSystem($window.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
+    });
 //      $window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
     return q.promise;
   }
