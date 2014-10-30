@@ -1,4 +1,4 @@
-angular.module(_FILTERS_).filter('photoFilter', function () {
+ angular.module(_FILTERS_).filter('photoFilter', function () {
     'use strict';
 
     return function (photos, filterKey, filterValue, returnProperty) {

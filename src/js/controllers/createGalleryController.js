@@ -7,14 +7,17 @@ angular.module(_CONTROLLERS_).controller('createGalleryController', function (
   $scope.pageClass = 'page--create-gallery';
   $scope.showCtrls = true;
 
-  $scope.createGallery = function (galleryTitle) {
-    console.log('galleryTitle', galleryTitle);
-    appDataService.addGallery({
-      title: galleryTitle,
-      uploadPassword: keyGeneratorService.generateKey()
-    });
-    $rootScope.go('edit-gallery', 'slide-left');
-  };
+  $scope.createGalleryForm = {};
 
+  $scope.submitForm = function(isValid){
+    if (isValid) {
+      console.log('galleryTitle', $scope.createGalleryForm.galleryTitle);
+      appDataService.addGallery({
+        title: $scope.createGalleryForm.galleryTitle,
+        uploadPassword: keyGeneratorService.generateKey()
+      });
+      $rootScope.go('edit-gallery', 'slide-left');
+    }
+  };
 
 });

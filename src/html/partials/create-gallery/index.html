@@ -10,20 +10,26 @@
 <div class="center center--show-top">
   <div class="center-inner">
 
-  <div class="form">
-    <h1>Create a new gallery</h1>
-    <p class="form__label">Enter a gallery title</p>
+    <form class="form"
+          name="createGalleryForm"
+          data-ng-submit="submitForm(createGalleryForm.$valid)"
+          novalidate>
+      <h1>Create a new gallery</h1>
+
+      <p class="form__label">Enter a gallery title</p>
       <span class="form__text-input-outer">
         <input class="form__text-input"
                type="text"
-               data-ng-model="titleOfNewGallery"
-               placeholder="YOUR TITLE"/>
+               data-ng-model="createGalleryForm.galleryTitle"
+               data-ng-minlength="3"
+               placeholder="YOUR TITLE"
+               required/>
       </span>
 
-    <p class="text-right">
-      <button class="btn--white" data-ng-click="createGallery(titleOfNewGallery)">Continue</button>
-    </p>
-  </div>
+      <p class="text-right">
+        <button class="btn--white" type="submit" data-ng-disabled="createGalleryForm.$invalid">Continue</button>
+      </p>
+    </form>
 
   </div>
 </div>

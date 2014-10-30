@@ -6,13 +6,6 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, 
   var fs = html5FileSystem;
 //  var fs = $cordovaFile;
 
-//  if ($window.webkitRequestFileSystem) {
-//    fs = html5FileSystem2;
-//  } else {
-//    fs = $cordovaFile;
-//  }
-//
-
   function checkDir (directory) {
     return fs.checkDir(directory);
   }
@@ -41,14 +34,9 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, 
     return fs.readAsText(filePath);
   }
 
-
-
-
   function renameFile (dir, oldFileName, newFileName) {
     return fs.renameFile(dir, oldFileName, newFileName);
   }
-
-
 
   return {
     checkDir: checkDir,

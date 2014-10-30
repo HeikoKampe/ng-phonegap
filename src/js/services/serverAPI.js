@@ -1,12 +1,8 @@
 angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   'use strict';
 
-  var API_BASE_URL = 'http://localhost/api/';
-//  var API_BASE_URL = 'http://localhost:3000/api/';
-//  var API_BASE_URL = 'http://cdp.grus.uberspace.de/photoframe-api/api/';
+//  var API_BASE_URL = 'http://localhost:33000/api/';
 
-  function registerClient() {
-  }
 
   /**
    *
@@ -129,6 +125,17 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function logErrorToServer (errorObj) {
+
+    return $http.post(API_BASE_URL + 'logs/', errorObj)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
   return {
     getGallery: getGallery,
     getGalleryById: getGalleryById,
@@ -138,7 +145,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
     signin: signin,
     uploadAuth: uploadAuth,
     getGalleryStatus: getGalleryStatus,
-    setGallerySettings: setGallerySettings
+    setGallerySettings: setGallerySettings,
+    logErrorToServer: logErrorToServer
   }
 
 });

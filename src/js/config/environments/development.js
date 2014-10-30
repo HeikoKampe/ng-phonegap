@@ -7,3 +7,7 @@
  * var _BASE_API_URL = 'http://dev.example.org/api/v1';
  *
  */
+
+
+var
+  API_BASE_URL = 'http://localhost:33000/api/';

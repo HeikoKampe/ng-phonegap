@@ -1,15 +1,11 @@
-angular.module(_SERVICES_).service('storageService', function ($rootScope, $log, $q, fileSystemAPI, eventService, appDataService) {
+angular.module(_SERVICES_).service('storageService', function ($rootScope, $log, $q, fileSystemAPI, eventService, appDataService, appSettingsService) {
 
   'use strict';
-
-  var
-    THUMBNAILS_DIR = 'thumbnails',
-    DATA_FILE = 'appData.txt'; // todo: move to settings
 
   function checkIfFirstRun() {
     var deferred = $q.defer();
 
-    fileSystemAPI.checkFile(DATA_FILE).then(function (result) {
+    fileSystemAPI.checkFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME).then(function (result) {
       deferred.resolve(false);
     }, function (err) {
       deferred.resolve(true);
@@ -19,10 +15,10 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   }
 
   function restoreAppData() {
-    fileSystemAPI.readFile(DATA_FILE).then(function (content) {
+    fileSystemAPI.readFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME).then(function (content) {
       appDataService.setAppData(angular.fromJson(content, true));
-    }, function (e) {
-      console.log("Error: restoring app data failed", e);
+    }, function onReadFileError(e) {
+      console.log(angular.toJson(e));
     });
   }
 
@@ -30,7 +26,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     checkIfFirstRun().then(function (isFirstRun) {
       console.log('checkIfFirstRun', isFirstRun);
       if (isFirstRun) {
-        fileSystemAPI.createDir(THUMBNAILS_DIR, true);
+        fileSystemAPI.createDir(appSettingsService.SETTINGS.THUMBNAILS_DIR, true);
         saveAppData();
       } else {
       restoreAppData();
@@ -39,7 +35,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   }
 
   function saveAppData() {
-    fileSystemAPI.writeFile(DATA_FILE, angular.toJson(appDataService.getAppData()), {}).then(function () {
+    fileSystemAPI.writeFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME, angular.toJson(appDataService.getAppData()), {}).then(function () {
       $log.log("app data saved", angular.toJson(appDataService.getAppData()));
     }, function (e) {
       throw new Error("saving app data", e);
@@ -50,8 +46,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferredImportObj = $q.defer();
 
-    fileSystemAPI.writeFile(THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
-      //fileSystemAPI.writeFile('xxx' +thumbnailsDirectory + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
+    fileSystemAPI.writeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
       .then(function () {
         delete importObj.photoObj.thumbDataURI;
         deferredImportObj.resolve(importObj);
@@ -112,14 +107,14 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       var deferred = $q.defer();
 
       // Fixme: thumb directory as global constant
-      fileSystemAPI.readFile(THUMBNAILS_DIR + '/' + photo.id).then(
+      fileSystemAPI.readFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photo.id).then(
         function (imgDataSrc) {
           // add image src to photo object
           thumbs[photo.id] = imgDataSrc;
           deferred.resolve();
         },
-        function (e) {
-          throw new Error('loading thumbnail', e);
+        function onReadThumbnailError(e) {
+          throw new Error(angular.toJson(e));
           // resolve anyway to trigger $q.all
           deferred.resolve();
         }
@@ -150,13 +145,13 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       deferred = $q.defer();
 
     // rename thumbnail
-    fileSystemAPI.renameFile(THUMBNAILS_DIR, oldName, newName).then(function () {
+    fileSystemAPI.renameFile(appSettingsService.SETTINGS.THUMBNAILS_DIR, oldName, newName).then(function () {
       // rename main image
       fileSystemAPI.renameFile('', oldName, newName).then(function () {
         deferred.resolve(uploadObj);
       });
-    }, function (e) {
-      throw new Error("renaming file", e);
+    }, function onRenameFileError(e) {
+      throw new Error(angular.toJson(e));
     });
 
     return deferred.promise;

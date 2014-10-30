@@ -1,4 +1,4 @@
-angular.module(_SERVICES_).service('fileReaderService', function ($q, $log, promiseHelperService) {
+angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
 
   function getImageAsDataURL(importObj) {
     var

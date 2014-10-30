@@ -7,27 +7,36 @@ angular.module(_CONTROLLERS_).controller('authController', function (
   $scope.pageClass = 'page--signin';
 
   $scope.uploadPassword = '';
+  $scope.signinCredentials = {};
+  $scope.showSigninFormErrors = false;
 
 
   function error(e) {
     console.log("error: ", e.data);
   }
 
-  $scope.signinSubmit = function () {
+  $scope.signinSubmit = function (isValid) {
     var credentials = {};
 
-    credentials.username = $scope.username;
-    credentials.email = $scope.email;
-    credentials.password = $scope.password;
-    serverAPI.signin(credentials).then(function (result) {
-      console.log("signin result:", result);
-      appDataService.setUserData({
-        userToken: result.data.token,
-        userId: result.data.id,
-        userName: credentials.username
-      });
-      $rootScope.go('share-gallery', 'slide-left');
-    }, error);
+    if (isValid) {
+      $scope.showSigninFormErrors = false;
+      credentials.username = $scope.signinCredentials.username;
+      credentials.email = $scope.signinCredentials.email;
+      credentials.password = $scope.signinCredentials.password;
+      serverAPI.signin(credentials).then(function (result) {
+        console.log("signin result:", result);
+        appDataService.setUserData({
+          userToken: result.data.token,
+          userId: result.data.id,
+          userName: credentials.username
+        });
+        $rootScope.go('share-gallery', 'slide-left');
+      }, error);
+    } else {
+      $scope.showSigninFormErrors = true;
+    }
+
+
   };
 
   $scope.uploadAuthSubmit = function () {

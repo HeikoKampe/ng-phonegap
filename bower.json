@@ -8,7 +8,9 @@
     "angular-touch": "~1.2.25",
     "angular-animate": "~1.2.25",
     "lodash": "~2.4.x",
-    "ngCordova": "latest"
+    "ngCordova": "latest",
+    "stacktrace-js": "latest",
+    "moment": "latest"
   },
   "devDependencies": {
     "angular-mocks": "1.2.x"
