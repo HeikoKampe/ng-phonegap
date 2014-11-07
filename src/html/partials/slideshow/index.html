@@ -12,7 +12,7 @@
     <div class="slideshow-thumbs">
       <div class="slideshow-thumbs__thumb"
            data-ng-repeat="photo in gallery.photos"
-           data-ng-class="{ 'thumb': true, 'slideshow-thumbs__thumb--active': activePhotoArrayIndex === $index }"
+           data-ng-class="{ 'thumb': true, 'slideshow-thumbs__thumb--active': activePhotoArrayIndex === $index, 'slideshow-thumbs__thumb--new': photo.viewStatus === 1}"
            data-ng-click="onThumbnailClick(photo.id, $index)">
         <img class="slideshow-thumbs__thumb-img"
              data-ng-src="{{ thumbnails[photo.id] }}"
@@ -25,7 +25,8 @@
       <img class="slideshow__img"
            data-ng-repeat="photo in gallery.photos"
            data-ng-src="{{ photoBuffer[photo.id] }}"
-           data-ng-show="photo.id === activePhotoId"/>
+           data-ng-show="photo.id === activePhotoId"
+           data-ng-class="{'slideshow__img--new': photo.viewStatus === 1}"/>
     </div>
 
   </div>
@@ -36,17 +37,18 @@
   <div class="bottom__inner text-center">
     <ul class="bottom-ctrl bottom-ctrl--center">
       <li class="bottom-ctrl__item">
-        <div  data-ng-click="showPrevPhoto()" class="bottom-ctrl__icon icon-backward"></div>
+        <div data-ng-click="showPrevPhoto()" class="bottom-ctrl__icon icon-backward"></div>
       </li>
       <li class="bottom-ctrl__item">
-        <div data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()" class="bottom-ctrl__icon icon-play2"></div>
+        <div data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()"
+             class="bottom-ctrl__icon icon-play2"></div>
         <div data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()" class="bottom-ctrl__icon icon-pause"></div>
       </li>
       <li class="bottom-ctrl__item">
-        <div  data-ng-click="showNextPhoto()" class="bottom-ctrl__icon icon-forward"></div>
+        <div data-ng-click="showNextPhoto()" class="bottom-ctrl__icon icon-forward"></div>
       </li>
       <li class="bottom-ctrl__item bottom-ctrl__item--left">
-        <div  data-ng-click="toggleThumbnails()" class="bottom-ctrl__icon icon-thumbs"></div>
+        <div data-ng-click="toggleThumbnails()" class="bottom-ctrl__icon icon-thumbs"></div>
       </li>
     </ul>
   </div>

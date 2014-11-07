@@ -74,12 +74,22 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function removePhoto(photoId, galleryId) {
-    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photo/' + photoId)
+    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId)
       .success(function (data, status, headers, config) {
         return data;
       })
       .error(function (data, status, headers, config) {
         return {'status': false}
+      });
+  }
+
+  function getSignedImageUrl (galleryId, photoId) {
+    return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
       });
   }
 
@@ -136,6 +146,19 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function sendInvitation (data) {
+
+    return $http.post(API_BASE_URL + 'emails/invitation', data)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
+
+
   return {
     getGallery: getGallery,
     getGalleryById: getGalleryById,
@@ -146,7 +169,9 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
     uploadAuth: uploadAuth,
     getGalleryStatus: getGalleryStatus,
     setGallerySettings: setGallerySettings,
-    logErrorToServer: logErrorToServer
+    logErrorToServer: logErrorToServer,
+    sendInvitation: sendInvitation,
+    getSignedImageUrl: getSignedImageUrl
   }
 
 });

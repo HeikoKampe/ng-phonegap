@@ -1,149 +1,130 @@
 'use strict';
 
-angular.module(_SERVICES_).service('importService', function ($rootScope,
-                                                              $q,
-                                                              $log,
-                                                              $timeout,
-                                                              serverAPI,
-                                                              fileReaderService,
-                                                              appDataService,
-                                                              imageVariantsService,
-                                                              storageService,
-                                                              messageService,
-                                                              eventService) {
-
-
+angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $log, $timeout, serverAPI, fileReaderService, appDataService, imageVariantsService, storageService, messageService, momentjs) {
 
 
   function updateImportStatus(importObj) {
     var messageData = {
       content: importObj.photoObj.name,
-      totalLength: importObj.importObjects.length,
-      progressIndex: importObj.importObjectIndex + 1
+      totalLength: importObj.status.nImports,
+      progressIndex: importObj.status.importIndex ++
     };
     messageService.updateProgressMessage(messageData, {'incr': true});
   }
 
-  function onImportError(importError) {
-    console.log("import error: ", importError);
+
+  function showImportResult(importObj) {
+    messageService.addProgressResult('some ;-)' + ' photos added');
   }
 
-  function createLocalImportObj(importObjects, importIndex, deferred, errors) {
-    return {
-      'importObjects': importObjects,
-      'importObjectIndex': importIndex,
-      'deferred': deferred,
-      'errors': errors || {},
-      'photoObj': {
-        'file': importObjects[importIndex],
-        'id': appDataService.createPhotoId(),
-        'name': importObjects[importIndex].name,
-        'ownerId': appDataService.getUserId()
-      }
-    };
-  }
+  function getSignedUrl(importObj) {
+    var deferred = $q.defer();
 
-  function createRemoteImportObj(importObjects, importIndex, deferred, galleryId, errors) {
-    return {
-      'importObjects': importObjects,
-      'importObjectIndex': importIndex,
-      'deferred': deferred,
-      'galleryId': galleryId,
-      'errors': errors || {},
-      'photoObj': importObjects[importIndex]
-    };
-  }
-
-  function showImportResult(importObj){
-    messageService.addProgressResult((importObj.importObjects.length - Object.keys(importObj.errors).length) + ' photos added');
-  }
-
-  function onLocalImportDone(importObj) {
-    var importObjectIndex;
-
-    if (importObj.errors && importObj.errors[importObj.importObjectIndex]) {
-      onImportError(importObj.errors[importObj.importObjectIndex]);
+    // signed urls on initial gallery import are already provided by the server
+    if (importObj.photoObj.url) {
+      deferred.resolve(importObj)
     } else {
-      appDataService.addPhotoToGallery(importObj.photoObj);
+      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id).then(function (data) {
+        importObj.photoObj.url = data.signedUrl;
+        deferred.resolve(importObj);
+      }, function (err) {
+        throw new Error('could not get signed url for image');
+      });
     }
 
-    importObjectIndex = importObj.importObjectIndex + 1;
+    return deferred.promise;
+  }
 
-    if (importObjectIndex < importObj.importObjects.length) {
-      // import next photo
-      importLocalImage(importObj.importObjects, importObjectIndex, importObj.deferred, importObj.errors).then(onLocalImportDone);
+
+
+  function onLocalImportDone(importObj) {
+    appDataService.addPhotoToGallery(importObj.photoObj);
+    if (importObj.importStack.length) {
+      // import next in stack
+      importLocalImage(importObj);
     } else {
-      // no more photos to import
+      // all imports are done
       showImportResult(importObj);
-      importObj.deferred.resolve();
+      importObj.deferred.resolve(importObj);
     }
   }
 
   function onRemoteImportDone(importObj) {
-    var importObjectIndex;
-
-    if (importObj.errors && importObj.errors[importObj.importObjectIndex]) {
-      onImportError(importObj.errors[importObj.importObjectIndex]);
+    appDataService.addPhotoToGallery(importObj.photoObj);
+    if (importObj.importStack.length) {
+      // import next in stack
+      importRemoteImage(importObj);
     } else {
-      appDataService.addPhotoToGallery(importObj.photoObj);
-    }
-
-    importObjectIndex = importObj.importObjectIndex + 1;
-
-    if (importObjectIndex < importObj.importObjects.length) {
-      // import next photo
-      importRemoteImage(importObj.importObjects, importObjectIndex, importObj.deferred, importObj.errors).then(onRemoteImportDone);
-    } else {
-      // no more photos to import
+      // all imports are done
       showImportResult(importObj);
-      importObj.deferred.resolve();
+      importObj.deferred.resolve(importObj);
     }
   }
 
-  function importLocalImage(fileObjects, fileObjectIndex, deferred, errors) {
-    var importObj = createLocalImportObj(fileObjects, fileObjectIndex, deferred, errors);
+  function importLocalImage(importObject) {
+    var
+      fileObject = importObject.importStack.shift();
 
-    updateImportStatus(importObj);
+      importObject.photoObj = {
+        file: fileObject,
+        id: appDataService.createPhotoId(),
+        name: fileObject.name,
+        ownerId: appDataService.getUserId()
+      };
 
-    return fileReaderService.getImageAsDataURL(importObj)
+    updateImportStatus(importObject);
+
+    fileReaderService.getImageAsDataURL(importObject)
       .then(imageVariantsService.createVariants)
       .then(storageService.saveImageVariants)
+      .then(onLocalImportDone)
       .catch(function (error) {
-        // if first error then create error property
-        if (!importObj.errors) {
-          importObj.errors = {};
-        }
         // add error to error property of import object
-        importObj.errors[importObj.importObjectIndex] = error;
-        return $q.when(importObj);
+        importObject.errors.push(error);
+        throw new Error(error);
       });
   }
 
-  function importRemoteImage(photoObjects, photoObjectIndex, deferred, galleryId, errors) {
-    var importObj = createRemoteImportObj(photoObjects, photoObjectIndex, deferred, galleryId, errors);
+  function importRemoteImage(importObject) {
+    var
+      photoObj = importObject.importStack.shift();
 
-    updateImportStatus(importObj);
+    //mark photo as newly imported and not viewed yet
+    photoObj.viewStatus = 0;
 
-    return imageVariantsService.createVariants(importObj)
+    updateImportStatus(importObject);
+
+    getSignedUrl(importObject)
+      .then(imageVariantsService.createVariants)
       .then(storageService.saveImageVariants)
+      .then(onRemoteImportDone)
       .catch(function (error) {
-        // if first error then create error property
-        if (!importObj.errors) {
-          importObj.errors = {};
-        }
         // add error to error property of import object
-        importObj.errors[importObj.importObjectIndex] = error;
-        return $q.when(importObj);
+        importObject.errors.push(error);
+        throw new Error(error);
       });
   }
 
   function importLocalImages(fileObjects) {
     var
       deferred = $q.defer(),
-      importObjectIndex = 0;
+      importObject = {
+        importStack: [],
+        errors: [],
+        status: {
+          nImports: fileObjects.length,
+          importIndex: 1,
+          errors: 0,
+          successes: 0
+        },
+        deferred: deferred
+      };
 
-    // recursion through promise success handler (onImportDone)
-    importLocalImage(fileObjects, importObjectIndex, deferred).then(onLocalImportDone);
+    angular.forEach(fileObjects, function (fileObj) {
+      importObject.importStack.push(fileObj);
+    });
+
+    importLocalImage(importObject);
 
     return deferred.promise;
   }
@@ -151,22 +132,23 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
   function importRemoteImages(photoObjects, galleryId) {
     var
       deferred = $q.defer(),
-      importObjectIndex = 0;
+      importObject = {
+        galleryId: galleryId,
+        importStack: photoObjects,
+        errors: [],
+        status: {
+          nImports: photoObjects.length,
+          importIndex: 1,
+          errors: 0,
+          successes: 0
+        },
+        deferred: deferred
+      };
 
-    if (photoObjects.length) {
-      // All images will be imported one after another by recursive calls to importRemoteImage() function
-      // from it´s success handler onRemoteImportDone().
-      // Sequential images import makes it easier to display progress status feedback and is a workaround for
-      // strange Angular view update issue. Hope it will not be to slow compared to parallel import.
-      importRemoteImage(photoObjects, importObjectIndex, deferred, galleryId).then(onRemoteImportDone);
-    } else {
-      // nothing to import
-      deferred.resolve();
-    }
+    importRemoteImage(importObject);
 
     return deferred.promise;
   }
-
 
   return {
     importLocalImages: importLocalImages,

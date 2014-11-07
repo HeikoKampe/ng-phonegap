@@ -58,7 +58,11 @@ angular.module(_APP_).config([
         templateUrl: 'html/partials/auth/upload.html',
         controller: 'authController'
       })
-      .otherwise({ redirectTo: '/' });
+      .when('/invite', {
+        templateUrl: 'html/partials/invite/index.html',
+        controller: 'inviteController'
+      })
+      .otherwise({ redirectTo: '/home' });
 
   }
 ]);

@@ -19,6 +19,10 @@
       <h1 class="preview__title">{{gallery.title}}</h1>
 
       <ul class="preview__details">
+        <li class="preview__details-item" data-ng-if="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length">
+          <span class="preview__icon icon-new-image"></span>
+          <span class="preview__details-value">{{ (galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length }}</span>
+        </li>
         <li class="preview__details-item">
           <span class="preview__icon icon-images"></span>
           <span class="preview__details-value">{{galleries[gallery.galleryId].photos.length}}</span>

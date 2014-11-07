@@ -1,4 +1,4 @@
-angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($scope, $rootScope, $q, $interval, appDataService, storageService) {
+angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($scope, $rootScope, $q, $interval, $filter, appDataService, storageService) {
 
   var
     shuffleInterval,
@@ -123,8 +123,26 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
     }
   }
 
+  function setPhotosViewStatus(galleryId) {
+    var
+      photosNeverViewedBefore = $filter('photoFilter')($scope.galleries[galleryId].photos, 'viewStatus', 0),
+      photosOnlyViewedOnce = $filter('photoFilter')($scope.galleries[galleryId].photos, 'viewStatus', 1);
+
+    angular.forEach(photosOnlyViewedOnce, function (photo) {
+      // mark photo as viewed more than once
+      photo.viewStatus = 2;
+    });
+
+    angular.forEach(photosNeverViewedBefore, function (photo) {
+      // mark photo as viewed once
+      photo.viewStatus = 1;
+    });
+
+  };
+
   $scope.onGalleryClick = function (galleryId) {
     appDataService.setActiveGallery(galleryId);
+    setPhotosViewStatus(galleryId);
     $rootScope.go('edit-gallery', 'slide-left');
   };
 

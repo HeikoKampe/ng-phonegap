@@ -131,7 +131,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
 
     photoObj.id = (_photoObj != undefined && _photoObj.id != undefined) ? _photoObj.id : undefined;
     photoObj.name = (_photoObj != undefined && _photoObj.name != undefined) ? _photoObj.name : undefined;
-    photoObj.lastModifiedDate = (_photoObj != undefined && _photoObj.lastModifiedDate != undefined) ? _photoObj.lastModifiedDate : undefined;
+    photoObj.viewStatus = (_photoObj != undefined && _photoObj.viewStatus != undefined) ? _photoObj.viewStatus : undefined;
     photoObj.ownerId = (_photoObj != undefined && _photoObj.ownerId != undefined) ? _photoObj.ownerId : undefined;
     photoObj.dateOfUpload = (_photoObj != undefined && _photoObj.dateOfUpload != undefined) ? _photoObj.dateOfUpload : undefined;
 

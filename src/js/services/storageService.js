@@ -44,36 +44,36 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
   function saveThumbnailImage(importObj) {
     var
-      deferredImportObj = $q.defer();
+      deferred = $q.defer();
 
     fileSystemAPI.writeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
       .then(function () {
         delete importObj.photoObj.thumbDataURI;
-        deferredImportObj.resolve(importObj);
+        deferred.resolve(importObj);
       },
       function (msg) {
         delete importObj.photoObj.thumbDataURI;
-        deferredImportObj.reject(msg);
+        deferred.reject(msg);
       });
 
-    return deferredImportObj.promise;
+    return deferred.promise;
   }
 
   function saveMainImage(importObj) {
     var
-      deferredImportObj = $q.defer();
+      deferred = $q.defer();
 
     fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
       .then(function () {
         delete importObj.photoObj.mainDataURI;
-        deferredImportObj.resolve(importObj);
+        deferred.resolve(importObj);
       },
       function (msg) {
         delete importObj.photoObj.mainDataURI;
-        deferredImportObj.reject(importObj);
+        deferred.reject(msg);
       });
 
-    return deferredImportObj.promise;
+    return deferred.promise;
   }
 
 
@@ -132,7 +132,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   function removePhoto(photoId) {
     var promises = [];
 
-    promises.push(fileSystemAPI.removeFile(THUMBNAILS_DIR + '/' + photoId));
+    promises.push(fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photoId));
     promises.push(fileSystemAPI.removeFile(photoId));
 
     return $q.all(promises);

@@ -95,7 +95,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if ($scope.gallery) {
         updateThumbnails();
         checkForLocalChanges();
-        checkForRemoteChanges();
+//        checkForRemoteChanges();
       }
     }
 
