@@ -13,11 +13,15 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         deletedPhotos = $filter('photoFilter')($scope.gallery.photos, 'deleted', true, 'id'),
         newPhotos = $filter('notUploadedPhotosFilter')($scope.gallery.photos);
 
-      $scope.showUploadBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
+      $scope.highlightSharingBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
+      $scope.showDeleteSelectionBtn = (!$scope.gallery.dateOfUpload && deletedPhotos.length > 0);
       $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
 
-      $log.info("$scope.showUpdateBtn", $scope.showUpdateBtn);
+      console.log('showUploadBtn', $scope.showUploadBtn);
+      console.log('showUpdateBtn', $scope.showUpdateBtn);
+
     }
+
 
     function uploadGallery() {
       exportService.uploadGallery();
@@ -49,8 +53,10 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       appDataService.markPhotoAsDeleted(this.thumb.id);
     };
 
-    $scope.togglePhoto = function () {
+    $scope.togglePhoto = function (photoIndex) {
       appDataService.toggleMarkPhotoAsDeleted(this.photo.id);
+
+
       checkForLocalChanges();
     };
 
@@ -95,7 +101,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if ($scope.gallery) {
         updateThumbnails();
         checkForLocalChanges();
-//        checkForRemoteChanges();
+        checkForRemoteChanges();
       }
     }
 

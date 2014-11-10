@@ -62,6 +62,10 @@ angular.module(_APP_).config([
         templateUrl: 'html/partials/invite/index.html',
         controller: 'inviteController'
       })
+      .when('/test', {
+        templateUrl: 'html/partials/test/index.html',
+        controller: 'testController'
+      })
       .otherwise({ redirectTo: '/home' });
 
   }

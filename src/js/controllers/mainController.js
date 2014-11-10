@@ -11,8 +11,7 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
 
   var
     ctrlsInterval,
-    HIDE_CTRLS_DELAY = 2000,
-    THUMBNAILS_DIR = 'thumbnails';
+    HIDE_CTRLS_DELAY = 2000;
 
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;

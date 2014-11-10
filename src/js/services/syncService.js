@@ -52,14 +52,17 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       var
         deletedPhotos = comparisonObj.local,
         nDeletedPhotos = 0;
+
       angular.forEach(deletedPhotos, function (photoObj, photoId) {
         storageService.removePhoto(photoId);
         appDataService.removePhoto(photoId);
         nDeletedPhotos ++;
       });
+
       if (nDeletedPhotos) {
         messageService.addProgressResult(nDeletedPhotos + ' photos deleted');
       }
+
       return comparisonObj;
     }
 
@@ -69,7 +72,12 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       angular.forEach(comparisonObj.remote, function (photoObj) {
         newPhotos.push(photoObj)
       });
-      return importService.importRemoteImages(newPhotos, comparisonObj.galleryId);
+
+      if (newPhotos.length) {
+        return importService.importRemoteImages(newPhotos, comparisonObj.galleryId);
+      } else {
+        return $q.when(comparisonObj);
+      }
     }
 
     function setSyncId(apiResult) {
@@ -117,6 +125,10 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
               .then(function () {
                 messageService.endProgressMessage();
                 eventService.broadcast('GALLERY-UPDATE');
+              }, function(err){
+                throw new Error ('getting remote updates', err);
+                //todo: show error message to user
+                messageService.endProgressMessage();
               });
           }
         });

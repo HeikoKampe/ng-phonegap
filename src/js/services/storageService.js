@@ -16,7 +16,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
   function restoreAppData() {
     fileSystemAPI.readFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME).then(function (content) {
-      appDataService.setAppData(angular.fromJson(content, true));
+      appDataService.setAppData(angular.fromJson(content));
     }, function onReadFileError(e) {
       console.log(angular.toJson(e));
     });

@@ -38,14 +38,14 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
     if (messageOpts && messageOpts.closeMessage) {
       $timeout(function () {
         messages[0].pop();
-      }, 3000);
+      }, 1000);
     }
   }
 
   function endProgressMessage() {
     $timeout(function () {
       messages.pop();
-    }, 3000);
+    }, 1000);
   }
 
   function addProgressMessage(messageObj, messageOpt) {
@@ -59,7 +59,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
     if (messageOpt.closeMessage) {
       $timeout(function () {
         messages.pop();
-      }, 3000);
+      }, 1000);
     }
   }
 

@@ -3,8 +3,9 @@
 <div class="top">
   <div class="top__inner">
     <span class="top-icon-back icon-back" data-ng-click="go('/select-gallery', 'slide-right')"></span>
-    <button class="settings-btn btn" data-ng-click="go('/settings', 'slide-left')"><span
-        class="icon icon--settings"></span></button>
+    <button class="settings-btn btn" data-ng-click="go('/settings', 'slide-left')">
+      <span class="icon icon--settings"></span>
+    </button>
   </div>
 </div>
 
@@ -17,7 +18,7 @@
       <div
           data-ng-repeat="photo in gallery.photos"
           data-ng-class="{ 'edit-thumbs__thumb': true, 'edit-thumbs__thumb--del': photo.deleted, 'edit-thumbs__thumb--new': !photo.dateOfUpload }"
-          data-ng-click="togglePhoto()"
+          data-ng-click="togglePhoto($index)"
           style="float:left; text-align:center;">
         <img class="edit-thumbs__thumb-img"
              data-ng-src="{{thumbnails[photo.id]}}"
@@ -28,10 +29,13 @@
         <div class="edit-thumbs__thumb-caption"></div>
       </div>
     </div>
+
   </div>
 </div>
 
+
 <div class="bottom">
+
   <div class="bottom__inner">
     <ul class="bottom-ctrl">
       <li class="bottom-ctrl__item">
@@ -41,7 +45,7 @@
           <input class="file-input" type="file" id="files" name="files[]" multiple data-file-selection-directive/>
         </div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()">
+      <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()" data-ng-class="{'bottom-ctrl__item--green': highlightSharingBtn}">
         <div class="bottom-ctrl__icon icon-share"></div>
         <div class="bottom-ctrl__label">Share</div>
       </li>
@@ -50,12 +54,14 @@
         <div class="bottom-ctrl__label">Slideshow</div>
       </li>
 
-      <li class="bottom-ctrl__item bottom-ctrl__item--green" data-ng-click="onUpdateBtnClick()">
+      <li class="bottom-ctrl__item bottom-ctrl__item--green" data-ng-if="showUpdateBtn" data-ng-click="onUpdateBtnClick()">
         <div class="bottom-ctrl__icon icon-sync2"></div>
         <div class="bottom-ctrl__label">Apply changes</div>
       </li>
-      <li>{{showUpdateBtn}}</li>
-
+      <li class="bottom-ctrl__item" data-ng-if="showDeleteSelectionBtn" data-ng-click="">
+        <div class="bottom-ctrl__icon icon-del-image"></div>
+        <div class="bottom-ctrl__label">Delete selection</div>
+      </li>
     </ul>
   </div>
 </div>

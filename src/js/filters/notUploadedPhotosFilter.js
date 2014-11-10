@@ -6,11 +6,9 @@ angular.module(_FILTERS_).filter('notUploadedPhotosFilter', function () {
         i, out = [];
 
       for (i = 0; i < photos.length; i++) {
-
-        if (!photos[i].dateOfUpload) {
+        if (!photos[i].dateOfUpload && photos[i].deleted !== true) {
           out.push(photos[i]);
         }
-
       }
 
       return out;

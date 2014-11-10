@@ -60,7 +60,7 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
 
       function () {
         // on image load error
-        importObj.photoObj.status.errors.push(new Error('Unable to load image with url ' + importObj.photoObj.url));
+        importObj.errors.push(new Error('Unable to load image with url ' + importObj.photoObj.url));
         deferredPhotoObject.reject(importObj);
       }
     );

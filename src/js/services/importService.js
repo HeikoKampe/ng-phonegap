@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $log, $timeout, serverAPI, fileReaderService, appDataService, imageVariantsService, storageService, messageService, momentjs) {
+angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $log, $timeout, serverAPI, fileReaderService, appDataService, imageVariantsService, storageService, messageService) {
 
 
-  function updateImportStatus(importObj) {
+  function updateStatusMessage(importObj) {
     var messageData = {
       content: importObj.photoObj.name,
       totalLength: importObj.status.nImports,
-      progressIndex: importObj.status.importIndex ++
+      progressIndex: importObj.status.importIndex++
     };
     messageService.updateProgressMessage(messageData, {'incr': true});
   }
 
 
   function showImportResult(importObj) {
-    messageService.addProgressResult('some ;-)' + ' photos added');
+    messageService.addProgressResult(importObj.status.successes + ' of ' + importObj.status.nImports + 'photos were added');
   }
 
   function getSignedUrl(importObj) {
@@ -24,8 +24,8 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
     if (importObj.photoObj.url) {
       deferred.resolve(importObj)
     } else {
-      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id).then(function (data) {
-        importObj.photoObj.url = data.signedUrl;
+      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id).then(function (result) {
+        importObj.photoObj.url = result.data.signedUrl;
         deferred.resolve(importObj);
       }, function (err) {
         throw new Error('could not get signed url for image');
@@ -36,9 +36,9 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
   }
 
 
-
   function onLocalImportDone(importObj) {
     appDataService.addPhotoToGallery(importObj.photoObj);
+    importObj.status.successes ++;
     if (importObj.importStack.length) {
       // import next in stack
       importLocalImage(importObj);
@@ -51,6 +51,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
 
   function onRemoteImportDone(importObj) {
     appDataService.addPhotoToGallery(importObj.photoObj);
+    importObj.status.successes ++;
     if (importObj.importStack.length) {
       // import next in stack
       importRemoteImage(importObj);
@@ -63,16 +64,16 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
 
   function importLocalImage(importObject) {
     var
-      fileObject = importObject.importStack.shift();
+      fileObject = importObject.importStack.pop();
 
-      importObject.photoObj = {
-        file: fileObject,
-        id: appDataService.createPhotoId(),
-        name: fileObject.name,
-        ownerId: appDataService.getUserId()
-      };
+    importObject.photoObj = {
+      file: fileObject,
+      id: appDataService.createPhotoId(),
+      name: fileObject.name,
+      ownerId: appDataService.getUserId()
+    };
 
-    updateImportStatus(importObject);
+    updateStatusMessage(importObject);
 
     fileReaderService.getImageAsDataURL(importObject)
       .then(imageVariantsService.createVariants)
@@ -81,18 +82,17 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
       .catch(function (error) {
         // add error to error property of import object
         importObject.errors.push(error);
+        importObject.status.failures ++;
         throw new Error(error);
       });
   }
 
   function importRemoteImage(importObject) {
-    var
-      photoObj = importObject.importStack.shift();
-
+    importObject.photoObj = importObject.importStack.pop();
     //mark photo as newly imported and not viewed yet
-    photoObj.viewStatus = 0;
+    importObject.photoObj.viewStatus = 0;
 
-    updateImportStatus(importObject);
+    updateStatusMessage(importObject);
 
     getSignedUrl(importObject)
       .then(imageVariantsService.createVariants)
@@ -101,6 +101,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
       .catch(function (error) {
         // add error to error property of import object
         importObject.errors.push(error);
+        importObject.status.failures ++;
         throw new Error(error);
       });
   }
@@ -114,7 +115,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
         status: {
           nImports: fileObjects.length,
           importIndex: 1,
-          errors: 0,
+          failures: 0,
           successes: 0
         },
         deferred: deferred
@@ -139,7 +140,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
         status: {
           nImports: photoObjects.length,
           importIndex: 1,
-          errors: 0,
+          failures: 0,
           successes: 0
         },
         deferred: deferred

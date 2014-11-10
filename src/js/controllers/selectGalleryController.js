@@ -13,6 +13,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   $scope.galleries = {};
   $scope.previewThumbnails = {};
 
+
   function createShuffleObj() {
     var
       i,
@@ -147,7 +148,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   };
 
   $scope.$on('GALLERY-UPDATE', function () {
-    getGalleries();
+//    getGalleries();
   });
 
   getGalleries();
