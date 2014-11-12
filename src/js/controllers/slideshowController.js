@@ -1,10 +1,12 @@
-angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope, $rootScope, $interval, appDataService, fileSystemAPI, storageService) {
+angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope, $rootScope, $interval, $timeout, appDataService, fileSystemAPI, storageService) {
 
   var
     SLIDESHOW_DELAY = 2000,
     BUFFER_DELTA = 2,
     BUFFER_MAX_LENGTH = 5,
-    photoBufferHistory = [];
+    CTRL_DELAY = 5000,
+    photoBufferHistory = [],
+    ctrlTimer;
 
   $scope.pageClass = 'page--slideshow';
 
@@ -21,7 +23,6 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   });
 
   $scope.onThumbnailClick = function (photoId, arrayIndex) {
-    console.log("click", photoId, arrayIndex);
     $scope.stopSlideshow();
     $scope.activePhotoArrayIndex = arrayIndex;
     $scope.activePhotoId = photoId;
@@ -35,8 +36,30 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   $scope.onCenterClick = function () {
     $rootScope.showCtrls();
     $scope.stopSlideshow();
-
+    setCtrlTimer();
   };
+
+  $scope.onBottomClick = function () {
+    setCtrlTimer();
+  };
+
+  function onCtrlTimer () {
+    if ($scope.showThumbnails === false) {
+      $rootScope.hideCtrls();
+    }
+  }
+
+  function cancelTimer (timer) {
+    if (timer) {
+      // cancel running timer
+      $timeout.cancel(timer);
+    }
+  }
+
+  function setCtrlTimer () {
+    cancelTimer(ctrlTimer);
+    ctrlTimer = $timeout(onCtrlTimer, CTRL_DELAY);
+  }
 
   function getArrayIndexOfNextPhoto(_delta) {
     var delta = (_delta === undefined) ? 1 : _delta;
@@ -91,7 +114,6 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
 
   function loadPhotoInBuffer(photoId) {
     storageService.loadImage(photoId).then(function (imageDataSrc) {
-      console.log("loaded", photoId);
       checkBufferLimit();
       // check buffer again because of loading delay
       if (!$scope.photoBuffer[photoId]) {
@@ -123,7 +145,6 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
         loadPhotoInBuffer(photoIdOfPrevPhoto);
       }
     }
-    console.log("bufferHistory", photoBufferHistory);
   }
 
   function loadPhotoAndBufferNeighbours(photoId) {
@@ -141,6 +162,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
 
   $scope.$on("$routeChangeStart", function (event, next, current) {
     $scope.stopSlideshow();
+    cancelTimer(ctrlTimer);
   });
 
   $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;

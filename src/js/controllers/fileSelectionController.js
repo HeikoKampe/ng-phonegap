@@ -18,6 +18,8 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
         console.log('import done');
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
+        // reset fileList in case user selects the same files again
+        $scope.selectedFiles = undefined;
       });
     }
   }

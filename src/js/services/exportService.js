@@ -143,8 +143,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
     // if there are new photos
     if (photoObjects.length) {
-      // All images will be uploaded one after another by recursive calls to uploadPhoto() function
-      // from it´s success handler onPhotoUploadDone().
+      // All images will be uploaded one after another by recursive calls.
       // Sequential images upload makes it easier to display progress status feedback, handle errors and is a workaround
       // for strange Angular view update issue. Hope it will not be too slow compared to parallel upload.
       uploadPhoto(photoObjects, uploadIndex, deferred, galleryId).then(onPhotoUploadDone);

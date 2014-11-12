@@ -16,10 +16,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       $scope.highlightSharingBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
       $scope.showDeleteSelectionBtn = (!$scope.gallery.dateOfUpload && deletedPhotos.length > 0);
       $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
-
-      console.log('showUploadBtn', $scope.showUploadBtn);
-      console.log('showUpdateBtn', $scope.showUpdateBtn);
-
     }
 
 
@@ -106,7 +102,5 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     }
 
     init();
-
-
   }
 );
