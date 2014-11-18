@@ -157,6 +157,16 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function validateUsername (username) {
+    return $http.get(API_BASE_URL + 'users/validate/' + username)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
 
 
   return {
@@ -171,7 +181,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
     setGallerySettings: setGallerySettings,
     logErrorToServer: logErrorToServer,
     sendInvitation: sendInvitation,
-    getSignedImageUrl: getSignedImageUrl
+    getSignedImageUrl: getSignedImageUrl,
+    validateUsername: validateUsername
   }
 
 });

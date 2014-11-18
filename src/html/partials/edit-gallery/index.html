@@ -27,6 +27,7 @@
              title="{{photo.name}}"/>
 
         <div class="edit-thumbs__thumb-caption"></div>
+        <div class="edit-thumbs__thumb-icon-new icon-upload" data-ng-if="!photo.dateOfUpload && !photo.deleted"></div>
       </div>
     </div>
 
@@ -58,7 +59,7 @@
         <div class="bottom-ctrl__icon icon-sync2"></div>
         <div class="bottom-ctrl__label">Apply changes</div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-if="showDeleteSelectionBtn" data-ng-click="">
+      <li class="bottom-ctrl__item" data-ng-if="showDeleteSelectionBtn" data-ng-click="onDeleteSelectionBtnClick()">
         <div class="bottom-ctrl__icon icon-del-image"></div>
         <div class="bottom-ctrl__label">Delete selection</div>
       </li>

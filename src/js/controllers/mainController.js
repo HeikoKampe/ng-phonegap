@@ -9,9 +9,6 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
   fileSystemAPI,
   messageService) {
 
-  var
-    ctrlsInterval,
-    HIDE_CTRLS_DELAY = 2000;
 
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;
@@ -43,16 +40,5 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
   $rootScope.toggleCtrls = function () {
     $scope.showCtrls = !$scope.ctrlsVisible;
   };
-
-  $rootScope.hideCtrlsAfterDelay = function () {
-    ctrlsInterval = $window.setInterval(function () {
-      $scope.$apply(function () {
-        $rootScope.hideCtrls();
-        $window.clearInterval(ctrlsInterval);
-      });
-
-    }, HIDE_CTRLS_DELAY)
-  };
-
 
 });

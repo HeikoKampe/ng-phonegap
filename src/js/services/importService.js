@@ -9,7 +9,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
       totalLength: importObj.status.nImports,
       progressIndex: importObj.status.importIndex++
     };
-    messageService.updateProgressMessage(messageData, {'incr': true});
+    messageService.updateProgressMessage(messageData);
   }
 
 

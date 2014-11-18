@@ -169,6 +169,5 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   loadPhotoAndBufferNeighbours($scope.activePhotoId);
 
   $scope.startSlideshow();
-  $rootScope.hideCtrlsAfterDelay();
 
 });

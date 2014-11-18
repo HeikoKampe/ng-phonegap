@@ -1,10 +1,10 @@
-angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, html5FileSystem, phoneGapFileSystem) {
+angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, html5FileSystem) {
   'use strict';
 
   //Filesystem (checkDir, createDir, checkFile, creatFile, removeFile, writeFile, readFile)
 
   var fs = html5FileSystem;
-//  var fs = $cordovaFile;
+  //var fs = $cordovaFile;
 
   function checkDir (directory) {
     return fs.checkDir(directory);

@@ -36,19 +36,20 @@
 <div class="bottom bottom--dark" data-ng-click="onBottomClick()">
   <div class="bottom__inner text-center">
     <ul class="bottom-ctrl bottom-ctrl--center">
-      <li class="bottom-ctrl__item">
-        <div data-ng-click="showPrevPhoto()" class="bottom-ctrl__icon icon-backward"></div>
+      <li class="bottom-ctrl__item"  data-ng-click="showPrevPhoto()">
+        <div class="bottom-ctrl__icon icon-backward"></div>
       </li>
-      <li class="bottom-ctrl__item">
-        <div data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()"
-             class="bottom-ctrl__icon icon-play2"></div>
-        <div data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()" class="bottom-ctrl__icon icon-pause"></div>
+      <li class="bottom-ctrl__item" data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()">
+        <div class="bottom-ctrl__icon icon-play2"></div>
       </li>
-      <li class="bottom-ctrl__item">
-        <div data-ng-click="showNextPhoto()" class="bottom-ctrl__icon icon-forward"></div>
+      <li class="bottom-ctrl__item" data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()" >
+        <div class="bottom-ctrl__icon icon-pause"></div>
       </li>
-      <li class="bottom-ctrl__item bottom-ctrl__item--left">
-        <div data-ng-click="toggleThumbnails()" class="bottom-ctrl__icon icon-thumbs"></div>
+      <li class="bottom-ctrl__item" data-ng-click="showNextPhoto()" >
+        <div class="bottom-ctrl__icon icon-forward"></div>
+      </li>
+      <li class="bottom-ctrl__item bottom-ctrl__item--left" data-ng-click="toggleThumbnails()">
+        <div class="bottom-ctrl__icon icon-thumbs"></div>
       </li>
     </ul>
   </div>

@@ -1,0 +1,96 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
+  </div>
+</div>
+
+<div class="center center--show-top">
+  <div class="center__inner text-center">
+
+    <form class="form" name="signinForm" data-ng-submit="signinSubmit(signinForm.$valid)" novalidate>
+      <h1 style="line-height:1em;">Signin,<br>
+        <span class="text-large">to share your photos with others.</span></h1>
+
+      <div class="form__group">
+        <span class="form__label">Pic a username</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+            <input
+                name="username"
+                data-ng-model="signinCredentials.username"
+                data-ng-minlength="8"
+                data-ng-maxlength="30"
+                data-ng-change="onUsernameChange()"
+                class="form__text-input"
+                placeholder="magic"
+                required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken"></span>
+        </div>
+        <span class="form__validation-icon icon-check"
+              data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken && signinForm.username.$blurred"></span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.username.$blurred) && signinForm.username.$error.required">A username is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.username.$blurred) && signinForm.username.$error.minlength">Username is to short.</span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.username.$blurred) && signinForm.username.$error.maxlength">Username is to long.</span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.username.$blurred) && signinForm.username.$error.taken">Username is not available.</span>
+      </div>
+
+      <div class="form__group">
+        <span class="form__label">Enter your email</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="email"
+              name="email"
+              data-ng-model="signinCredentials.email"
+              class="form__text-input"
+              placeholder="mike@somedomain.com"
+              required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="signinForm.email.$valid"></span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.email"></span>
+        </div>
+
+        <span class="form__error-msg" data-ng-show="showSigninFormErrors && signinForm.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.email">Not a valid email format!</span>
+
+      </div>
+
+      <div class="form__group">
+        <span class="form__label">Choose a password</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+            <input
+                name="password"
+                data-ng-model="signinCredentials.password"
+                class="form__text-input"
+                placeholder="a!s,F2l0"
+                required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="signinForm.password.$valid"></span>
+        </div>
+
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.password.$blurred) && signinForm.password.$error.required">A password is required!</span>
+      </div>
+
+      <div class="form__ctrl text-right">
+        <button class="btn--white" type="submit">Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+

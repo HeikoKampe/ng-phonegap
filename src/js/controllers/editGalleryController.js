@@ -81,6 +81,10 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     };
 
+    $scope.onDeleteSelectionBtnClick = function () {
+      exportService.removeDeletedAndNotUploadedPhotos();
+    };
+
 
     $scope.$on('GALLERY-UPDATE', function () {
       if ($scope.gallery) {

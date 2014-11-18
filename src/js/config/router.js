@@ -47,8 +47,8 @@ angular.module(_APP_).config([
         controller: 'settingsController'
       })
       .when('/signin', {
-        templateUrl: 'html/partials/auth/signin.html',
-        controller: 'authController'
+        templateUrl: 'html/partials/signin/index.html',
+        controller: 'signinController'
       })
       .when('/login', {
         templateUrl: 'html/partials/auth/login.html',
