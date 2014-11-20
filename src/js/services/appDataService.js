@@ -79,8 +79,15 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     eventService.broadcast("GALLERY-UPDATE");
   }
 
-  function removeGallery() {
-    // todo
+  function deleteGallery(_galleryId) {
+    var
+      galleryId = _galleryId || appData.activeGalleryId;
+
+    delete appData.galleries[galleryId];
+    if (galleryId === appData.activeGalleryId) {
+      appData.activeGalleryId = undefined;
+    }
+    eventService.broadcast("GALLERY-UPDATE");
   }
 
   function setActiveGallery(galleryId) {
@@ -260,7 +267,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   function getUploadToken(_galleryId) {
     var galleryId = _galleryId || appData.activeGalleryId;
 
-    if (galleryId === -1) {
+    if (!galleryId || galleryId === -1) {
       return '';
     }
 
@@ -319,6 +326,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     incrSyncId: incrSyncId,
     setGallerySettings: setGallerySettings,
     getGalleryKey: getGalleryKey,
+    deleteGallery: deleteGallery,
 
     createPhotoId: createPhotoId,
     getPhotos: getPhotos,

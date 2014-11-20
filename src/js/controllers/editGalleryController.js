@@ -1,10 +1,21 @@
-angular.module(_CONTROLLERS_).controller('editGalleryController', function ($rootScope, $scope, $log, $filter, appDataService, storageService, exportService, eventService, syncService, authService) {
+angular.module(_CONTROLLERS_).controller('editGalleryController', function (
+    $rootScope,
+    $scope,
+    $log,
+    $filter,
+    appDataService,
+    storageService,
+    exportService,
+    eventService,
+    syncService,
+    authService) {
 
     $scope.pageClass = 'page--edit-gallery';
     $scope.showCtrls = true;
     $scope.showUploadBtn = false;
     $scope.showUpdateBtn = false;
     $scope.showDeleteBtn = false;
+    $scope.showDeleteGalleryBtn = false;
 
     $scope.gallery = appDataService.getGallery();
 
@@ -18,20 +29,19 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
     }
 
-
     function uploadGallery() {
       exportService.uploadGallery();
     }
 
-    function updateGallery() {
-      if ($scope.gallery.dateOfUpload) {
-        exportService.uploadGalleryPhotos
-          .then(exportService.removeDeletedGalleryPhotos)
-          .then(function () {
-            eventService.broadcast('GALLERY-UPDATE');
-          });
-      }
-    }
+    //function updateGallery() {
+    //  if ($scope.gallery.dateOfUpload) {
+    //    exportService.uploadGalleryPhotos
+    //      .then(exportService.removeDeletedGalleryPhotos)
+    //      .then(function () {
+    //        eventService.broadcast('GALLERY-UPDATE');
+    //      });
+    //  }
+    //}
 
     function updateThumbnails() {
       storageService.loadThumbnails().then(function (thumbnails) {
@@ -45,14 +55,21 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     }
 
+    function checkForEmptyGallery () {
+      // show button for deleting a gallery if there are no photos left
+      if ($scope.gallery.photos.length === 0) {
+        $scope.showDeleteGalleryBtn = true;
+      } else {
+        $scope.showDeleteGalleryBtn = false;
+      }
+    }
+
     $scope.removePhoto = function () {
       appDataService.markPhotoAsDeleted(this.thumb.id);
     };
 
     $scope.togglePhoto = function (photoIndex) {
       appDataService.toggleMarkPhotoAsDeleted(this.photo.id);
-
-
       checkForLocalChanges();
     };
 
@@ -63,6 +80,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         // if gallery was not not uploaded, just remove deleted photos
         exportService.removeDeletedAndNotUploadedPhotos();
       }
+      checkForEmptyGallery();
     };
 
     $scope.onUploadBtnClick = function () {
@@ -83,25 +101,36 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
     $scope.onDeleteSelectionBtnClick = function () {
       exportService.removeDeletedAndNotUploadedPhotos();
+      checkForEmptyGallery();
     };
 
+    $scope.onDeleteGalleryBtnClick = function () {
+      appDataService.deleteGallery();
+      console.log('xxx', Object.keys(appDataService.getAppData().galleries).length);
+      if (Object.keys(appDataService.getAppData().galleries).length > 0) {
+        $rootScope.go('select-gallery', 'slide-right');
+      } else {
+        $rootScope.go('/home', 'slide-right');
+      }
+    };
 
     $scope.$on('GALLERY-UPDATE', function () {
       if ($scope.gallery) {
         updateThumbnails();
         checkForLocalChanges();
+        checkForEmptyGallery();
       } else {
         $scope.gallery = appDataService.getGallery();
         init();
       }
     });
 
-
     function init() {
       if ($scope.gallery) {
         updateThumbnails();
         checkForLocalChanges();
         checkForRemoteChanges();
+        checkForEmptyGallery();
       }
     }
 

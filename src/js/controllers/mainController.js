@@ -21,7 +21,7 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
     } else {
       $location.url(path);
     }
-    console.log('class', animationClass);
+    console.log('go: ', path, animationClass);
   };
 
   $rootScope.back = function () {
