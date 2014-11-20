@@ -21,12 +21,15 @@
       </div>
     </div>
 
+    <!--<div class="slideshow-main trans-ken-burns">-->
     <div class="slideshow-main">
-      <img class="slideshow__img"
+      <div class="slideshow-main__img-outer"
+           data-ng-class="transitionClass"
            data-ng-repeat="photo in gallery.photos"
-           data-ng-src="{{ photoBuffer[photo.id] }}"
-           data-ng-show="photo.id === activePhotoId"
-           data-ng-class="{'slideshow__img--new': photo.viewStatus === 1}"/>
+           data-ng-if="photo.id === activePhotoId"
+           data-ng-class="{'slideshow__img--new': photo.viewStatus === 1}">
+        <img class="slideshow-main__img" data-ng-src="{{ photoBuffer[photo.id] }}"/>
+      </div>
     </div>
 
   </div>
@@ -36,16 +39,16 @@
 <div class="bottom bottom--dark" data-ng-click="onBottomClick()">
   <div class="bottom__inner text-center">
     <ul class="bottom-ctrl bottom-ctrl--center">
-      <li class="bottom-ctrl__item"  data-ng-click="showPrevPhoto()">
+      <li class="bottom-ctrl__item" data-ng-click="showPrevPhoto()">
         <div class="bottom-ctrl__icon icon-backward"></div>
       </li>
       <li class="bottom-ctrl__item" data-ng-if="!slideshowInterval" data-ng-click="startSlideshow()">
         <div class="bottom-ctrl__icon icon-play2"></div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()" >
+      <li class="bottom-ctrl__item" data-ng-if="slideshowInterval" data-ng-click="stopSlideshow()">
         <div class="bottom-ctrl__icon icon-pause"></div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-click="showNextPhoto()" >
+      <li class="bottom-ctrl__item" data-ng-click="showNextPhoto()">
         <div class="bottom-ctrl__icon icon-forward"></div>
       </li>
       <li class="bottom-ctrl__item bottom-ctrl__item--left" data-ng-click="toggleThumbnails()">

@@ -1,7 +1,15 @@
-angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope, $rootScope, $interval, $timeout, appDataService, fileSystemAPI, storageService) {
+angular.module(_CONTROLLERS_).controller('slideshowController', function (
+  $scope,
+  $rootScope,
+  $interval,
+  $timeout,
+  appDataService,
+  fileSystemAPI,
+  storageService,
+  slideshowTransitionService) {
 
   var
-    SLIDESHOW_DELAY = 2000,
+    SLIDESHOW_DELAY = 10000,
     BUFFER_DELTA = 2,
     BUFFER_MAX_LENGTH = 5,
     CTRL_DELAY = 5000,
@@ -17,6 +25,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   $scope.activePhotoArrayIndex = 0;
   $scope.gallery = appDataService.getGallery();
   $scope.showThumbnails = false;
+
 
   storageService.loadThumbnails().then(function (thumbnails) {
     $scope.thumbnails = thumbnails;
@@ -74,6 +83,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function ($scope
   }
 
   $scope.showNextPhoto = function () {
+    $scope.transitionClass = slideshowTransitionService.getTransitionClass();
     $scope.activePhotoArrayIndex = getArrayIndexOfNextPhoto();
     $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
     bufferPhotos();
