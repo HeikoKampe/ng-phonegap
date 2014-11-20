@@ -22,7 +22,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.thumbnails = {};
   $scope.photoBuffer = {};
   $scope.activePhotoId = -1;
-  $scope.activePhotoArrayIndex = 0;
+  $scope.activePhotoArrayIndex = -1;
   $scope.gallery = appDataService.getGallery();
   $scope.showThumbnails = false;
 
@@ -77,13 +77,15 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   }
 
   function getArrayIndexOfPrevPhoto(_delta) {
-    var delta = (_delta === undefined) ? 1 : _delta;
+    var
+      delta = (_delta === undefined) ? 1 : _delta;
 
     return ((($scope.activePhotoArrayIndex - delta) % $scope.gallery.photos.length) + $scope.gallery.photos.length) % $scope.gallery.photos.length;
   }
 
   $scope.showNextPhoto = function () {
-    $scope.transitionClass = slideshowTransitionService.getTransitionClass();
+    // careful: showCtrls is inherited from $rootScope! Refactor?!
+    $scope.transitionClass = slideshowTransitionService.getTransitionClass($scope.showCtrls);
     $scope.activePhotoArrayIndex = getArrayIndexOfNextPhoto();
     $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
     bufferPhotos();
@@ -98,6 +100,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.startSlideshow = function () {
     $rootScope.hideCtrls();
     $scope.showThumbnails = false;
+    $scope.showNextPhoto();
     if (!$scope.slideshowInterval) {
       $scope.slideshowInterval = $interval(function () {
         $scope.showNextPhoto();
@@ -175,9 +178,9 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     cancelTimer(ctrlTimer);
   });
 
-  $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
-  loadPhotoAndBufferNeighbours($scope.activePhotoId);
-
+  // load first photo and it´ s neighbours
+  loadPhotoAndBufferNeighbours($scope.gallery.photos[0].id);
+  // autostart slideshow
   $scope.startSlideshow();
 
 });

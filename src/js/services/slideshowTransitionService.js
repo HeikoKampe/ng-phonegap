@@ -11,7 +11,7 @@ angular.module(_SERVICES_).factory('slideshowTransitionService', function () {
     zooms: ['trans-ken-burns--zoom-in', 'trans-ken-burns--zoom-out']
   };
 
-  function getTransitionClass () {
+  function getKenBurnsTransitionClass () {
     var transitionClass = 'trans-ken-burns';
 
     transitionClass += ' ';
@@ -20,6 +20,19 @@ angular.module(_SERVICES_).factory('slideshowTransitionService', function () {
     transitionClass +=  kenBurnsTransitionClasses.zooms[Math.floor(Math.random()*kenBurnsTransitionClasses.zooms.length)];
 
     console.log(transitionClass);
+    return transitionClass;
+  }
+
+  function getTransitionClass(ctrlMode){
+    var
+      transitionClass;
+
+    if (ctrlMode) {
+      transitionClass = 'trans-cross-fade trans-cross-fade--fast';
+    } else {
+      transitionClass = getKenBurnsTransitionClass();
+    }
+
     return transitionClass;
   }
 
