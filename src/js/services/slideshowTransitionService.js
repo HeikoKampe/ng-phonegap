@@ -19,7 +19,6 @@ angular.module(_SERVICES_).factory('slideshowTransitionService', function () {
     transitionClass += ' ';
     transitionClass +=  kenBurnsTransitionClasses.zooms[Math.floor(Math.random()*kenBurnsTransitionClasses.zooms.length)];
 
-    console.log(transitionClass);
     return transitionClass;
   }
 
@@ -33,6 +32,7 @@ angular.module(_SERVICES_).factory('slideshowTransitionService', function () {
       transitionClass = getKenBurnsTransitionClass();
     }
 
+    console.log('transitionClass: ', transitionClass);
     return transitionClass;
   }
 

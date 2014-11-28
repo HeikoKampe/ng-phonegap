@@ -32,6 +32,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   });
 
   $scope.onThumbnailClick = function (photoId, arrayIndex) {
+    setTransitionClass();
     $scope.stopSlideshow();
     $scope.activePhotoArrayIndex = arrayIndex;
     $scope.activePhotoId = photoId;
@@ -83,9 +84,15 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     return ((($scope.activePhotoArrayIndex - delta) % $scope.gallery.photos.length) + $scope.gallery.photos.length) % $scope.gallery.photos.length;
   }
 
-  $scope.showNextPhoto = function () {
+  function setTransitionClass () {
+    // sets the css class on slideshow images
     // careful: showCtrls is inherited from $rootScope! Refactor?!
     $scope.transitionClass = slideshowTransitionService.getTransitionClass($scope.showCtrls);
+
+  }
+
+  $scope.showNextPhoto = function () {
+    setTransitionClass();
     $scope.activePhotoArrayIndex = getArrayIndexOfNextPhoto();
     $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
     bufferPhotos();
@@ -176,6 +183,10 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.$on("$routeChangeStart", function (event, next, current) {
     $scope.stopSlideshow();
     cancelTimer(ctrlTimer);
+  });
+
+  $scope.$on("$routeChangeSuccess", function () {
+    console.log("routChangeSuccess");
   });
 
   // load first photo and it´ s neighbours

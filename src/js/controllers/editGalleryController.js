@@ -57,11 +57,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
 
     function checkForEmptyGallery () {
       // show button for deleting a gallery if there are no photos left
-      if ($scope.gallery.photos.length === 0) {
-        $scope.showDeleteGalleryBtn = true;
-      } else {
-        $scope.showDeleteGalleryBtn = false;
-      }
+      $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
     }
 
     $scope.removePhoto = function () {
@@ -106,7 +102,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
 
     $scope.onDeleteGalleryBtnClick = function () {
       appDataService.deleteGallery();
-      console.log('xxx', Object.keys(appDataService.getAppData().galleries).length);
       if (Object.keys(appDataService.getAppData().galleries).length > 0) {
         $rootScope.go('select-gallery', 'slide-right');
       } else {
