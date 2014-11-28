@@ -28,14 +28,6 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     };
   }
 
-  function onUploadStart(numberOfExports) {
-    var messageData = {
-      type: messageService.MESSAGE_TYPES.PROGRESS,
-      title: 'Uploading images ...'
-    };
-    messageService.startProgressMessage(messageData);
-  }
-
   function onUploadProgress(uploadObj) {
     var messageData = {
       content: uploadObj.photoObj.name,
@@ -164,8 +156,6 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       title: 'Uploading gallery'
     });
 
-    removeDeletedAndNotUploadedPhotos();
-
     serverAPI.createGallery(galleryData)
       .then(function (apiResult) {
         $log.info('success: created remote gallery', galleryData);
@@ -181,68 +171,6 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       });
   }
 
-  function removePhoto(photoId, galleryId) {
-
-    var
-      deferred = $q.defer(),
-      dateOfUpload = appDataService.getPhotoById(photoId, galleryId).dateOfUpload;
-
-    if (dateOfUpload) {
-      // delete from remote server and locally
-      serverAPI.removePhoto(photoId, galleryId)
-        .then(function () {
-          storageService.removePhoto(photoId);
-          appDataService.removePhoto(photoId);
-          appDataService.incrSyncId();
-          deferred.resolve();
-        })
-    } else {
-      // delete not uploaded photo only locally
-      storageService.removePhoto(photoId)
-        .then(function () {
-          appDataService.removePhoto(photoId);
-          deferred.resolve();
-        });
-    }
-
-    return deferred.promise;
-  }
-
-  function removeDeletedAndNotUploadedPhotos() {
-    var
-      i, deletedPhotos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
-
-    for (i = 0; i < deletedPhotos.length; i++) {
-      storageService.removePhoto(deletedPhotos[i]);
-      appDataService.removePhoto(deletedPhotos[i]);
-    }
-    if (deletedPhotos.length) {
-      eventService.broadcast('GALLERY-UPDATE');
-    }
-  }
-
-  function removeDeletedGalleryPhotos() {
-    var
-      i,
-      deferred = $q.defer(),
-      promises = [],
-      galleryId = appDataService.getActiveGalleryId(),
-      photos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
-
-    for (i = 0; i < photos.length; i++) {
-      promises.push(removePhoto(photos[i], galleryId));
-    }
-
-    $q.all(promises).then(function (result) {
-      deferred.resolve(result);
-      if (result.length) {
-        messageService.addProgressResult(result.length + ' photos deleted');
-      }
-    });
-
-    return deferred.promise;
-  }
-
   function uploadGallerySettings (galleryId, gallerySettings) {
     serverAPI.setGallerySettings(galleryId, gallerySettings)
       .then(function () {
@@ -255,8 +183,6 @@ angular.module(_SERVICES_).service('exportService', function ($q,
   return {
     uploadGalleryPhotos: uploadGalleryPhotos,
     uploadGallery: uploadGallery,
-    removeDeletedGalleryPhotos: removeDeletedGalleryPhotos,
-    removeDeletedAndNotUploadedPhotos: removeDeletedAndNotUploadedPhotos,
     uploadGallerySettings: uploadGallerySettings
   };
 

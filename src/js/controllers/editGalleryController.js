@@ -60,6 +60,19 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
       $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
     }
 
+    function removeDeletedAndNotUploadedPhotos() {
+      var
+        i, deletedPhotos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
+
+      for (i = 0; i < deletedPhotos.length; i++) {
+        storageService.removePhoto(deletedPhotos[i]);
+        appDataService.removePhoto(deletedPhotos[i]);
+      }
+      if (deletedPhotos.length) {
+        eventService.broadcast('GALLERY-UPDATE');
+      }
+    }
+
     $scope.removePhoto = function () {
       appDataService.markPhotoAsDeleted(this.thumb.id);
     };
@@ -74,7 +87,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
         syncService.uploadLocalChanges();
       } else {
         // if gallery was not not uploaded, just remove deleted photos
-        exportService.removeDeletedAndNotUploadedPhotos();
+        removeDeletedAndNotUploadedPhotos();
       }
       checkForEmptyGallery();
     };
@@ -96,7 +109,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
     };
 
     $scope.onDeleteSelectionBtnClick = function () {
-      exportService.removeDeletedAndNotUploadedPhotos();
+      removeDeletedAndNotUploadedPhotos();
       checkForEmptyGallery();
     };
 

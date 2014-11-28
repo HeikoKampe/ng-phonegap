@@ -48,7 +48,49 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       return $q.when(comparisonObj);
     }
 
-    function removeDeletedPhotos(comparisonObj) {
+    function removePhotoOnRemoteAndLocally(photoId, galleryId) {
+
+      var
+        deferred = $q.defer(),
+        dateOfUpload = appDataService.getPhotoById(photoId, galleryId).dateOfUpload;
+
+      if (dateOfUpload) {
+        // delete from remote server and locally
+        serverAPI.removePhoto(photoId, galleryId)
+          .then(function () {
+            storageService.removePhoto(photoId);
+            appDataService.removePhoto(photoId);
+            appDataService.incrSyncId();
+            deferred.resolve();
+          })
+      }
+
+      return deferred.promise;
+    }
+
+    function removeLocallyDeletedPhotos() {
+      var
+        i,
+        deferred = $q.defer(),
+        promises = [],
+        galleryId = appDataService.getActiveGalleryId(),
+        photos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
+
+      for (i = 0; i < photos.length; i++) {
+        promises.push(removePhotoOnRemoteAndLocally(photos[i], galleryId));
+      }
+
+      $q.all(promises).then(function (result) {
+        deferred.resolve(result);
+        if (result.length) {
+          messageService.addProgressResult(result.length + ' photos deleted');
+        }
+      });
+
+      return deferred.promise;
+    }
+
+    function removeRemotelyDeletedPhotos(comparisonObj) {
       var
         deletedPhotos = comparisonObj.local,
         nDeletedPhotos = 0;
@@ -100,7 +142,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         .then(setSyncId)
         .then(setGallerySettings)
         .then(compareGalleries)
-        .then(removeDeletedPhotos)
+        .then(removeRemotelyDeletedPhotos)
         .then(importNewPhotos)
     }
 
@@ -148,7 +190,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       if (authService.hasUploadPermission()) {
         onUploadStart();
         exportService.uploadGalleryPhotos()
-          .then(exportService.removeDeletedGalleryPhotos)
+          .then(removeLocallyDeletedPhotos)
           .then(messageService.endProgressMessage)
           .then(function () {
             eventService.broadcast('GALLERY-UPDATE');
