@@ -3,9 +3,7 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function (
   $rootScope,
   appDataService,
   serverAPI,
-  importService,
-  eventService,
-  messageService) {
+  importService) {
 
   $scope.pageClass = 'page--get-gallery';
   $scope.showCtrls = true;
@@ -23,15 +21,8 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function (
   $scope.onContinueBtnClick = function () {
     var galleryKey = $scope.galleryKeySegments[0] + $scope.galleryKeySegments[1] + $scope.galleryKeySegments[2];
 
-    serverAPI.getGallery($scope.galleryOwnerName, galleryKey).then(function (result) {
-      console.log("received gallery from API:", result);
-      appDataService.addGallery(result.data);
-      messageService.startProgressMessage({title: 'Importing gallery'});
-      importService.importRemoteImages(result.data.photos).then(function () {
-        messageService.endProgressMessage();
-        eventService.broadcast('GALLERY-UPDATE');
-        $rootScope.go('edit-gallery', 'slide-left');
-      });
+    importService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey).then(function(){
+      $rootScope.go('edit-gallery', 'slide-left');
     });
   };
 

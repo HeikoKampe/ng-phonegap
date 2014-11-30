@@ -1,6 +1,17 @@
 'use strict';
 
-angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $log, $timeout, serverAPI, fileReaderService, appDataService, imageVariantsService, storageService, messageService) {
+angular.module(_SERVICES_).service('importService', function (
+  $rootScope,
+  $q,
+  $log,
+  $timeout,
+  serverAPI,
+  fileReaderService,
+  appDataService,
+  imageVariantsService,
+  storageService,
+  eventService,
+  messageService) {
 
 
   function updateStatusMessage(importObj) {
@@ -50,7 +61,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
   }
 
   function onRemoteImportDone(importObj) {
-    appDataService.addPhotoToGallery(importObj.photoObj);
+    appDataService.addPhotoToGallery(importObj.photoObj, importObj.galleryId);
     importObj.status.successes ++;
     if (importObj.importStack.length) {
       // import next in stack
@@ -151,9 +162,52 @@ angular.module(_SERVICES_).service('importService', function ($rootScope, $q, $l
     return deferred.promise;
   }
 
+  function importGalleriesOfOwner (userId) {
+    var
+      deferred = $q.defer(),
+      promises = [];
+
+    serverAPI.getGalleriesOfOwner(userId)
+      .then(function(result){
+        messageService.startProgressMessage({title: 'Importing galleries ...'});
+        angular.forEach(result.data, function (gallery) {
+          appDataService.addGallery(gallery);
+          promises.push(importRemoteImages(gallery.photos, gallery._id));
+        });
+
+      });
+
+    $q.all(promises).then(function () {
+      messageService.endProgressMessage();
+      deferred.resolve();
+    });
+
+    return deferred.promise;
+  }
+
+  function importGalleryByUsernameAndKey (ownerName, galleryKey) {
+    var
+      deferred = $q.defer();
+
+    serverAPI.getGallery(ownerName, galleryKey).then(function (result) {
+      console.log("received gallery from API:", result);
+      appDataService.addGallery(result.data);
+      messageService.startProgressMessage({title: 'Importing gallery'});
+      importService.importRemoteImages(result.data.photos).then(function () {
+        messageService.endProgressMessage();
+        eventService.broadcast('GALLERY-UPDATE');
+        deferred.resolve();
+      });
+    });
+
+    return deferred.promise;
+  }
+
   return {
     importLocalImages: importLocalImages,
-    importRemoteImages: importRemoteImages
+    importRemoteImages: importRemoteImages,
+    importGalleryByUsernameAndKey: importGalleryByUsernameAndKey,
+    importGalleriesOfOwner: importGalleriesOfOwner
   }
 
 });

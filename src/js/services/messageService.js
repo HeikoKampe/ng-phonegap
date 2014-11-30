@@ -6,6 +6,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
 
   var
     messages = [],
+    MESSAGE_HIDE_DELAY = 2000,
     MESSAGE_TYPES = {
       PROGRESS: 'progress',
       MESSAGE: 'message',
@@ -16,20 +17,19 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
     return messages;
   }
 
-  function startProgressMessage(messageObj, messageOpts) {
+  function startProgressMessage(messageObj) {
     messageObj.type = MESSAGE_TYPES.PROGRESS;
     messageObj.progressIndex = 0;
-    //messages.push(messageObj);
     messages.push(messageObj);
   }
 
 
-  function updateProgressMessage(messageObj, messageOpts) {
+  function updateProgressMessage(messageObj) {
     angular.extend(messages[0], messageObj);
   }
 
   function addProgressResult(result, messageOpts) {
-    if (!messages[0].results) {
+    if (!messages[0].result) {
       messages[0].results = [];
     }
     messages[0].results.push(result);
@@ -45,7 +45,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
   function endProgressMessage() {
     $timeout(function () {
       messages.pop();
-    }, 1000);
+    }, MESSAGE_HIDE_DELAY);
   }
 
   function addProgressMessage(messageObj, messageOpt) {

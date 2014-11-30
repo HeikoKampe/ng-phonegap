@@ -34,7 +34,6 @@ angular.module(_DIRECTIVES_).directive('messageDirective', function ($compile, $
     scope: {
       message: '='
     },
-    //controller: 'tableController'
 
     link: function (scope, element, attrs) {
       var templateUrl = getTemplateUrl(attrs.messageType);

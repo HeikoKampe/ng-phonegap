@@ -15,6 +15,14 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
     console.log("error: ", e.data);
   }
 
+  function setUserData (userData) {
+    appDataService.setUserData({
+      userToken: userData.data.token,
+      userId: userData.data.id,
+      userName: userData.username
+    });
+  }
+
   $scope.signinSubmit = function (isValid) {
     var credentials = {};
 
@@ -25,11 +33,7 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
       credentials.password = $scope.signinCredentials.password;
       serverAPI.signin(credentials).then(function (result) {
         console.log("signin result:", result);
-        appDataService.setUserData({
-          userToken: result.data.token,
-          userId: result.data.id,
-          userName: credentials.username
-        });
+        setUserData(result);
         $rootScope.go('share-gallery', 'slide-left');
       }, error);
     } else {

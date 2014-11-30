@@ -108,6 +108,20 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  /**
+   * @returns
+   */
+  function login(credentials) {
+
+    return $http.post(API_BASE_URL + 'login/', credentials)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
 
   /**
    * @returns
@@ -167,15 +181,27 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function getGalleriesOfOwner (userId) {
+    return $http.get(API_BASE_URL + 'users/' + userId + '/galleries')
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
 
 
   return {
     getGallery: getGallery,
     getGalleryById: getGalleryById,
+    getGalleriesOfOwner: getGalleriesOfOwner,
     uploadPhoto: uploadPhoto,
     removePhoto: removePhoto,
     createGallery: createGallery,
     signin: signin,
+    login: login,
     uploadAuth: uploadAuth,
     getGalleryStatus: getGalleryStatus,
     setGallerySettings: setGallerySettings,

@@ -7,13 +7,18 @@ angular.module(_CONTROLLERS_).controller('authController', function (
   $scope.pageClass = 'page--signin';
 
   $scope.uploadPassword = '';
+
   $scope.signinCredentials = {};
   $scope.showSigninFormErrors = false;
+
+  $scope.loginCredentials = {};
+  $scope.showLoginFormErrors = false;
 
 
   function error(e) {
     console.log("error: ", e.data);
   }
+
 
   $scope.signinSubmit = function (isValid) {
     var credentials = {};
@@ -25,19 +30,15 @@ angular.module(_CONTROLLERS_).controller('authController', function (
       credentials.password = $scope.signinCredentials.password;
       serverAPI.signin(credentials).then(function (result) {
         console.log("signin result:", result);
-        appDataService.setUserData({
-          userToken: result.data.token,
-          userId: result.data.id,
-          userName: credentials.username
-        });
+        setUserData(result);
         $rootScope.go('share-gallery', 'slide-left');
       }, error);
     } else {
       $scope.showSigninFormErrors = true;
     }
-
-
   };
+
+
 
   $scope.uploadAuthSubmit = function () {
 

@@ -51,8 +51,8 @@ angular.module(_APP_).config([
         controller: 'signinController'
       })
       .when('/login', {
-        templateUrl: 'html/partials/auth/login.html',
-        controller: 'authController'
+        templateUrl: 'html/partials/login/index.html',
+        controller: 'loginController'
       })
       .when('/upload-auth', {
         templateUrl: 'html/partials/auth/upload.html',

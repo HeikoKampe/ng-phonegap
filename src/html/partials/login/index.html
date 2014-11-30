@@ -1,0 +1,68 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
+  </div>
+</div>
+
+<div class="center center--show-top">
+  <div class="center__inner text-center">
+
+    <form class="form" name="loginForm" data-ng-submit="loginSubmit(loginForm.$valid)" novalidate>
+      <h1 style="line-height:1em;">Login,<br>
+        <span class="text-large">to share your photos with others.</span></h1>
+
+
+      <div class="form__group">
+        <span class="form__label">Username or email</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="text"
+              name="usernameOrEmail"
+              data-ng-model="loginCredentials.usernameOrEmail"
+              class="form__text-input"
+              placeholder=""
+              required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="loginForm.email.$valid"></span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="(showLoginFormErrors || loginForm.email.$blurred) && loginForm.email.$error.email"></span>
+        </div>
+
+        <span class="form__error-msg" data-ng-show="showLoginFormErrors && loginForm.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showLoginFormErrors || loginForm.email.$blurred) && loginForm.email.$error.email">Not a valid email format!</span>
+
+      </div>
+
+      <div class="form__group">
+        <span class="form__label">Password</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+            <input
+                name="password"
+                data-ng-model="loginCredentials.password"
+                class="form__text-input"
+                placeholder=""
+                required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="loginForm.password.$valid"></span>
+        </div>
+
+        <span class="form__error-msg"
+              data-ng-show="(showLoginFormErrors || loginForm.password.$blurred) && loginForm.password.$error.required">A password is required!</span>
+      </div>
+
+      <div class="form__ctrl text-right">
+        <button class="btn--white" type="submit">Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+
