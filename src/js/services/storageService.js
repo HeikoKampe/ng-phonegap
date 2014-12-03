@@ -36,7 +36,8 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
   function saveAppData() {
     fileSystemAPI.writeFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME, angular.toJson(appDataService.getAppData()), {}).then(function () {
-      $log.log("app data saved", angular.toJson(appDataService.getAppData()));
+      //$log.log("app data saved", angular.toJson(appDataService.getAppData()));
+      $log.log("app data saved");
     }, function (e) {
       throw new Error("saving app data", e);
     })

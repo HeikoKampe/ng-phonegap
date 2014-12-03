@@ -12,7 +12,7 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
 
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;
-  $scope.messages = messageService.getMessages();
+  //$scope.messages = messageService.getMessages();
 
   $rootScope.go = function (path, animationClass) {
     $scope.animationClass = animationClass;

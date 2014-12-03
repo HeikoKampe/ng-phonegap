@@ -1,17 +1,16 @@
 'use strict';
 
-angular.module(_SERVICES_).service('importService', function (
-  $rootScope,
-  $q,
-  $log,
-  $timeout,
-  serverAPI,
-  fileReaderService,
-  appDataService,
-  imageVariantsService,
-  storageService,
-  eventService,
-  messageService) {
+angular.module(_SERVICES_).service('importService', function ($rootScope,
+                                                              $q,
+                                                              $log,
+                                                              $timeout,
+                                                              serverAPI,
+                                                              fileReaderService,
+                                                              appDataService,
+                                                              imageVariantsService,
+                                                              storageService,
+                                                              eventService,
+                                                              messageService) {
 
 
   function updateStatusMessage(importObj) {
@@ -49,7 +48,7 @@ angular.module(_SERVICES_).service('importService', function (
 
   function onLocalImportDone(importObj) {
     appDataService.addPhotoToGallery(importObj.photoObj);
-    importObj.status.successes ++;
+    importObj.status.successes++;
     if (importObj.importStack.length) {
       // import next in stack
       importLocalImage(importObj);
@@ -62,7 +61,7 @@ angular.module(_SERVICES_).service('importService', function (
 
   function onRemoteImportDone(importObj) {
     appDataService.addPhotoToGallery(importObj.photoObj, importObj.galleryId);
-    importObj.status.successes ++;
+    importObj.status.successes++;
     if (importObj.importStack.length) {
       // import next in stack
       importRemoteImage(importObj);
@@ -93,7 +92,7 @@ angular.module(_SERVICES_).service('importService', function (
       .catch(function (error) {
         // add error to error property of import object
         importObject.errors.push(error);
-        importObject.status.failures ++;
+        importObject.status.failures++;
         throw new Error(error);
       });
   }
@@ -112,7 +111,7 @@ angular.module(_SERVICES_).service('importService', function (
       .catch(function (error) {
         // add error to error property of import object
         importObject.errors.push(error);
-        importObject.status.failures ++;
+        importObject.status.failures++;
         throw new Error(error);
       });
   }
@@ -162,30 +161,31 @@ angular.module(_SERVICES_).service('importService', function (
     return deferred.promise;
   }
 
-  function importGalleriesOfOwner (userId) {
+  function importGalleriesOfOwner(userId) {
     var
       deferred = $q.defer(),
       promises = [];
 
     serverAPI.getGalleriesOfOwner(userId)
-      .then(function(result){
+      .then(function (result) {
         messageService.startProgressMessage({title: 'Importing galleries ...'});
         angular.forEach(result.data, function (gallery) {
           appDataService.addGallery(gallery);
           promises.push(importRemoteImages(gallery.photos, gallery._id));
         });
 
+        $q.all(promises).then(function () {
+          messageService.endProgressMessage();
+          deferred.resolve();
+        });
+
       });
 
-    $q.all(promises).then(function () {
-      messageService.endProgressMessage();
-      deferred.resolve();
-    });
 
     return deferred.promise;
   }
 
-  function importGalleryByUsernameAndKey (ownerName, galleryKey) {
+  function importGalleryByUsernameAndKey(ownerName, galleryKey) {
     var
       deferred = $q.defer();
 

@@ -9,7 +9,7 @@
       <div class="message__body-inner">
         <p data-ng-if="message.content">adding ({{message.progressIndex}} / {{message.totalLength}}) {{message.content}}</p>
         <ul>
-          <li data-ng-repeat="result in message.results">{{result}}</li>
+          <li data-ng-repeat="result in message.results track by $index">{{result}}</li>
         </ul>
       </div>
     </div>

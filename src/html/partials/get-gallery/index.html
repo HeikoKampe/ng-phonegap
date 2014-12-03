@@ -8,55 +8,67 @@
 </div>
 
 <div class="center center--show-top">
-  <div class="center-inner text-center">
+  <div class="center-inner">
 
-  <form class="form" data-ng-submit="onContinueBtnClick()">
-    <h1>Import a gallery</h1>
+    <div class="grid">
+      <div class="grid__item two-thirds">
+        <form class="form" data-ng-submit="onContinueBtnClick()">
+          <h1>Import a gallery</h1>
 
-    <p class="push--bottom">Enter the gallerie´s author username and the gallery key.</p>
+          <p class="push--bottom">Enter the gallerie´s author username and the gallery key.</p>
 
-    <div class="form__fieldset">
+          <div class="form__fieldset">
 
-      <p class="form__label">Username of gallery author</p>
+            <p class="form__label">Username of gallery author</p>
 
-      <div class="form__text-input-outer push--bottom">
-        <input class="form__text-input"
-               type="text"
-               data-ng-model="galleryOwnerName"
-               placeholder="x8HLo7-f"/>
+            <div class="form__text-input-outer push--bottom">
+              <input class="form__text-input"
+                     type="text"
+                     data-ng-model="galleryOwnerName"
+                     placeholder="x8HLo7-f"/>
+            </div>
+
+            <p class="form__label">Gallery key</p>
+
+            <div class="input-segments">
+              <div class="input-segments__segment form__text-input-outer">
+                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                       data-ng-model="galleryKeySegments[0]"
+                       placeholder="XXXX"/>
+              </div>
+              <span class="input-segments__div">-</span>
+
+              <div class="input-segments__segment form__text-input-outer">
+                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                       data-ng-model="galleryKeySegments[1]"
+                       placeholder="XXXX"/>
+              </div>
+              <span class="input-segments__div">-</span>
+
+              <div class="input-segments__segment form__text-input-outer">
+                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
+                       data-ng-model="galleryKeySegments[2]"
+                       placeholder="XXXX"/>
+              </div>
+            </div>
+
+            <p class="text-right push--top clear">
+              <button class="btn--white" type="submit">Continue</button>
+            </p>
+
+          </div>
+
+        </form>
       </div>
-
-      <p class="form__label">Gallery key</p>
-
-      <div class="input-segments">
-        <div class="input-segments__segment form__text-input-outer">
-          <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                 data-ng-model="galleryKeySegments[0]"
-                 placeholder="XXXX"/>
-        </div>
-        <span class="input-segments__div">-</span>
-
-        <div class="input-segments__segment form__text-input-outer">
-          <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                 data-ng-model="galleryKeySegments[1]"
-                 placeholder="XXXX"/>
-        </div>
-        <span class="input-segments__div">-</span>
-
-        <div class="input-segments__segment form__text-input-outer">
-          <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                 data-ng-model="galleryKeySegments[2]"
-                 placeholder="XXXX"/>
-        </div>
+      <div class="grid__item one-third">
+        <h2>Login</h2>
+        <p>Login with your PhotoFrame account to get and manage your own galleries on this device.</p>
+        <a href=""  data-ng-click="go('/login', 'slide-left')">Go to login</a>
       </div>
-
-      <p class="text-right push--top clear">
-        <button class="btn--white" type="submit">Continue</button>
-      </p>
 
     </div>
 
-  </form>
+
 
   </div>
 </div>

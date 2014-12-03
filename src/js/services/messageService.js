@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
+angular.module(_SERVICES_).factory('messageService', function ($rootScope,
+                                                               $q,
                                                                $log,
                                                                $timeout) {
 
   var
-    messages = [],
+  //message = undefined,
     MESSAGE_HIDE_DELAY = 2000,
     MESSAGE_TYPES = {
       PROGRESS: 'progress',
@@ -13,52 +14,55 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope, $q,
       DIALOG: 'dialog'
     };
 
+  $rootScope.message = {};
+
   function getMessages() {
-    return messages;
+    return $rootScope.messages;
   }
 
   function startProgressMessage(messageObj) {
     messageObj.type = MESSAGE_TYPES.PROGRESS;
     messageObj.progressIndex = 0;
-    messages.push(messageObj);
+
+      $rootScope.message = messageObj;
   }
 
 
   function updateProgressMessage(messageObj) {
-    angular.extend(messages[0], messageObj);
+    console.log('updateProgressMessage', messageObj);
+      angular.extend($rootScope.message, messageObj);
   }
 
   function addProgressResult(result, messageOpts) {
-    if (!messages[0].result) {
-      messages[0].results = [];
+    if (!$rootScope.message.result) {
+      $rootScope.message.results = [];
     }
-    messages[0].results.push(result);
-    delete messages[0].content;
+      $rootScope.message.results.push(result);
 
-    if (messageOpts && messageOpts.closeMessage) {
-      $timeout(function () {
-        messages[0].pop();
-      }, 1000);
-    }
+    //if (messageOpts && messageOpts.closeMessage) {
+    //  $timeout(function () {
+    //    $rootScope.message = {};
+    //  }, 1000);
+    //}
   }
 
   function endProgressMessage() {
     $timeout(function () {
-      messages.pop();
+      $rootScope.message = {};
     }, MESSAGE_HIDE_DELAY);
   }
 
   function addProgressMessage(messageObj, messageOpt) {
-    if (messages[0]) {
-      angular.extend(messages[0], messageObj);
+    if ($rootScope.messages[0]) {
+      angular.extend($rootScope.messages[0], messageObj);
       console.log("message: ", messageObj);
     } else {
-      messages.push(messageObj);
+      $rootScope.messages.push(messageObj);
     }
 
     if (messageOpt.closeMessage) {
       $timeout(function () {
-        messages.pop();
+        $rootScope.messages.pop();
       }, 1000);
     }
   }
