@@ -22,12 +22,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     messageService.updateProgressMessage(messageData);
   }
 
-
-  function showImportResult(importObj) {
-    messageService.addProgressResult(importObj.status.successes + ' of ' + importObj.status.nImports + 'photos were added');
-  }
-
-  function showImportResult2(importStatusObj) {
+  function showImportResult(importStatusObj) {
     messageService.addProgressResult(importStatusObj.successes + ' of ' + importStatusObj.nImports + 'photos were added');
   }
 
@@ -58,11 +53,10 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       importLocalImage(importObj);
     } else {
       // all imports are done
-      showImportResult(importObj);
+      showImportResult(importObj.status);
       importObj.deferred.resolve(importObj);
     }
   }
-
 
   function importLocalImage(importObject) {
     var
@@ -89,7 +83,6 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       });
   }
 
-
   function importLocalImages(fileObjects) {
     var
       deferred = $q.defer(),
@@ -115,14 +108,14 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
   }
 
 
-  function onImportImageSuccess(importObject) {
+  function onImportRemoteImageSuccess(importObject) {
     appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
     importObject.status.successes++;
     updateStatusMessage(importObject);
     importObject.deferred.resolve(importObject);
   }
 
-  function onImportImageError(error, importObject){
+  function onImportRemoteImageError(error, importObject){
     // add error to error property of import object
     importObject.errors.push(error);
     importObject.status.failures++;
@@ -135,9 +128,9 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     getSignedUrl(importObject)
       .then(imageVariantsService.createVariants)
       .then(storageService.saveImageVariants)
-      .then(onImportImageSuccess)
+      .then(onImportRemoteImageSuccess)
       .catch(function (error) {
-        onImportImageError(error, importObject)
+        onImportRemoteImageError(error, importObject)
       });
 
     return importObject.deferred.promise;
@@ -169,7 +162,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     });
 
     $q.all(promises).then(function (resolvedPromises) {
-      showImportResult2(status);
+      showImportResult(status);
       deferred.resolve();
     });
 

@@ -140,7 +140,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       // for strange Angular view update issue. Hope it will not be too slow compared to parallel upload.
       uploadPhoto(photoObjects, uploadIndex, deferred, galleryId).then(onPhotoUploadDone);
     } else {
-      // nothing to upload
+      // nothing to do here
       deferred.resolve();
     }
 

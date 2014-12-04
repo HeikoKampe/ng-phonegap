@@ -63,6 +63,10 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
             appDataService.incrSyncId();
             deferred.resolve();
           })
+      } else {
+        storageService.removePhoto(photoId);
+        appDataService.removePhoto(photoId);
+        deferred.resolve();
       }
 
       return deferred.promise;
@@ -76,16 +80,23 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         galleryId = appDataService.getActiveGalleryId(),
         photos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
 
-      for (i = 0; i < photos.length; i++) {
-        promises.push(removePhotoOnRemoteAndLocally(photos[i], galleryId));
-      }
+      if (photos.length) {
 
-      $q.all(promises).then(function (result) {
-        deferred.resolve(result);
-        if (result.length) {
-          messageService.addProgressResult(result.length + ' photos deleted');
+        for (i = 0; i < photos.length; i++) {
+          promises.push(removePhotoOnRemoteAndLocally(photos[i], galleryId));
         }
-      });
+
+        $q.all(promises).then(function (result) {
+          deferred.resolve(result);
+          if (result.length) {
+            messageService.addProgressResult(result.length + ' photos deleted');
+          }
+        });
+
+      } else {
+        //nothing to do here
+        deferred.resolve();
+      }
 
       return deferred.promise;
     }
@@ -176,19 +187,10 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         });
     }
 
-    function onUploadStart() {
-      var messageData = {
-        title: 'Syncing ...'
-      };
-
-      messageService.startProgressMessage(messageData);
-    }
-
-
     function uploadLocalChanges() {
 
       if (authService.hasUploadPermission()) {
-        onUploadStart();
+        messageService.startProgressMessage({title: 'Syncing gallery ...'});
         exportService.uploadGalleryPhotos()
           .then(removeLocallyDeletedPhotos)
           .then(messageService.endProgressMessage)

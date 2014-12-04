@@ -62,7 +62,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
 
     function removeDeletedAndNotUploadedPhotos() {
       var
-        i, deletedPhotos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
+        i, deletedPhotos = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos());
 
       for (i = 0; i < deletedPhotos.length; i++) {
         storageService.removePhoto(deletedPhotos[i]);
@@ -86,7 +86,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
       if ($scope.gallery.dateOfUpload) {
         syncService.uploadLocalChanges();
       } else {
-        // if gallery was not not uploaded, just remove deleted photos
         removeDeletedAndNotUploadedPhotos();
       }
       checkForEmptyGallery();

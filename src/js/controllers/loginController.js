@@ -28,7 +28,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
         console.log("login result:", result);
         setUserData(result.data);
         importService.importGalleriesOfOwner(result.data.id).then(function(){
-          console.log("importGalleriesOfOwner done");
+          $rootScope.go('select-gallery', 'slide-right');
         });
       });
     }
