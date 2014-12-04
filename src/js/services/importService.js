@@ -27,6 +27,10 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     messageService.addProgressResult(importObj.status.successes + ' of ' + importObj.status.nImports + 'photos were added');
   }
 
+  function showImportResult2(importStatusObj) {
+    messageService.addProgressResult(importStatusObj.successes + ' of ' + importStatusObj.nImports + 'photos were added');
+  }
+
   function getSignedUrl(importObj) {
     var deferred = $q.defer();
 
@@ -59,18 +63,6 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     }
   }
 
-  function onRemoteImportDone(importObj) {
-    appDataService.addPhotoToGallery(importObj.photoObj, importObj.galleryId);
-    importObj.status.successes++;
-    if (importObj.importStack.length) {
-      // import next in stack
-      importRemoteImage(importObj);
-    } else {
-      // all imports are done
-      showImportResult(importObj);
-      importObj.deferred.resolve(importObj);
-    }
-  }
 
   function importLocalImage(importObject) {
     var
@@ -97,24 +89,6 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       });
   }
 
-  function importRemoteImage(importObject) {
-    importObject.photoObj = importObject.importStack.pop();
-    //mark photo as newly imported and not viewed yet
-    importObject.photoObj.viewStatus = 0;
-
-    updateStatusMessage(importObject);
-
-    getSignedUrl(importObject)
-      .then(imageVariantsService.createVariants)
-      .then(storageService.saveImageVariants)
-      .then(onRemoteImportDone)
-      .catch(function (error) {
-        // add error to error property of import object
-        importObject.errors.push(error);
-        importObject.status.failures++;
-        throw new Error(error);
-      });
-  }
 
   function importLocalImages(fileObjects) {
     var
@@ -140,23 +114,64 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     return deferred.promise;
   }
 
+
+  function onImportImageSuccess(importObject) {
+    appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
+    importObject.status.successes++;
+    updateStatusMessage(importObject);
+    importObject.deferred.resolve(importObject);
+  }
+
+  function onImportImageError(error, importObject){
+    // add error to error property of import object
+    importObject.errors.push(error);
+    importObject.status.failures++;
+    updateStatusMessage(importObject);
+    importObject.deferred.resolve(importObject);
+    throw new Error(error);
+  }
+
+  function importRemoteImage(importObject) {
+    getSignedUrl(importObject)
+      .then(imageVariantsService.createVariants)
+      .then(storageService.saveImageVariants)
+      .then(onImportImageSuccess)
+      .catch(function (error) {
+        onImportImageError(error, importObject)
+      });
+
+    return importObject.deferred.promise;
+  }
+
   function importRemoteImages(photoObjects, galleryId) {
     var
       deferred = $q.defer(),
-      importObject = {
-        galleryId: galleryId,
-        importStack: photoObjects,
-        errors: [],
-        status: {
-          nImports: photoObjects.length,
-          importIndex: 1,
-          failures: 0,
-          successes: 0
-        },
-        deferred: deferred
+      promises = [],
+      errors = [],
+      status = {
+        nImports: photoObjects.length,
+        importIndex: 1,
+        failures: 0,
+        successes: 0
       };
 
-    importRemoteImage(importObject);
+    angular.forEach(photoObjects, function (photoObj) {
+      var importObject = {
+        'photoObj': photoObj,
+        'galleryId': galleryId,
+        'deferred': $q.defer(),
+        'errors': errors,
+        'status': status
+      };
+      // mark photo as not viewed
+      importObject.photoObj.viewStatus = 0;
+      promises.push(importRemoteImage(importObject));
+    });
+
+    $q.all(promises).then(function (resolvedPromises) {
+      showImportResult2(status);
+      deferred.resolve();
+    });
 
     return deferred.promise;
   }
@@ -180,7 +195,6 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
         });
 
       });
-
 
     return deferred.promise;
   }
