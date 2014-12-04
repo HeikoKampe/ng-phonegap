@@ -1,0 +1,106 @@
+<!--home view-->
+
+<div class="top">
+  <div class="top__background"></div>
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
+  </div>
+</div>
+
+<div class="center center--show-top">
+  <div class="center__inner text-center">
+
+    <h1 style="line-height:1em;">Reset Password</h1>
+
+    <form class="form" name="requestPasswordPinForm"
+          data-ng-if="!showResetPasswordForm"
+          data-ng-submit="requestPasswordPinSubmit(requestPasswordPinForm.$valid)" novalidate>
+
+      <div class="form__group">
+        <span class="form__label">Email</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="email"
+              name="email"
+              data-ng-model="resetPwdCredentials.email"
+              class="form__text-input"
+              placeholder=""
+              required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="requestPasswordPinForm.email.$valid"></span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="(showRequestPasswordPinErrors || requestPasswordPinForm.email.$blurred) && requestPasswordPinForm.email.$error.email"></span>
+        </div>
+
+        <span class="form__error-msg"
+              data-ng-show="showRequestPasswordPinErrors && requestPasswordPinForm.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showRequestPasswordPinErrors || requestPasswordPinForm.email.$blurred) && requestPasswordPinForm.email.$error.email">Not a valid email format!</span>
+      </div>
+
+      <div class="form__ctrl text-right">
+        <button class="btn--white" type="submit">Continue</button>
+      </div>
+    </form>
+
+    
+    <form class="form" name="resetPasswordForm"
+          data-ng-if="showResetPasswordForm"
+          data-ng-submit="resetPasswordSubmit(resetPasswordForm.$valid)" novalidate>
+
+      <div class="form__group">
+        <span class="form__label">Security PIN</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="text"
+              name="securityPin"
+              data-ng-model="resetPwdCredentials.pin"
+              class="form__text-input"
+              placeholder=""
+              required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="resetPasswordForm.pin.$valid"></span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="(showResetPasswordErrors || resetPasswordForm.email.$blurred) && resetPasswordForm.email.$error.email"></span>
+        </div>
+
+        <span class="form__error-msg"
+              data-ng-show="showResetPasswordErrors && resetPasswordForm.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showResetPasswordErrors || resetPasswordForm.email.$blurred) && resetPasswordForm.email.$error.email">Not a valid email format!</span>
+      </div>
+
+      <div class="form__group">
+        <span class="form__label">Choose a password</span>
+
+        <div class="form__ctrl">
+          <span class="form__text-input-outer">
+            <input
+                name="password"
+                data-ng-model="resetPwdCredentials.password"
+                class="form__text-input"
+                placeholder="a!s,F2l0"
+                required/>
+          </span>
+          <span class="form__validation-icon icon-check" data-ng-show="resetPasswordForm.password.$valid"></span>
+        </div>
+
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || resetPasswordForm.password.$blurred) && resetPasswordForm.password.$error.required">A password is required!</span>
+      </div>
+
+      <div class="form__ctrl text-right">
+        <button class="btn--white" type="submit">Continue</button>
+      </div>
+    </form>
+
+
+  </div>
+</div>
+

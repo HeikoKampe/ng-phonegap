@@ -191,6 +191,26 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function requestPasswordPin (userEmail) {
+    return $http.post(API_BASE_URL + 'reset-pwd-req', userEmail)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
+  function resetPassword (credentials) {
+    return $http.post(API_BASE_URL + 'reset-pwd', credentials)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false, 'message': data}
+      });
+  }
+
 
 
   return {
@@ -208,7 +228,9 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
     logErrorToServer: logErrorToServer,
     sendInvitation: sendInvitation,
     getSignedImageUrl: getSignedImageUrl,
-    validateUsername: validateUsername
+    validateUsername: validateUsername,
+    requestPasswordPin: requestPasswordPin,
+    resetPassword: resetPassword
   }
 
 });

@@ -10,7 +10,7 @@ angular.module(_DIRECTIVES_).directive('messageDirective', function ($compile, $
      var templateUrl = '';
 
     switch (messageType) {
-      case 'progress':
+      case messageService.MESSAGE_TYPES.PROGRESS:
         templateUrl = TEMPLATE_BASE_PATH + 'progress.html';
         break;
       case messageService.MESSAGE_TYPES.MESSAGE:

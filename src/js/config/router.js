@@ -62,9 +62,9 @@ angular.module(_APP_).config([
         templateUrl: 'html/partials/invite/index.html',
         controller: 'inviteController'
       })
-      .when('/test', {
-        templateUrl: 'html/partials/test/index.html',
-        controller: 'testController'
+      .when('/reset-pwd', {
+        templateUrl: 'html/partials/reset-pwd/index.html',
+        controller: 'resetPasswordController'
       })
       .otherwise({ redirectTo: '/home' });
 

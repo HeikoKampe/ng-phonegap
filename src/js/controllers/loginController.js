@@ -6,6 +6,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
   importService) {
 
   $scope.pageClass = 'page--login';
+  $scope.loginCredentials = {};
 
 
   function setUserData (userData) {

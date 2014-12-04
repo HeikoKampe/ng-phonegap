@@ -1,14 +1,13 @@
-angular.module(_CONTROLLERS_).controller('editGalleryController', function (
-    $rootScope,
-    $scope,
-    $log,
-    $filter,
-    appDataService,
-    storageService,
-    exportService,
-    eventService,
-    syncService,
-    authService) {
+angular.module(_CONTROLLERS_).controller('editGalleryController', function ($rootScope,
+                                                                            $scope,
+                                                                            $log,
+                                                                            $filter,
+                                                                            appDataService,
+                                                                            storageService,
+                                                                            exportService,
+                                                                            eventService,
+                                                                            syncService,
+                                                                            authService) {
 
     $scope.pageClass = 'page--edit-gallery';
     $scope.showCtrls = true;
@@ -33,16 +32,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
       exportService.uploadGallery();
     }
 
-    //function updateGallery() {
-    //  if ($scope.gallery.dateOfUpload) {
-    //    exportService.uploadGalleryPhotos
-    //      .then(exportService.removeDeletedGalleryPhotos)
-    //      .then(function () {
-    //        eventService.broadcast('GALLERY-UPDATE');
-    //      });
-    //  }
-    //}
-
     function updateThumbnails() {
       storageService.loadThumbnails().then(function (thumbnails) {
         $scope.thumbnails = thumbnails;
@@ -55,20 +44,23 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
       }
     }
 
-    function checkForEmptyGallery () {
+    function checkForEmptyGallery() {
       // show button for deleting a gallery if there are no photos left
       $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
     }
 
     function removeDeletedAndNotUploadedPhotos() {
       var
-        i, deletedPhotos = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos());
+        i, deletedPhotoIds = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos(), 'id');
 
-      for (i = 0; i < deletedPhotos.length; i++) {
-        storageService.removePhoto(deletedPhotos[i]);
-        appDataService.removePhoto(deletedPhotos[i]);
+      console.log('111', deletedPhotoIds);
+
+      for (i = 0; i < deletedPhotoIds.length; i++) {
+        storageService.removePhoto(deletedPhotoIds[i]);
+        appDataService.removePhoto(deletedPhotoIds[i]);
       }
-      if (deletedPhotos.length) {
+
+      if (deletedPhotoIds.length) {
         eventService.broadcast('GALLERY-UPDATE');
       }
     }
@@ -143,4 +135,5 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function (
 
     init();
   }
-);
+)
+;

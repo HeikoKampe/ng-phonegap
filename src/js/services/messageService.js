@@ -7,7 +7,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
 
   var
   //message = undefined,
-    MESSAGE_HIDE_DELAY = 2000,
+    MESSAGE_HIDE_DELAY = 3000,
     MESSAGE_TYPES = {
       PROGRESS: 'progress',
       MESSAGE: 'message',
@@ -20,93 +20,58 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
     return $rootScope.messages;
   }
 
-  function startProgressMessage(messageObj) {
-    messageObj.type = MESSAGE_TYPES.PROGRESS;
-    messageObj.progressIndex = 0;
-
-      $rootScope.message = messageObj;
+  function closeMessage () {
+    $rootScope.message = {};
   }
 
-
-  function updateProgressMessage(messageObj) {
-    console.log('updateProgressMessage', messageObj);
-      angular.extend($rootScope.message, messageObj);
-  }
-
-  function addProgressResult(result, messageOpts) {
-    if (!$rootScope.message.result) {
-      $rootScope.message.results = [];
-    }
-      $rootScope.message.results.push(result);
-
-    //if (messageOpts && messageOpts.closeMessage) {
-    //  $timeout(function () {
-    //    $rootScope.message = {};
-    //  }, 1000);
-    //}
-  }
-
-  function endProgressMessage() {
+  function closeMessageWithDelay() {
     $timeout(function () {
-      $rootScope.message = {};
+      closeMessage();
     }, MESSAGE_HIDE_DELAY);
   }
 
-  function addProgressMessage(messageObj, messageOpt) {
-    if ($rootScope.messages[0]) {
-      angular.extend($rootScope.messages[0], messageObj);
-      console.log("message: ", messageObj);
-    } else {
-      $rootScope.messages.push(messageObj);
-    }
+  function startProgressMessage(messageObj) {
+    messageObj.type = MESSAGE_TYPES.PROGRESS;
+    messageObj.progressIndex = 0;
+    $rootScope.message = messageObj;
+  }
 
-    if (messageOpt.closeMessage) {
-      $timeout(function () {
-        $rootScope.messages.pop();
-      }, 1000);
+  function updateProgressMessage(messageObj) {
+    console.log('updateProgressMessage', messageObj);
+    angular.extend($rootScope.message, messageObj);
+  }
+
+  function addProgressResult(result) {
+    if (!$rootScope.message.result) {
+      $rootScope.message.results = [];
     }
+    $rootScope.message.results.push(result);
+  }
+
+  function endProgressMessage() {
+    closeMessageWithDelay();
   }
 
 
-  function addNoticeMessage() {
-
-  }
-
-  function addDialogMessage() {
-
-  }
-
-  function addMessage(messageObj, _messageOptions) {
-    var
-      messageType = messageObj.type,
-      messageOptions = _messageOptions || {};
-
-    switch (messageType) {
-      case MESSAGE_TYPES.PROGRESS:
-        addProgressMessage(messageObj, messageOptions);
-        break;
-      case MESSAGE_TYPES.MESSAGE:
-        addNoticeMessage();
-        break;
-      case MESSAGE_TYPES.DIALOG:
-        addDialogMessage();
-        break;
-      default:
-        addNoticeMessage();
-
-    }
+  function showMessage (messageObj) {
+    messageObj.type = MESSAGE_TYPES.MESSAGE;
+    $rootScope.message = messageObj;
+    closeMessageWithDelay();
   }
 
 
   return {
-    getMessages: getMessages,
-    addMessage: addMessage,
     MESSAGE_TYPES: MESSAGE_TYPES,
+
+    getMessages: getMessages,
+    closeMessage: closeMessage,
 
     startProgressMessage: startProgressMessage,
     updateProgressMessage: updateProgressMessage,
     addProgressResult: addProgressResult,
-    endProgressMessage: endProgressMessage
+    endProgressMessage: endProgressMessage,
+
+    showMessage: showMessage
   }
 
 })
