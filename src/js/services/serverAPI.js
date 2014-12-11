@@ -1,9 +1,6 @@
 angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   'use strict';
 
-//  var API_BASE_URL = 'http://localhost:33000/api/';
-
-
   /**
    *
    * @param clientId
@@ -29,6 +26,16 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
+  function deleteGallery(galleryId) {
+    return $http.delete(API_BASE_URL + 'galleries/' + galleryId)
+      .success(function (data, status, headers, config) {
+        return data;
+      })
+      .error(function (data, status, headers, config) {
+        return {'status': false}
+      });
+  }
+
   /**
    * @returns serverPhotoId
    */
@@ -41,7 +48,6 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
         return {'status': false}
       });
   }
-
 
   function getGallery(galleryOwnerName, galleryKey) {
     return $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/'  + galleryKey)
@@ -92,7 +98,6 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
         return {'status': false, 'message': data}
       });
   }
-
 
   /**
    * @returns
@@ -211,8 +216,6 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
-
-
   return {
     getGallery: getGallery,
     getGalleryById: getGalleryById,
@@ -220,6 +223,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
     uploadPhoto: uploadPhoto,
     removePhoto: removePhoto,
     createGallery: createGallery,
+    deleteGallery: deleteGallery,
     signin: signin,
     login: login,
     uploadAuth: uploadAuth,

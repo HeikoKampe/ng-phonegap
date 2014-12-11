@@ -2,12 +2,14 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
                                                                             $scope,
                                                                             $log,
                                                                             $filter,
+                                                                            $q,
                                                                             appDataService,
                                                                             storageService,
                                                                             exportService,
                                                                             eventService,
                                                                             syncService,
-                                                                            authService) {
+                                                                            authService,
+                                                                            serverAPI) {
 
     $scope.pageClass = 'page--edit-gallery';
     $scope.showCtrls = true;
@@ -16,9 +18,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     $scope.showDeleteBtn = false;
     $scope.showDeleteGalleryBtn = false;
 
-    $scope.gallery = appDataService.getGallery();
-
-    function checkForLocalChanges() {
+    function updateGalleryStatus() {
       var
         deletedPhotos = $filter('photoFilter')($scope.gallery.photos, 'deleted', true, 'id'),
         newPhotos = $filter('notUploadedPhotosFilter')($scope.gallery.photos);
@@ -26,6 +26,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       $scope.highlightSharingBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
       $scope.showDeleteSelectionBtn = (!$scope.gallery.dateOfUpload && deletedPhotos.length > 0);
       $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
+      $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
     }
 
     function uploadGallery() {
@@ -44,25 +45,22 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     }
 
-    function checkForEmptyGallery() {
-      // show button for deleting a gallery if there are no photos left
-      $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
-    }
-
     function removeDeletedAndNotUploadedPhotos() {
       var
-        i, deletedPhotoIds = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos(), 'id');
-
-      console.log('111', deletedPhotoIds);
+        i,
+        promises = [],
+        deletedPhotoIds = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos(), 'id');
 
       for (i = 0; i < deletedPhotoIds.length; i++) {
-        storageService.removePhoto(deletedPhotoIds[i]);
+        promises.push(storageService.removePhoto(deletedPhotoIds[i]));
         appDataService.removePhoto(deletedPhotoIds[i]);
       }
 
-      if (deletedPhotoIds.length) {
+      $q.all(promises).then(function () {
+        console.log("photos deleted");
         eventService.broadcast('GALLERY-UPDATE');
-      }
+      });
+
     }
 
     $scope.removePhoto = function () {
@@ -71,7 +69,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
     $scope.togglePhoto = function (photoIndex) {
       appDataService.toggleMarkPhotoAsDeleted(this.photo.id);
-      checkForLocalChanges();
+      updateGalleryStatus();
     };
 
     $scope.onUpdateBtnClick = function () {
@@ -80,7 +78,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       } else {
         removeDeletedAndNotUploadedPhotos();
       }
-      checkForEmptyGallery();
+      updateGalleryStatus();
     };
 
     $scope.onUploadBtnClick = function () {
@@ -93,47 +91,61 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
     $scope.onShareBtnClick = function () {
       if (authService.isAuthorized()) {
+        // check if gallery is uploaded
+        if (!$scope.gallery.dateOfUpload) {
+          // upload to server
+          exportService.uploadGallery();
+        }
         $rootScope.go('share-gallery', 'slide-left');
       } else {
         $rootScope.go('signin', 'slide-left');
       }
     };
 
+    $scope.onSlideshowBtnClick = function () {
+      if ($scope.gallery.photos.length) {
+        $rootScope.go('slideshow', 'slide-left');
+      }
+    };
+
     $scope.onDeleteSelectionBtnClick = function () {
       removeDeletedAndNotUploadedPhotos();
-      checkForEmptyGallery();
+      updateGalleryStatus();
     };
 
     $scope.onDeleteGalleryBtnClick = function () {
-      appDataService.deleteGallery();
-      if (Object.keys(appDataService.getAppData().galleries).length > 0) {
-        $rootScope.go('select-gallery', 'slide-right');
-      } else {
-        $rootScope.go('/home', 'slide-right');
-      }
+      serverAPI.deleteGallery($scope.gallery.galleryId).then(function () {
+        appDataService.deleteGallery();
+        if (Object.keys(appDataService.getAppData().galleries).length > 0) {
+          $rootScope.go('select-gallery', 'slide-right');
+        } else {
+          $rootScope.go('/home', 'slide-right');
+        }
+      }, function () {
+        throw new Error('could not delete gallery from server');
+      });
+
     };
 
-    $scope.$on('GALLERY-UPDATE', function () {
-      if ($scope.gallery) {
-        updateThumbnails();
-        checkForLocalChanges();
-        checkForEmptyGallery();
-      } else {
-        $scope.gallery = appDataService.getGallery();
-        init();
-      }
-    });
-
     function init() {
-      if ($scope.gallery) {
+      if ($rootScope.appDataReady) {
+        $scope.gallery = appDataService.getGallery();
         updateThumbnails();
-        checkForLocalChanges();
         checkForRemoteChanges();
-        checkForEmptyGallery();
+        updateGalleryStatus();
       }
     }
 
+    $scope.$on('GALLERY-UPDATE', function () {
+      updateThumbnails();
+      updateGalleryStatus();
+    });
+
+    $scope.$on('APP-DATA-READY', function () {
+      init();
+    });
+
     init();
+
   }
-)
-;
+);

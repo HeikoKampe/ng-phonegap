@@ -23,13 +23,8 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.photoBuffer = {};
   $scope.activePhotoId = -1;
   $scope.activePhotoArrayIndex = -1;
-  $scope.gallery = appDataService.getGallery();
   $scope.showThumbnails = false;
 
-
-  storageService.loadThumbnails().then(function (thumbnails) {
-    $scope.thumbnails = thumbnails;
-  });
 
   $scope.onThumbnailClick = function (photoId, arrayIndex) {
     setTransitionClass();
@@ -185,13 +180,23 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     cancelTimer(ctrlTimer);
   });
 
-  $scope.$on("$routeChangeSuccess", function () {
-    console.log("routChangeSuccess");
+  function init() {
+    if ($rootScope.appDataReady) {
+      $scope.gallery = appDataService.getGallery();
+      storageService.loadThumbnails().then(function (thumbnails) {
+        $scope.thumbnails = thumbnails;
+      });
+      // load first photo and it´ s neighbours
+      loadPhotoAndBufferNeighbours($scope.gallery.photos[0].id);
+      // autostart slideshow
+      $scope.startSlideshow();
+    }
+  }
+
+  $scope.$on('APP-DATA-READY', function () {
+    init();
   });
 
-  // load first photo and it´ s neighbours
-  loadPhotoAndBufferNeighbours($scope.gallery.photos[0].id);
-  // autostart slideshow
-  $scope.startSlideshow();
+  init();
 
 });

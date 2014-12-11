@@ -2,6 +2,11 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
   'use strict';
 
+  function setAppDataReadyStatus () {
+    $rootScope.appDataReady = true;
+    eventService.broadcast("APP-DATA-READY");
+  }
+
   function checkIfFirstRun() {
     var deferred = $q.defer();
 
@@ -17,8 +22,9 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   function restoreAppData() {
     fileSystemAPI.readFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME).then(function (content) {
       appDataService.setAppData(angular.fromJson(content));
+      setAppDataReadyStatus();
     }, function onReadFileError(e) {
-      console.log(angular.toJson(e));
+      console.log('app data file read error: ', angular.toJson(e));
     });
   }
 
@@ -28,14 +34,17 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       if (isFirstRun) {
         fileSystemAPI.createDir(appSettingsService.SETTINGS.THUMBNAILS_DIR, true);
         saveAppData();
+        setAppDataReadyStatus();
       } else {
-      restoreAppData();
+        restoreAppData();
       }
     });
   }
 
   function saveAppData() {
-    fileSystemAPI.writeFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME, angular.toJson(appDataService.getAppData()), {}).then(function () {
+    var appDataJson = angular.toJson(appDataService.getAppData());
+
+    fileSystemAPI.writeFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME, appDataJson).then(function (test) {
       //$log.log("app data saved", angular.toJson(appDataService.getAppData()));
       $log.log("app data saved");
     }, function (e) {

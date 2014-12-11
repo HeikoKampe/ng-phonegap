@@ -115,7 +115,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     importObject.deferred.resolve(importObject);
   }
 
-  function onImportRemoteImageError(error, importObject){
+  function onImportRemoteImageError(error, importObject) {
     // add error to error property of import object
     importObject.errors.push(error);
     importObject.status.failures++;
@@ -141,6 +141,9 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       deferred = $q.defer(),
       promises = [],
       errors = [],
+      status = {};
+
+    if (photoObjects && photoObjects.length) {
       status = {
         nImports: photoObjects.length,
         importIndex: 1,
@@ -148,23 +151,27 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
         successes: 0
       };
 
-    angular.forEach(photoObjects, function (photoObj) {
-      var importObject = {
-        'photoObj': photoObj,
-        'galleryId': galleryId,
-        'deferred': $q.defer(),
-        'errors': errors,
-        'status': status
-      };
-      // mark photo as not viewed
-      importObject.photoObj.viewStatus = 0;
-      promises.push(importRemoteImage(importObject));
-    });
+      angular.forEach(photoObjects, function (photoObj) {
+        var importObject = {
+          'photoObj': photoObj,
+          'galleryId': galleryId,
+          'deferred': $q.defer(),
+          'errors': errors,
+          'status': status
+        };
+        // mark photo as not viewed
+        importObject.photoObj.viewStatus = 0;
+        promises.push(importRemoteImage(importObject));
+      });
 
-    $q.all(promises).then(function (resolvedPromises) {
-      showImportResult(status);
+      $q.all(promises).then(function (resolvedPromises) {
+        showImportResult(status);
+        deferred.resolve();
+      });
+
+    } else {
       deferred.resolve();
-    });
+    }
 
     return deferred.promise;
   }
@@ -200,7 +207,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       console.log("received gallery from API:", result);
       appDataService.addGallery(result.data);
       messageService.startProgressMessage({title: 'Importing gallery'});
-      importService.importRemoteImages(result.data.photos).then(function () {
+      importRemoteImages(result.data.photos).then(function () {
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
         deferred.resolve();

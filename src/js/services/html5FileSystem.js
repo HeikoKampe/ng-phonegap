@@ -82,6 +82,7 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
       getFileWriter(filePath, {create: true})
         .then(function (fileWriter) {
+          var truncated = false;
           if (options['append'] === true) {
             // Start write position at EOF.
             fileWriter.seek(fileWriter.length);
@@ -89,8 +90,14 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
           fileWriter.onwriteend = function (evt) {
             if (this.error)
               q.reject(this.error);
-            else
-              q.resolve(evt);
+            else {
+              //truncate all data after current position
+              if (!truncated) {
+                truncated = true;
+                this.truncate(this.position);
+                q.resolve(evt);
+              }
+            }
           };
           // create text blob from string
           // webkit only allows blobs written to text files
@@ -218,10 +225,10 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
           getFileEntry(filePath, {})
             .then(function (fileEntry) {
               fileEntry.moveTo(dirEntry, newFileName)
-            }, function(err) {
+            }, function (err) {
               $log.error('renameFile1: ', err);
             });
-        }, function(err) {
+        }, function (err) {
           $log.error('renameFile2: ', err);
         });
     }

@@ -108,9 +108,8 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   }
 
 
-  function getGalleries() {
+  function createPreviews() {
     var promises = [];
-    $scope.galleries = appDataService.getGalleries();
 
     if ($scope.galleries) {
       angular.forEach($scope.galleries, function (gallery) {
@@ -139,7 +138,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
       photo.viewStatus = 1;
     });
 
-  };
+  }
 
   $scope.onGalleryClick = function (galleryId) {
     appDataService.setActiveGallery(galleryId);
@@ -147,10 +146,18 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
     $rootScope.go('edit-gallery', 'slide-left');
   };
 
-  $scope.$on('GALLERY-UPDATE', function () {
-//    getGalleries();
+
+  function init() {
+    if ($rootScope.appDataReady) {
+      $scope.galleries = appDataService.getGalleries();
+      createPreviews();
+    }
+  }
+
+  $scope.$on('APP-DATA-READY', function () {
+    init();
   });
 
-  getGalleries();
+  init();
 
 });

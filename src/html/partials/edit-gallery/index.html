@@ -50,7 +50,7 @@
         <div class="bottom-ctrl__icon icon-share"></div>
         <div class="bottom-ctrl__label">Share</div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-click="go('/slideshow', 'slide-left')">
+      <li class="bottom-ctrl__item" data-ng-if="gallery.photos.length" data-ng-click="onSlideshowBtnClick()">
         <div class="bottom-ctrl__icon icon-play2"></div>
         <div class="bottom-ctrl__label">Slideshow</div>
       </li>

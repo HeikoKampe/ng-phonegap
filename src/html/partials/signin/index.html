@@ -49,9 +49,10 @@
         <div class="form__ctrl">
           <span class="form__text-input-outer">
           <input
-              type="email"
+              type="text"
               name="email"
               data-ng-model="signinCredentials.email"
+              data-ng-pattern="/^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/"
               class="form__text-input"
               placeholder="mike@somedomain.com"
               required/>
@@ -59,12 +60,13 @@
           <span class="form__validation-icon icon-check" data-ng-show="signinForm.email.$valid"></span>
           <span
               class="form__validation-icon form__validation-icon--error icon-attention"
-              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.email"></span>
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.pattern"></span>
         </div>
 
-        <span class="form__error-msg" data-ng-show="showSigninFormErrors && signinForm.email.$error.required">Your email is required!</span>
+
+        <span class="form__error-msg" data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.required">Your email is required!</span>
         <span class="form__error-msg"
-              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.email">Not a valid email format!</span>
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.pattern">Not a valid email format!</span>
 
       </div>
 
