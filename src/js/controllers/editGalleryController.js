@@ -137,8 +137,10 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     }
 
     $scope.$on('GALLERY-UPDATE', function () {
-      updateThumbnails();
-      updateGalleryStatus();
+      if ($rootScope.appDataReady) {
+        updateThumbnails();
+        updateGalleryStatus();
+      }
     });
 
     $scope.$on('APP-DATA-READY', function () {

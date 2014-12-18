@@ -89,8 +89,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
       });
   }
 
-  function getSignedImageUrl (galleryId, photoId) {
-    return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId)
+  function getSignedImageUrl (galleryId, photoId, httpConfig) {
+    return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId, httpConfig)
       .success(function (data, status, headers, config) {
         return data;
       })

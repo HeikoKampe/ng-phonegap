@@ -24,7 +24,7 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
 
   function createVariants(importObj) {
     var
-      deferredPhotoObject = $q.defer(),
+      deferred = $q.defer(),
       canvasThumb = document.createElement("canvas"),
       canvasMain = document.createElement("canvas"),
       ctxThumb = canvasThumb.getContext("2d"),
@@ -32,6 +32,10 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
 
     canvasThumb.width = IMAGE_VARIANTS.thumbnail.width;
     canvasThumb.height = IMAGE_VARIANTS.thumbnail.height;
+
+    if (importObj.batchObject && importObj.batchObject.isCancelled) {
+      deferred.reject(new Error('abort'));
+    }
 
     imageFactoryService.createImageInstance(importObj.photoObj.url, function () {
         var
@@ -55,17 +59,17 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
         importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.7);
         importObj.photoObj.mainDataURI = canvasMain.toDataURL(IMAGE_FILE_TYPE, 0.9);
         delete importObj.photoObj.originalDataURI;
-        deferredPhotoObject.resolve(importObj);
+        deferred.resolve(importObj);
       },
 
       function () {
         // on image load error
         importObj.errors.push(new Error('Unable to load image with url ' + importObj.photoObj.url));
-        deferredPhotoObject.reject(importObj);
+        deferred.reject(importObj);
       }
     );
 
-    return deferredPhotoObject.promise;
+    return deferred.promise;
   }
 
   return {

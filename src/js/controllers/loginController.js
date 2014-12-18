@@ -35,4 +35,9 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
     }
   };
 
+  $scope.onCancelBtnClick = function () {
+    console.log("cancel");
+    importService.cancelImport();
+  }
+
 });

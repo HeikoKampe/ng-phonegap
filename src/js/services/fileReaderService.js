@@ -3,20 +3,24 @@ angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
   function getImageAsDataURL(importObj) {
     var
       fileReader = new FileReader(),
-      deferredPhotoObject = $q.defer();
+      deferred = $q.defer();
+
+    if (importObj.batchObject && importObj.batchObject.isCancelled) {
+      deferred.reject(new Error('abort'));
+    }
 
     fileReader.onload = function () {
       if (/image/.test(importObj.photoObj.file.type)) {
         importObj.photoObj.url = fileReader.result;
-        deferredPhotoObject.resolve(importObj);
+        deferred.resolve(importObj);
       } else {
         $log.error('file is not of type image');
-        deferredPhotoObject.reject(new Error('file is not of type image'));
+        deferred.reject(new Error('file is not of type image'));
       }
     };
 
     fileReader.readAsDataURL(importObj.photoObj.file);
-    return deferredPhotoObject.promise;
+    return deferred.promise;
   }
 
   return {

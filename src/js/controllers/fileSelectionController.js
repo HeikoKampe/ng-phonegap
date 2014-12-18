@@ -4,20 +4,18 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
                                                                               $q,
                                                                               $log,
                                                                               appDataService,
-                                                                              importService,
-                                                                              eventService,
-  messageService) {
+                                                                              localImageImportService,
+                                                                              eventService) {
 
 
   function onFileSelection() {
     if ($scope.selectedFiles && $scope.selectedFiles.length) {
 
-      messageService.startProgressMessage({title: 'Importing photos'});
-      importService.importLocalImages($scope.selectedFiles).then(function () {
+      localImageImportService.importLocalImages($scope.selectedFiles).then(function () {
         console.log('import done');
-        messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
         // reset fileList in case user selects the same files again
+        // because in that case onFileSelection would not been called
         $scope.selectedFiles = undefined;
       });
     }

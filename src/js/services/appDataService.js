@@ -148,19 +148,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   function removePhoto(photoId) {
     var photos = appData.galleries[appData.activeGalleryId].photos;
 
-    console.log("<<", photos);
-
-    // ToDo: use lowdash for searching array
-    // or use a map for storing images
-    //angular.forEach(photos, function (value, key) {
-    //  if (value.id === photoId) {
-    //    photos.splice(key, 1);
-    //  }
-    //});
-
     _.remove(photos, function(photo) { return photo.id === photoId });
-
-    console.log("<<", photos);
   }
 
   function getPhotoArrayIndex(photoId, galleryId) {

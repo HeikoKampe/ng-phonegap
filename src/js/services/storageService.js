@@ -56,6 +56,10 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferred = $q.defer();
 
+    if (importObj.batchObject && importObj.batchObject.isCancelled) {
+      deferred.reject(new Error('abort'));
+    }
+
     fileSystemAPI.writeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
       .then(function () {
         delete importObj.photoObj.thumbDataURI;
@@ -72,6 +76,10 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
   function saveMainImage(importObj) {
     var
       deferred = $q.defer();
+
+    if (importObj.batchObject && importObj.batchObject.isCancelled) {
+      deferred.reject(new Error('abort'));
+    }
 
     fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
       .then(function () {

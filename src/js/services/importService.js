@@ -29,11 +29,15 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
   function getSignedUrl(importObj) {
     var deferred = $q.defer();
 
+    if (importObj.batchObject && importObj.batchObject.isCancelled) {
+      deferred.reject(new Error('abort'));
+    }
+
     // signed urls on initial gallery import are already provided by the server
     if (importObj.photoObj.url) {
       deferred.resolve(importObj)
     } else {
-      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id).then(function (result) {
+      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id, {timeout: importObj.batchObject.deferredHttpTimeout.promise}).then(function (result) {
         importObj.photoObj.url = result.data.signedUrl;
         deferred.resolve(importObj);
       }, function (err) {
@@ -45,83 +49,34 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
   }
 
 
-  function onLocalImportDone(importObj) {
-    appDataService.addPhotoToGallery(importObj.photoObj);
-    importObj.status.successes++;
-    if (importObj.importStack.length) {
-      // import next in stack
-      importLocalImage(importObj);
-    } else {
-      // all imports are done
-      showImportResult(importObj.status);
-      importObj.deferred.resolve(importObj);
-    }
-  }
-
-  function importLocalImage(importObject) {
-    var
-      fileObject = importObject.importStack.pop();
-
-    importObject.photoObj = {
-      file: fileObject,
-      id: appDataService.createPhotoId(),
-      name: fileObject.name,
-      ownerId: appDataService.getUserId()
-    };
-
-    updateStatusMessage(importObject);
-
-    fileReaderService.getImageAsDataURL(importObject)
-      .then(imageVariantsService.createVariants)
-      .then(storageService.saveImageVariants)
-      .then(onLocalImportDone)
-      .catch(function (error) {
-        // add error to error property of import object
-        importObject.errors.push(error);
-        importObject.status.failures++;
-        throw new Error(error);
-      });
-  }
-
-  function importLocalImages(fileObjects) {
-    var
-      deferred = $q.defer(),
-      importObject = {
-        importStack: [],
-        errors: [],
-        status: {
-          nImports: fileObjects.length,
-          importIndex: 1,
-          failures: 0,
-          successes: 0
-        },
-        deferred: deferred
-      };
-
-    angular.forEach(fileObjects, function (fileObj) {
-      importObject.importStack.push(fileObj);
-    });
-
-    importLocalImage(importObject);
-
-    return deferred.promise;
-  }
-
-
   function onImportRemoteImageSuccess(importObject) {
-    appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
-    importObject.status.successes++;
-    updateStatusMessage(importObject);
-    importObject.deferred.resolve(importObject);
+    $rootScope.$evalAsync(function () {
+      console.log('import success: ', importObject.batchObject);
+      appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
+      importObject.batchObject.successes++;
+      importObject.batchObject.progress++;
+      // all imports done?
+      if (importObject.batchObject.nImports === importObject.batchObject.progress) {
+        importObject.batchObject.deferredAll.resolve(importObject.batchObject);
+      }
+    });
   }
 
   function onImportRemoteImageError(error, importObject) {
-    // add error to error property of import object
-    importObject.errors.push(error);
-    importObject.status.failures++;
-    updateStatusMessage(importObject);
-    importObject.deferred.resolve(importObject);
-    throw new Error(error);
+
+    if (error.message !== 'abort') {
+      throw error;
+    }
+
+    $rootScope.$evalAsync(function () {
+      importObject.batchObject.failures++;
+      importObject.batchObject.progress++;
+      updateStatusMessage(importObject);
+      // all imports done?
+      if (importObject.batchObject.nImports === importObject.batchObject.successes + importObject.batchObject.failures) {
+        importObject.batchObject.deferredAll.resolve(importObject.batchObject);
+      }
+    });
   }
 
   function importRemoteImage(importObject) {
@@ -132,46 +87,63 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
       .catch(function (error) {
         onImportRemoteImageError(error, importObject)
       });
-
-    return importObject.deferred.promise;
   }
 
   function importRemoteImages(photoObjects, galleryId) {
     var
-      deferred = $q.defer(),
-      promises = [],
-      errors = [],
-      status = {};
-
-    if (photoObjects && photoObjects.length) {
-      status = {
+      batchObject = {
+        deferredAll: $q.defer(),
+        deferredHttpTimeout: $q.defer(),
         nImports: photoObjects.length,
-        importIndex: 1,
+        progress: 0,
         failures: 0,
-        successes: 0
+        successes: 0,
+        isCancelled: false,
+        cancel: function () {
+          this.isCancelled = true;
+        }
       };
 
+    if (photoObjects && photoObjects.length) {
+
       angular.forEach(photoObjects, function (photoObj) {
-        var importObject = {
-          'photoObj': photoObj,
-          'galleryId': galleryId,
-          'deferred': $q.defer(),
-          'errors': errors,
-          'status': status
-        };
+        var
+          importObject = {
+            'batchObject': batchObject,
+            'photoObj': photoObj,
+            'galleryId': galleryId
+          };
+
         // mark photo as not viewed
         importObject.photoObj.viewStatus = 0;
-        promises.push(importRemoteImage(importObject));
-      });
-
-      $q.all(promises).then(function (resolvedPromises) {
-        showImportResult(status);
-        deferred.resolve();
+        // start import of image
+        importRemoteImage(importObject);
       });
 
     } else {
-      deferred.resolve();
+      batchObject.deferredAll.resolve();
     }
+
+    return batchObject;
+  }
+
+  function importGallery(apiResult) {
+    var
+      deferred = $q.defer(),
+      galleryObj = apiResult.data,
+      batchImport = importRemoteImages(galleryObj.photos);
+
+    messageService.startProgressMessage({title: 'Importing gallery', 'batchObject': batchImport});
+    appDataService.addGallery(galleryObj);
+    batchImport.deferredAll.promise.then(function (result) {
+      messageService.endProgressMessage();
+      eventService.broadcast('GALLERY-UPDATE');
+      deferred.resolve(batchImport);
+    }, function (err) {
+      messageService.endProgressMessage();
+      deferred.resolve(batchImport);
+      throw new Error('gallery import failed');
+    });
 
     return deferred.promise;
   }
@@ -200,25 +172,11 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
   }
 
   function importGalleryByUsernameAndKey(ownerName, galleryKey) {
-    var
-      deferred = $q.defer();
-
-    serverAPI.getGallery(ownerName, galleryKey).then(function (result) {
-      console.log("received gallery from API:", result);
-      appDataService.addGallery(result.data);
-      messageService.startProgressMessage({title: 'Importing gallery'});
-      importRemoteImages(result.data.photos).then(function () {
-        messageService.endProgressMessage();
-        eventService.broadcast('GALLERY-UPDATE');
-        deferred.resolve();
-      });
-    });
-
-    return deferred.promise;
+    return serverAPI.getGallery(ownerName, galleryKey)
+      .then(importGallery);
   }
 
   return {
-    importLocalImages: importLocalImages,
     importRemoteImages: importRemoteImages,
     importGalleryByUsernameAndKey: importGalleryByUsernameAndKey,
     importGalleriesOfOwner: importGalleriesOfOwner
