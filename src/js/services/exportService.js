@@ -1,4 +1,5 @@
 angular.module(_SERVICES_).service('exportService', function ($q,
+                                                              $rootScope,
                                                               $log,
                                                               $filter,
                                                               fileSystemAPI,
@@ -10,158 +11,148 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
   'use strict';
 
-  function errorHandler(e) {
-    throw new Error(e);
-  }
-
-  function createUploadObject(uploadObjects, uploadIndex, deferred, galleryId, errors) {
-    var photoObjCopy = angular.copy(uploadObjects[uploadIndex]);
-
-    photoObjCopy.galleryId = galleryId;
-
-    return {
-      'uploadObjects': uploadObjects,
-      'uploadObjectIndex': uploadIndex,
-      'deferred': deferred,
-      'errors': errors || {},
-      'photoObj': photoObjCopy
-    };
-  }
-
-  function onUploadProgress(uploadObj) {
-    var messageData = {
-      content: uploadObj.photoObj.name,
-      totalLength: uploadObj.uploadObjects.length,
-      progressIndex: uploadObj.uploadObjectIndex + 1
-    };
-    messageService.updateProgressMessage(messageData);
-  }
-
-  function loadImage(uploadObj) {
-    return storageService.loadImage(uploadObj.photoObj.id)
-      .then(function (imageDataSrc) {
-        uploadObj.photoObj.src = imageDataSrc;
-        return uploadObj;
-      });
-  }
-
-  function uploadToServer(uploadObj) {
-    return serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.photoObj.galleryId)
-      .then(function (apiResult) {
-        // add received data from API to uploadObj
-        uploadObj.apiResult = apiResult.data;
-        // delete imgDataSrc for releasing memory
-        uploadObj.photoObj.src = '';
-        return uploadObj;
-      });
-  }
-
   function updateLocalData(uploadObj) {
-    appDataService.resetPhotoData(uploadObj);
+    appDataService.resetPhotoDataAfterUpload(uploadObj.apiResult);
     appDataService.incrSyncId();
-    onUploadProgress(uploadObj);
 
     return uploadObj;
   }
 
-  function uploadPhoto(uploadObjects, uploadIndex, deferred, galleryId, errors) {
-    var uploadObj = createUploadObject(uploadObjects, uploadIndex, deferred, galleryId, errors);
-
-    onUploadProgress(uploadObj);
-
-    return loadImage(uploadObj)
-      .then(uploadToServer)
-      .then(storageService.renameImageVariants)
-      .catch(function (error) {
-        // add error to error property of export object
-        uploadObj.errors[uploadObj.uploadObjectIndex] = error;
-        return $q.when(uploadObj);
-      });
+  function onUploadImageSuccess(uploadObject) {
+    $rootScope.$evalAsync(function () {
+      console.log('upload success: ', uploadObject.batchObject);
+      updateLocalData(uploadObject);
+      uploadObject.batchObject.successes++;
+      uploadObject.batchObject.progress++;
+      // all imports done?
+      if (uploadObject.batchObject.nImports === uploadObject.batchObject.progress) {
+        uploadObject.batchObject.deferredAll.resolve(uploadObject.batchObject);
+      }
+    });
   }
 
-  // PARALLEL UPLOAD
-  //
-  //function exportGalleryPhotos() {
-  //  var
-  //    promises = [],
-  //    deferred = $q.defer(),
-  //    galleryId = appDataService.getActiveGalleryId(),
-  //    photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId));
-  //
-  //  angular.forEach(photoObjects, function (photoObj) {
-  //    var uploadObj;
-  //    // check if photo is not already marked as deleted
-  //    if (!photoObj.deleted) {
-  //      uploadObj = createUploadObject(photoObj, galleryId);
-  //      promises.push(uploadPhoto(uploadObj));
-  //    }
-  //  });
-  //
-  //  $q.all(promises).then(function (result) {
-  //    messageService.endProgressMessage();
-  //    deferred.resolve(result);
-  //  });
-  //
-  //  return deferred.promise;
-  //}
+  function onUploadImageError(error, uploadObject) {
 
-  function onPhotoUploadDone(uploadObj){
-    var uploadIndex;
-
-    if (uploadObj.errors[uploadObj.uploadObjectIndex]) {
-      // todo
-    } else {
-      updateLocalData(uploadObj);
+    if (error.message !== 'abort') {
+      throw error;
     }
 
-    uploadIndex = uploadObj.uploadObjectIndex + 1;
-
-    if (uploadIndex < uploadObj.uploadObjects.length) {
-      uploadPhoto(uploadObj.uploadObjects, uploadIndex, uploadObj.deferred, uploadObj.photoObj.galleryId, uploadObj.errors).then(onPhotoUploadDone);
-    } else {
-      uploadObj.deferred.resolve();
-      messageService.addProgressResult((uploadObj.uploadObjects.length - Object.keys(uploadObj.errors).length) + ' photos uploaded');
-      messageService.endProgressMessage();
-    }
-
+    $rootScope.$evalAsync(function () {
+      uploadObject.batchObject.failures++;
+      uploadObject.batchObject.progress++;
+      // all imports done?
+      if (uploadObject.batchObject.nImports === uploadObject.batchObject.progress) {
+        uploadObject.batchObject.deferredAll.resolve(uploadObject.batchObject);
+      }
+    });
   }
 
-  function uploadGalleryPhotos() {
+  function loadImage(uploadObj) {
     var
-      deferred = $q.defer(),
-      galleryId = appDataService.getActiveGalleryId(),
-      photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId)),
-      uploadIndex = 0;
+      deferred = $q.defer();
 
-    // if there are new photos
-    if (photoObjects.length) {
-      // All images will be uploaded one after another by recursive calls.
-      // Sequential images upload makes it easier to display progress status feedback, handle errors and is a workaround
-      // for strange Angular view update issue. Hope it will not be too slow compared to parallel upload.
-      uploadPhoto(photoObjects, uploadIndex, deferred, galleryId).then(onPhotoUploadDone);
-    } else {
-      // nothing to do here
-      deferred.resolve();
+    if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
+      console.log("abort");
+      return deferred.reject(new Error('abort'));
     }
+
+    storageService.loadImage(uploadObj.photoObj.id)
+      .then(function (imageDataSrc) {
+        uploadObj.photoObj.src = imageDataSrc;
+        deferred.resolve(uploadObj);
+      });
+
+    return deferred.promise;
+  }
+
+  function uploadToServer(uploadObj) {
+    var
+      deferred = $q.defer();
+
+    if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
+      console.log("abort");
+      return deferred.reject(new Error('abort'));
+    }
+
+    serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.galleryId, {timeout: uploadObj.batchObject.deferredHttpTimeout.promise})
+      .then(function (apiResult) {
+        // add received data from API to uploadObj
+        uploadObj.apiResult = apiResult.data;
+        // delete imgDataSrc for releasing memory
+        delete uploadObj.photoObj.src;
+        deferred.resolve(uploadObj);
+      });
 
     return deferred.promise;
   }
 
 
+
+  function uploadPhoto(uploadObject) {
+    loadImage(uploadObject)
+      .then(uploadToServer)
+      .then(storageService.renameImageVariants)
+      .then(onUploadImageSuccess)
+      .catch(function (error) {
+        onUploadImageError(error, uploadObject)
+      });
+  }
+
+  function uploadGalleryPhotos() {
+    var
+      galleryId = appDataService.getActiveGalleryId(),
+      photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId)),
+      batchObject = {
+        deferredAll: $q.defer(),
+        deferredHttpTimeout: $q.defer(),
+        nImports: photoObjects.length,
+        progress: 0,
+        failures: 0,
+        successes: 0,
+        isCancelled: false,
+        cancel: function () {
+          this.isCancelled = true;
+          this.deferredHttpTimeout.resolve();
+        }
+      };
+
+    // if there are new photos
+    if (photoObjects.length) {
+
+      angular.forEach(photoObjects, function (photoObj) {
+        var
+          uploadObject = {
+            'batchObject': batchObject,
+            'photoObj': photoObj,
+            'galleryId': galleryId
+          };
+
+        uploadPhoto(uploadObject);
+      });
+
+    } else {
+      batchObject.deferredAll.resolve();
+    }
+
+    return batchObject;
+  }
+
+
   function uploadGallery() {
     var
-      galleryData = appDataService.getGallery();
-
-    messageService.startProgressMessage({
-      title: 'Uploading gallery'
-    });
+      galleryData = appDataService.getGallery(),
+      batchUpload;
 
     serverAPI.createGallery(galleryData)
       .then(function (apiResult) {
         $log.info('success: created remote gallery', galleryData);
         appDataService.resetGalleryData(apiResult.data);
       })
-      .then(uploadGalleryPhotos)
+      .then(function () {
+        batchUpload = uploadGalleryPhotos();
+        messageService.startProgressMessage({title: 'Uploading photos', 'batchObject': batchUpload});
+        return batchUpload.deferredAll.promise;
+      })
       .then(function () {
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
@@ -171,7 +162,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       });
   }
 
-  function uploadGallerySettings (galleryId, gallerySettings) {
+  function uploadGallerySettings(galleryId, gallerySettings) {
     serverAPI.setGallerySettings(galleryId, gallerySettings)
       .then(function () {
         appDataService.incrSyncId();

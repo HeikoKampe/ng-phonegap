@@ -39,8 +39,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   /**
    * @returns serverPhotoId
    */
-  function uploadPhoto(photoObj, galleryId) {
-    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/photo', photoObj)
+  function uploadPhoto(photoObj, galleryId, httpConfig) {
+    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/photo', photoObj, httpConfig)
       .success(function (data, status, headers, config) {
         return data;
       })

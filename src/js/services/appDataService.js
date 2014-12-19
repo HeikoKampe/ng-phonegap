@@ -151,28 +151,39 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     _.remove(photos, function(photo) { return photo.id === photoId });
   }
 
-  function getPhotoArrayIndex(photoId, galleryId) {
-    var i, photos;
+  //function getPhotoArrayIndex(photoId, galleryId) {
+  //  var i, photos;
+  //
+  //  photos = getPhotos(galleryId);
+  //
+  //  for (i = 0; i < photos.length; i++) {
+  //    if (photos[i].id === photoId) {
+  //      return i;
+  //    }
+  //  }
+  //  return -1;
+  //}
 
-    photos = getPhotos(galleryId);
+  //function resetPhotoData(uploadObj) {
+  //  var photoArrayIndex = getPhotoArrayIndex(uploadObj.photoObj.id, appData.activeGalleryId);
+  //
+  //  if (photoArrayIndex > -1) {
+  //    appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].id = uploadObj.apiResult.remotePhotoId;
+  //    appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].dateOfUpload = uploadObj.apiResult.dateOfUpload;
+  //  } else {
+  //    throw new Error("error at resetPhotoId");
+  //  }
+  //}
 
-    for (i = 0; i < photos.length; i++) {
-      if (photos[i].id === photoId) {
-        return i;
-      }
-    }
-    return -1;
-  }
 
-  function resetPhotoData(uploadObj) {
-    var photoArrayIndex = getPhotoArrayIndex(uploadObj.photoObj.id, appData.activeGalleryId);
 
-    if (photoArrayIndex > -1) {
-      appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].id = uploadObj.apiResult.remotePhotoId;
-      appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].dateOfUpload = uploadObj.apiResult.dateOfUpload;
-    } else {
-      throw new Error("error at resetPhotoId");
-    }
+  function resetPhotoDataAfterUpload (apiResult) {
+    var
+      galleryId = apiResult.galleryId || appData.activeGalleryId,
+      photo = _.find(appData.galleries[galleryId].photos, {'id': apiResult.localPhotoId});
+
+    photo.id = apiResult.remotePhotoId;
+    photo.dateOfUpload = apiResult.dateOfUpload;
   }
 
   function getPhotoById(photoId, galleryId) {
@@ -326,8 +337,9 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     getPhotos: getPhotos,
     addPhotoToGallery: addPhotoToGallery,
     removePhoto: removePhoto,
-    resetPhotoData: resetPhotoData,
+    //resetPhotoData: resetPhotoData,
     getPhotoById: getPhotoById,
+    resetPhotoDataAfterUpload: resetPhotoDataAfterUpload,
     markPhotoAsDeleted: markPhotoAsDeleted,
     toggleMarkPhotoAsDeleted: toggleMarkPhotoAsDeleted,
 

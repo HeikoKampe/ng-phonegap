@@ -10,52 +10,38 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
                                                                         imageVariantsService,
                                                                         storageService,
                                                                         eventService,
-                                                                        messageService) {
+                                                                        messageService,
+                                                                        batchFactoryService) {
 
 
   function onImportLocalImageSuccess(importObject) {
     $rootScope.$evalAsync(function () {
-      console.log('import success: ', importObject.batchObject);
+      importObject.batchObject.onSuccess();
       appDataService.addPhotoToGallery(importObject.photoObj);
-      importObject.batchObject.successes++;
-      importObject.batchObject.progress++;
       // all imports done?
-      if (importObject.batchObject.nImports === importObject.batchObject.progress) {
-        importObject.batchObject.deferredAll.resolve(importObject.batchObject);
-        messageService.endProgressMessage();
-      } else {
+      if (importObject.batchObject.hasNext()) {
         // import next in stack
-        importLocalImage(importObject);
+        importLocalImage(importObject.batchObject);
       }
     });
   }
 
   function onImportLocalImageError(error, importObject) {
-
-    if (error.message !== 'abort') {
-      throw error;
+    importObject.batchObject.onError(error);
+    // all imports done?
+    if (importObject.batchObject.hasNext()) {
+      // import next in stack
+      importLocalImage(importObject.batchObject);
     }
-
-    console.log('import error: ', importObject.batchObject);
-    $rootScope.$evalAsync(function () {
-      importObject.batchObject.failures++;
-      importObject.batchObject.progress++;
-      // all imports done?
-      if (importObject.batchObject.nImports === importObject.batchObject.progress) {
-        importObject.batchObject.deferredAll.resolve(importObject.batchObject);
-        messageService.endProgressMessage();
-      } else {
-        // import next in stack
-        importLocalImage(importObject);
-      }
-
-    });
   }
 
-
-  function importLocalImage(importObject) {
+  function importLocalImage(batchObject) {
     var
-      fileObject = importObject.batchObject.fileObjects.pop();
+      // create an import object with a reference to batch object
+      importObject = {
+        'batchObject': batchObject
+      },
+      fileObject = batchObject.getNext();
 
     importObject.photoObj = {
       file: fileObject,
@@ -75,35 +61,21 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
 
   function importLocalImages(fileObjects) {
     var
-      batchObject = {
-        fileObjects: [],
-        deferredAll: $q.defer(),
-        nImports: fileObjects.length,
-        progress: 0,
-        failures: 0,
-        successes: 0,
-
-        isCancelled: false,
-        cancel: function () {
-          this.isCancelled = true;
-        }
-      },
-      importObject = {
-        'batchObject': batchObject
-      };
-
-    // push each file objects into an array for easier handling
-    angular.forEach(fileObjects, function (fileObj) {
-      batchObject.fileObjects.push(fileObj);
-    });
+      deferred = $q.defer(),
+      batchObject = batchFactoryService.createBatchObject(fileObjects);
 
     messageService.startProgressMessage({title: 'Importing photos', 'batchObject': batchObject});
 
     // importLocalImage will recursive import all objects on the importStack
     // start import by calling importLocalImage the first time
-    importLocalImage(importObject);
+    importLocalImage(batchObject);
 
-    return batchObject.deferredAll.promise;
+    batchObject.deferred.promise.then(function () {
+      messageService.endProgressMessage();
+      deferred.resolve();
+    });
+
+    return deferred.promise;
   }
 
   return {

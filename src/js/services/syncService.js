@@ -109,7 +109,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       angular.forEach(deletedPhotos, function (photoObj, photoId) {
         storageService.removePhoto(photoId);
         appDataService.removePhoto(photoId);
-        nDeletedPhotos ++;
+        nDeletedPhotos++;
       });
 
       if (nDeletedPhotos) {
@@ -178,8 +178,8 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
               .then(function () {
                 messageService.endProgressMessage();
                 eventService.broadcast('GALLERY-UPDATE');
-              }, function(err){
-                throw new Error ('getting remote updates', err);
+              }, function (err) {
+                throw new Error('getting remote updates', err);
                 //todo: show error message to user
                 messageService.endProgressMessage();
               });
@@ -188,10 +188,12 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     }
 
     function uploadLocalChanges() {
+      var batchUpload;
 
       if (authService.hasUploadPermission()) {
-        messageService.startProgressMessage({title: 'Syncing gallery ...'});
-        exportService.uploadGalleryPhotos()
+        batchUpload = exportService.uploadGalleryPhotos();
+        messageService.startProgressMessage({title: 'Uploading photos', 'batchObject': batchUpload});
+        batchUpload.deferredAll.promise
           .then(removeLocallyDeletedPhotos)
           .then(messageService.endProgressMessage)
           .then(function () {

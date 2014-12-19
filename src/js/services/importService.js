@@ -13,14 +13,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
                                                               messageService) {
 
 
-  function updateStatusMessage(importObj) {
-    var messageData = {
-      content: importObj.photoObj.name,
-      totalLength: importObj.status.nImports,
-      progressIndex: importObj.status.importIndex++
-    };
-    messageService.updateProgressMessage(messageData);
-  }
+
 
   function showImportResult(importStatusObj) {
     messageService.addProgressResult(importStatusObj.successes + ' of ' + importStatusObj.nImports + 'photos were added');
@@ -71,9 +64,8 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
     $rootScope.$evalAsync(function () {
       importObject.batchObject.failures++;
       importObject.batchObject.progress++;
-      updateStatusMessage(importObject);
       // all imports done?
-      if (importObject.batchObject.nImports === importObject.batchObject.successes + importObject.batchObject.failures) {
+      if (importObject.batchObject.nImports === importObject.batchObject.progress) {
         importObject.batchObject.deferredAll.resolve(importObject.batchObject);
       }
     });
@@ -135,6 +127,7 @@ angular.module(_SERVICES_).service('importService', function ($rootScope,
 
     messageService.startProgressMessage({title: 'Importing gallery', 'batchObject': batchImport});
     appDataService.addGallery(galleryObj);
+
     batchImport.deferredAll.promise.then(function (result) {
       messageService.endProgressMessage();
       eventService.broadcast('GALLERY-UPDATE');

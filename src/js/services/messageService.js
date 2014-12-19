@@ -32,7 +32,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
 
   function startProgressMessage(messageObj) {
     messageObj.type = MESSAGE_TYPES.PROGRESS;
-    messageObj.progressIndex = messageObj.batchObject.progressIndex;
+    messageObj.progressIndex = messageObj.batchObject.progress;
     messageObj.totalLength = messageObj.batchObject.nImports;
     $rootScope.message = messageObj;
   }

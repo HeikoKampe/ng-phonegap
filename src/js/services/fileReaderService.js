@@ -14,7 +14,6 @@ angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
         importObj.photoObj.url = fileReader.result;
         deferred.resolve(importObj);
       } else {
-        $log.error('file is not of type image');
         deferred.reject(new Error('file is not of type image'));
       }
     };
