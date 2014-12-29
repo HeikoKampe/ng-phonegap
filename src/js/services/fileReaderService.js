@@ -5,8 +5,8 @@ angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
       fileReader = new FileReader(),
       deferred = $q.defer();
 
-    if (importObj.batchObject && importObj.batchObject.isCancelled) {
-      deferred.reject(new Error('abort'));
+    if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
+      deferred.reject(new Error('cancel batch'));
     }
 
     fileReader.onload = function () {

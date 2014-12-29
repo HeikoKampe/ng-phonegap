@@ -3,7 +3,7 @@ angular.module(_CONTROLLERS_).controller('homeController', function (
   $rootScope,
   appDataService,
   serverAPI,
-  importService,
+  galleryImportService,
   keyGeneratorService) {
 
   $scope.pageClass = 'page--home';
@@ -22,8 +22,8 @@ angular.module(_CONTROLLERS_).controller('homeController', function (
   $scope.importGallery = function () {
     serverAPI.getGallery($scope.galleryId).then(function (result) {
       console.log("received gallery from API:", result);
-      appDataService.addGallery(result.data);
-      importService.importRemoteImages(result.data.photos, $scope.galleryId).then(function (importObjects) {
+      appDataService.addGallery(result);
+      galleryImportService.importRemoteImages(result.photos, $scope.galleryId).then(function (importObjects) {
         console.log("BÄHM", importObjects);
       });
     });

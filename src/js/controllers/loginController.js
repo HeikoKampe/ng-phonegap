@@ -3,7 +3,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
   $scope,
   serverAPI,
   appDataService,
-  importService) {
+  galleryImportService) {
 
   $scope.pageClass = 'page--login';
   $scope.loginCredentials = {};
@@ -28,16 +28,14 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
       serverAPI.login(credentials).then(function (result) {
         console.log("login result:", result);
         setUserData(result.data);
-        importService.importGalleriesOfOwner(result.data.id).then(function(){
+        galleryImportService.importAllGalleriesOfUser(result.data.id).then(function(){
           $rootScope.go('select-gallery', 'slide-right');
+        }, function (error) {
+          console.log('importAllGalleriesOfUser was canceled');
         });
       });
     }
   };
 
-  $scope.onCancelBtnClick = function () {
-    console.log("cancel");
-    importService.cancelImport();
-  }
 
 });

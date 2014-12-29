@@ -9,7 +9,11 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
       galleryId: -1,
       activeGalleryId: -1,
       photoId: 0,
-      galleries: null
+      galleries: null,
+      settings: {
+        maxGalleries:1,
+        maxPhotos:5
+      }
     },
     galleryModel = {
       galleryId: 0,
@@ -40,6 +44,14 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
 
   function getAppData() {
     return appData;
+  }
+
+  function getAppSettings() {
+    return appData.settings;
+  }
+
+  function setAppSettings(settings) {
+    appData.settings = settings;
   }
 
   function getGalleries() {
@@ -317,6 +329,8 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   return {
     setAppData: setAppData,
     getAppData: getAppData,
+    getAppSettings: getAppSettings,
+    setAppSettings: setAppSettings,
 
     getGalleries: getGalleries,
     setGalleries: setGalleries,

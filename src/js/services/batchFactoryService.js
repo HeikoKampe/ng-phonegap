@@ -1,6 +1,7 @@
-angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, $q) {
+angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, $q, $log) {
   'use strict';
-  function createBatchObject(batchCollection, galleryId) {
+
+  function createBatchObject(batchCollection, cancelObj) {
     var
       batchObject = {};
 
@@ -9,30 +10,38 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
       deferred: $q.defer(),
       deferredHttpTimeout: $q.defer(),
       stackLength: batchCollection.length,
+      stackIndex: -1,
       progress: 0,
       failures: 0,
       successes: 0,
-      isCancelled: false
+      cancelObject: cancelObj
     };
 
+    if (!batchCollection || batchCollection.length === 0) {
+      // if batch collection is empty, resolve promise immediately
+      batchObject.deferred.resolve();
+    }
+
+
     // Fill batch stack with items of passed in collection.
-    // This is needed when dealing with a file list as the passed in collection.
-    // A file list collection does not behave like an array.
+    // This is needed when dealing with file lists which do not behave like regular arrays
     angular.forEach(batchCollection, function (batchItem) {
       batchObject.batchStack.push(batchItem);
     });
 
     // abort batch processing
     batchObject.cancel = function () {
-      batchObject.isCancelled = true;
+      // kill pending requests
       batchObject.deferredHttpTimeout.resolve();
+      batchObject.cancelObject.isCancelled = true;
+      console.log('canceled batch job');
     };
 
     batchObject.onSuccess = function () {
-      console.log('batch success: ', batchObject);
       $rootScope.$evalAsync(function () {
         batchObject.successes++;
         batchObject.progress++;
+        console.log('batch success: ' + batchObject.progress + "/" + batchObject.stackLength);
         // if all batch items are processed, resolve promise
         if (batchObject.stackLength === batchObject.progress) {
           batchObject.deferred.resolve(batchObject);
@@ -41,15 +50,17 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
     };
 
     batchObject.onError = function (error) {
-      console.log('batch error: ', batchObject);
-
-      if (error.message !== 'abort') {
+      if (error.message === 'cancel batch') {
+        batchObject.deferred.reject(error);
+      } else {
         $log.error(error);
       }
 
       $rootScope.$evalAsync(function () {
         batchObject.failures++;
         batchObject.progress++;
+        console.log('batch error: ' + batchObject.progress + "/" + batchObject.stackLength);
+
         // if all batch items are processed, resolve promise
         if (batchObject.stackLength === batchObject.progress) {
           batchObject.deferred.resolve(batchObject);
@@ -58,17 +69,18 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
     };
 
     batchObject.hasNext = function () {
-      return batchObject.batchStack.length > 0;
+      // when batch processing was aborted, do not return the next item
+      return batchObject.batchStack.length > batchObject.stackIndex + 1 && batchObject.cancelObject.isCancelled === false;
     };
 
-    // go to next photo in stack
+    // go to next item in stack
     batchObject.getNext = function () {
-      return  batchObject.batchStack.pop();
+      batchObject.stackIndex ++;
+      return batchObject.batchStack[batchObject.stackIndex];
     };
 
     return batchObject;
   }
-
 
   return {
     createBatchObject: createBatchObject

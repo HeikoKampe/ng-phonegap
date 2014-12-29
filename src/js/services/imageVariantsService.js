@@ -33,41 +33,41 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
     canvasThumb.width = IMAGE_VARIANTS.thumbnail.width;
     canvasThumb.height = IMAGE_VARIANTS.thumbnail.height;
 
-    if (importObj.batchObject && importObj.batchObject.isCancelled) {
-      deferred.reject(new Error('abort'));
-    }
-
-    imageFactoryService.createImageInstance(importObj.photoObj.url, function () {
-        var
+    // batch import cancelled?
+    if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
+      deferred.reject(new Error('cancel batch'));
+    } else {
+      imageFactoryService.createImageInstance(importObj.photoObj.url, function () {
+          var
           //minVal = Math.min(this.width, this.height) * 0.9,
-          minVal = Math.min(this.width, this.height) * 1,
-          scaleRatio;
+            minVal = Math.min(this.width, this.height) * 1,
+            scaleRatio;
 
-        if (this.width > this.height) {
-          ctxThumb.drawImage(this, (this.width - minVal) / 2, 0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
-          scaleRatio = IMAGE_VARIANTS.main.width / this.width;
-          canvasMain.width = IMAGE_VARIANTS.main.width;
-          canvasMain.height = this.height * scaleRatio;
-          ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
-        } else {
-          ctxThumb.drawImage(this, 0, (this.height - minVal) / 2, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
-          scaleRatio = IMAGE_VARIANTS.main.height / this.height;
-          canvasMain.width = this.width * scaleRatio;
-          canvasMain.height = IMAGE_VARIANTS.main.height;
-          ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+          if (this.width > this.height) {
+            ctxThumb.drawImage(this, (this.width - minVal) / 2, 0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
+            scaleRatio = IMAGE_VARIANTS.main.width / this.width;
+            canvasMain.width = IMAGE_VARIANTS.main.width;
+            canvasMain.height = this.height * scaleRatio;
+            ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+          } else {
+            ctxThumb.drawImage(this, 0, (this.height - minVal) / 2, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
+            scaleRatio = IMAGE_VARIANTS.main.height / this.height;
+            canvasMain.width = this.width * scaleRatio;
+            canvasMain.height = IMAGE_VARIANTS.main.height;
+            ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+          }
+          importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.7);
+          importObj.photoObj.mainDataURI = canvasMain.toDataURL(IMAGE_FILE_TYPE, 0.9);
+          delete importObj.photoObj.originalDataURI;
+          deferred.resolve(importObj);
+        },
+
+        function () {
+          // on image load error
+          deferred.reject(new Error('Unable to load image with url ' + importObj.photoObj.url));
         }
-        importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.7);
-        importObj.photoObj.mainDataURI = canvasMain.toDataURL(IMAGE_FILE_TYPE, 0.9);
-        delete importObj.photoObj.originalDataURI;
-        deferred.resolve(importObj);
-      },
-
-      function () {
-        // on image load error
-        importObj.errors.push(new Error('Unable to load image with url ' + importObj.photoObj.url));
-        deferred.reject(importObj);
-      }
-    );
+      );
+    }
 
     return deferred.promise;
   }

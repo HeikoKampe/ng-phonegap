@@ -7,8 +7,7 @@
     </div>
     <div class="message__body">
       <div class="message__body-inner">
-        <p>{{message.batchObject.successes + message.batchObject.failures}}</p>
-        <p data-ng-if="message">adding ({{message.progressIndex}} / {{message.totalLength}}) {{message.content}}</p>
+        <p data-ng-if="message">adding ({{message.batchObject.progress}} / {{message.batchObject.stackLength}}) {{message.content}}</p>
         <ul>
           <li data-ng-repeat="result in message.results track by $index">{{result}}</li>
         </ul>

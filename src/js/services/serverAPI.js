@@ -1,4 +1,4 @@
-angular.module(_SERVICES_).factory('serverAPI', function ($http) {
+angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   'use strict';
 
   /**
@@ -50,13 +50,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function getGallery(galleryOwnerName, galleryKey) {
-    return $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/'  + galleryKey)
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/'  + galleryKey)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject({'status': false});
       });
+
+    return deferred.promise;
   }
 
   function getGalleryById(galleryId) {
@@ -187,13 +192,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http) {
   }
 
   function getGalleriesOfOwner (userId) {
-    return $http.get(API_BASE_URL + 'users/' + userId + '/galleries')
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'users/' + userId + '/galleries')
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false, 'message': data}
+        deferred.reject({'status': false, 'message': data});
       });
+
+    return deferred.promise;
   }
 
   function requestPasswordPin (userEmail) {

@@ -6,7 +6,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
                                                             $q,
                                                             serverAPI,
                                                             appDataService,
-                                                            importService,
+                                                            remoteImageImportService,
                                                             storageService,
                                                             eventService,
                                                             authService,
@@ -127,7 +127,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       });
 
       if (newPhotos.length) {
-        return importService.importRemoteImages(newPhotos, comparisonObj.galleryId);
+        return remoteImageImportService.importRemoteImages(newPhotos, comparisonObj.galleryId);
       } else {
         return $q.when(comparisonObj);
       }

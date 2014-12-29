@@ -1,9 +1,8 @@
-angular.module(_CONTROLLERS_).controller('getGalleryController', function (
-  $scope,
-  $rootScope,
-  appDataService,
-  serverAPI,
-  importService) {
+angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scope,
+                                                                           $rootScope,
+                                                                           appDataService,
+                                                                           serverAPI,
+                                                                           galleryImportService) {
 
   $scope.pageClass = 'page--get-gallery';
   $scope.showCtrls = true;
@@ -21,9 +20,10 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function (
   $scope.onContinueBtnClick = function () {
     var galleryKey = $scope.galleryKeySegments[0] + $scope.galleryKeySegments[1] + $scope.galleryKeySegments[2];
 
-    importService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey).then(function(){
-      $rootScope.go('edit-gallery', 'slide-left');
-    });
+    galleryImportService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey)
+      .then(function () {
+        $rootScope.go('edit-gallery', 'slide-left');
+      });
   };
 
 

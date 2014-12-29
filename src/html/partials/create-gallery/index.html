@@ -10,6 +10,7 @@
 <div class="center center--show-top">
   <div class="center-inner">
 
+    <div data-ng-if="!appData.galleries || appData.galleries.length < appData.settings.maxGalleries">
     <form class="form"
           name="createGalleryForm"
           data-ng-submit="submitForm(createGalleryForm.$valid)"
@@ -31,5 +32,11 @@
       </p>
     </form>
 
-  </div>
+    </div>
+
+    <div data-ng-if="appData.galleries.length >= appData.settings.maxGalleries">
+      <p>REACHED GALLERIES LIMIT</p>
+    </div>
+
+    </div>
 </div>

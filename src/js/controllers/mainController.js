@@ -2,12 +2,7 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
   $rootScope,
   $scope,
   $location,
-  $window,
-  $log,
-  $cordovaFile,
-  storageService,
-  fileSystemAPI,
-  messageService) {
+  $window) {
 
 
   $rootScope.appDataReady = false;

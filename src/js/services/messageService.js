@@ -14,7 +14,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
       DIALOG: 'dialog'
     };
 
-  $rootScope.message = {};
+
 
   function getMessages() {
     return $rootScope.messages;
@@ -31,10 +31,9 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
   }
 
   function startProgressMessage(messageObj) {
-    messageObj.type = MESSAGE_TYPES.PROGRESS;
-    messageObj.progressIndex = messageObj.batchObject.progress;
-    messageObj.totalLength = messageObj.batchObject.nImports;
-    $rootScope.message = messageObj;
+    $rootScope.message = {};
+    $rootScope.message.type = MESSAGE_TYPES.PROGRESS;
+    angular.extend($rootScope.message, messageObj);
   }
 
   function updateProgressMessage(messageObj) {

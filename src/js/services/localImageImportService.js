@@ -15,7 +15,6 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
 
 
   function onImportLocalImageSuccess(importObject) {
-    $rootScope.$evalAsync(function () {
       importObject.batchObject.onSuccess();
       appDataService.addPhotoToGallery(importObject.photoObj);
       // all imports done?
@@ -23,7 +22,6 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
         // import next in stack
         importLocalImage(importObject.batchObject);
       }
-    });
   }
 
   function onImportLocalImageError(error, importObject) {
@@ -37,7 +35,7 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
 
   function importLocalImage(batchObject) {
     var
-      // create an import object with a reference to batch object
+      // create an import object with a reference to the batch object
       importObject = {
         'batchObject': batchObject
       },
@@ -64,11 +62,20 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
       deferred = $q.defer(),
       batchObject = batchFactoryService.createBatchObject(fileObjects);
 
-    messageService.startProgressMessage({title: 'Importing photos', 'batchObject': batchObject});
+    if (fileObjects && fileObjects.length) {
+      messageService.startProgressMessage({
+        title: 'Importing photos',
+        'batchObject': batchObject
+      });
 
-    // importLocalImage will recursive import all objects on the importStack
-    // start import by calling importLocalImage the first time
-    importLocalImage(batchObject);
+      // importLocalImage will recursive import all objects on the importStack
+      // start import by calling importLocalImage the first time
+      importLocalImage(batchObject);
+
+    } else {
+      // do nothing
+      deferred.resolve();
+    }
 
     batchObject.deferred.promise.then(function () {
       messageService.endProgressMessage();

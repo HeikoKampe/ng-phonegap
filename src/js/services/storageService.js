@@ -56,10 +56,6 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferred = $q.defer();
 
-    if (importObj.batchObject && importObj.batchObject.isCancelled) {
-      deferred.reject(new Error('abort'));
-    }
-
     fileSystemAPI.writeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
       .then(function () {
         delete importObj.photoObj.thumbDataURI;
@@ -77,10 +73,6 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     var
       deferred = $q.defer();
 
-    if (importObj.batchObject && importObj.batchObject.isCancelled) {
-      deferred.reject(new Error('abort'));
-    }
-
     fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
       .then(function () {
         delete importObj.photoObj.mainDataURI;
@@ -96,7 +88,20 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
 
   function saveImageVariants(importObj) {
-    return saveMainImage(importObj).then(saveThumbnailImage);
+    var
+      deferred = $q.defer();
+
+    if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
+      deferred.reject(new Error('cancel batch'));
+    } else {
+      saveMainImage(importObj)
+        .then(saveThumbnailImage)
+        .then(function (importObj) {
+          deferred.resolve(importObj);
+        });
+    }
+
+    return deferred.promise;
   }
 
   function loadImage(photoId) {
@@ -156,6 +161,17 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     return $q.all(promises);
   }
 
+  function removePhotos(photosArray) {
+    var
+      i, promises = [];
+
+    for(i = 0; i < photosArray.length; i++) {
+      promises.push(removePhoto(photosArray[i].id));
+    }
+
+    return $q.all(promises);
+  }
+
   function renameImageVariants(uploadObj) {
     var
       oldName = uploadObj.photoObj.id,
@@ -187,6 +203,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     saveImageVariants: saveImageVariants,
     loadThumbnails: loadThumbnails,
     removePhoto: removePhoto,
+    removePhotos: removePhotos,
     renameImageVariants: renameImageVariants,
     loadImage: loadImage
   };

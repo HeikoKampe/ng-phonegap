@@ -33,7 +33,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
   function onUploadImageError(error, uploadObject) {
 
-    if (error.message !== 'abort') {
+    if (error.message !== 'cancel batch') {
       throw error;
     }
 
@@ -53,7 +53,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
     if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
       console.log("abort");
-      return deferred.reject(new Error('abort'));
+      return deferred.reject(new Error('cancel batch'));
     }
 
     storageService.loadImage(uploadObj.photoObj.id)
@@ -71,7 +71,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
     if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
       console.log("abort");
-      return deferred.reject(new Error('abort'));
+      return deferred.reject(new Error('cancel batch'));
     }
 
     serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.galleryId, {timeout: uploadObj.batchObject.deferredHttpTimeout.promise})
