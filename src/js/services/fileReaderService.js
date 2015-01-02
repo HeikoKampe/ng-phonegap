@@ -5,10 +5,6 @@ angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
       fileReader = new FileReader(),
       deferred = $q.defer();
 
-    if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
-      deferred.reject(new Error('cancel batch'));
-    }
-
     fileReader.onload = function () {
       if (/image/.test(importObj.photoObj.file.type)) {
         importObj.photoObj.url = fileReader.result;
@@ -18,7 +14,12 @@ angular.module(_SERVICES_).service('fileReaderService', function ($q, $log) {
       }
     };
 
-    fileReader.readAsDataURL(importObj.photoObj.file);
+    if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
+      deferred.reject(new Error('cancel batch'));
+    } else {
+      fileReader.readAsDataURL(importObj.photoObj.file);
+    }
+
     return deferred.promise;
   }
 

@@ -1,10 +1,10 @@
-angular.module(_SERVICES_).service('appDataService', function ($log, $filter, eventService) {
+angular.module(_SERVICES_).service('appDataService', function ($log, $filter, eventService, uuidService) {
 
   'use strict';
 
   var
     appData = {
-      userId: 0,
+      userId: uuidService.createUUID(),
       userName:'',
       galleryId: -1,
       activeGalleryId: -1,
@@ -29,12 +29,16 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
       }
     };
 
+  function initAppData () {
+
+  }
+
   function createGalleryId() {
     return (++appData.galleryId).toString();
   }
 
   function createPhotoId() {
-    return (++appData.photoId).toString();
+    return uuidService.createUUID();
   }
 
   function setAppData(_appData) {
@@ -163,39 +167,13 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     _.remove(photos, function(photo) { return photo.id === photoId });
   }
 
-  //function getPhotoArrayIndex(photoId, galleryId) {
-  //  var i, photos;
-  //
-  //  photos = getPhotos(galleryId);
-  //
-  //  for (i = 0; i < photos.length; i++) {
-  //    if (photos[i].id === photoId) {
-  //      return i;
-  //    }
-  //  }
-  //  return -1;
-  //}
-
-  //function resetPhotoData(uploadObj) {
-  //  var photoArrayIndex = getPhotoArrayIndex(uploadObj.photoObj.id, appData.activeGalleryId);
-  //
-  //  if (photoArrayIndex > -1) {
-  //    appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].id = uploadObj.apiResult.remotePhotoId;
-  //    appData.galleries[appData.activeGalleryId].photos[photoArrayIndex].dateOfUpload = uploadObj.apiResult.dateOfUpload;
-  //  } else {
-  //    throw new Error("error at resetPhotoId");
-  //  }
-  //}
-
-
-
-  function resetPhotoDataAfterUpload (apiResult) {
+  function resetPhotoDataAfterUpload (photoObj) {
     var
-      galleryId = apiResult.galleryId || appData.activeGalleryId,
-      photo = _.find(appData.galleries[galleryId].photos, {'id': apiResult.localPhotoId});
+      galleryId = photoObj.galleryId || appData.activeGalleryId,
+      photo = _.find(appData.galleries[galleryId].photos, {'id': photoObj.localId});
 
-    photo.id = apiResult.remotePhotoId;
-    photo.dateOfUpload = apiResult.dateOfUpload;
+    photo.id = photoObj.id;
+    photo.dateOfUpload = photoObj.dateOfUpload;
   }
 
   function getPhotoById(photoId, galleryId) {

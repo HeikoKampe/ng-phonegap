@@ -219,20 +219,19 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
     // CUSTOM FUNCTION
     // CAREFUL WHEN UPDATING
     renameFile: function (dir, oldFileName, newFileName) {
-      return getDirectory(dir, {})
+      var q = $q.defer();
+
+       getDirectory(dir, {})
         .then(function (dirEntry) {
           var filePath = (dir === '' || dir === '/') ? oldFileName : dir + '/' + oldFileName;
           getFileEntry(filePath, {})
             .then(function (fileEntry) {
-              fileEntry.moveTo(dirEntry, newFileName)
-            }, function (err) {
-              $log.error('renameFile1: ', err);
-            });
-        }, function (err) {
-          $log.error('renameFile2: ', err);
-        });
-    }
+              fileEntry.moveTo(dirEntry, newFileName, q.resolve, q.reject)
+            }, q.reject);
+        }, q.reject);
 
+      return q.promise;
+    }
   };
 
   /*

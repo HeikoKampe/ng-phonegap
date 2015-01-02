@@ -37,6 +37,9 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
   }
 
   function updateProgressMessage(messageObj) {
+    if (!$rootScope.message) {
+      $rootScope.message = {};
+    }
     console.log('updateProgressMessage', messageObj);
     angular.extend($rootScope.message, messageObj);
   }

@@ -60,11 +60,11 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
   function importLocalImages(fileObjects) {
     var
       deferred = $q.defer(),
-      batchObject = batchFactoryService.createBatchObject(fileObjects);
+      batchObject = batchFactoryService.createBatchObject(fileObjects, {isCancelled: false});
 
     if (fileObjects && fileObjects.length) {
       messageService.startProgressMessage({
-        title: 'Importing photos',
+        title: 'Loading photos',
         'batchObject': batchObject
       });
 
@@ -80,6 +80,9 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
     batchObject.deferred.promise.then(function () {
       messageService.endProgressMessage();
       deferred.resolve();
+    }, function (error) {
+      messageService.endProgressMessage();
+      deferred.reject(error);
     });
 
     return deferred.promise;

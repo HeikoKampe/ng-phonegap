@@ -38,7 +38,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       comparisonObj.remote = createComparisonObj(remoteGallery.photos);
 
       angular.forEach(comparisonObj.remote, function (remotePhoto, remotePhotoKey) {
-        // remove objects with same keys/ids
+        // remove objects with same keys/ids (objects which are in sync)
         if (comparisonObj.local[remotePhotoKey]) {
           delete comparisonObj.local[remotePhotoKey];
           delete comparisonObj.remote[remotePhotoKey];
@@ -119,8 +119,49 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       return comparisonObj;
     }
 
+    function updatePhotoStatusToUploaded (photoObj) {
+      var
+        deferred = $q.defer();
+
+      storageService.renameImageVariants(photoObj.localId, photoObj.id)
+        .then(function() {
+          console.log('444', photoObj);
+          appDataService.resetPhotoDataAfterUpload(photoObj);
+          deferred.resolve();
+        })
+        .catch(function(error){
+          deferred.reject(error);
+        });
+
+      return deferred.promise;
+    }
+
+    function checkForBrokenUploads (comparisonObj) {
+      var
+        deferred = $q.defer(),
+        promises = [],
+        notUploadedPhotos = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(comparisonObj.galleryId));
+
+      angular.forEach(comparisonObj.remote, function (photoObj, photoObjKey) {
+        // Double check if photo was not uploaded by this user and this client already and just not marked as uploaded.
+        // This can happen in case of broken uploads where the server answer does not get back to the client.
+        if (_.find(notUploadedPhotos, {'id': photoObj.localId})) {
+          promises.push(updatePhotoStatusToUploaded(photoObj));
+          console.log('photoObjKey', photoObjKey);
+          delete comparisonObj.remote[photoObjKey];
+        }
+      });
+
+      $q.all(promises).then(function(){
+        deferred.resolve(comparisonObj);
+      });
+
+      return deferred.promise;
+    }
+
     function importNewPhotos(comparisonObj) {
-      var newPhotos = [];
+      var
+        newPhotos = [];
       // put photo objects into an array for easier handling
       angular.forEach(comparisonObj.remote, function (photoObj) {
         newPhotos.push(photoObj)
@@ -154,6 +195,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         .then(setGallerySettings)
         .then(compareGalleries)
         .then(removeRemotelyDeletedPhotos)
+        .then(checkForBrokenUploads)
         .then(importNewPhotos)
     }
 
@@ -188,15 +230,22 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     }
 
     function uploadLocalChanges() {
-      var batchUpload;
-
       if (authService.hasUploadPermission()) {
-        batchUpload = exportService.uploadGalleryPhotos();
-        messageService.startProgressMessage({title: 'Uploading photos', 'batchObject': batchUpload});
-        batchUpload.deferredAll.promise
+        messageService.startProgressMessage({title: 'Uploading photos'});
+        exportService.uploadGalleryPhotos()
           .then(removeLocallyDeletedPhotos)
-          .then(messageService.endProgressMessage)
           .then(function () {
+            // on success
+            messageService.endProgressMessage();
+            eventService.broadcast('GALLERY-UPDATE');
+          }, function (error) {
+            // on error
+            if (error.message === 'cancel batch') {
+              messageService.updateProgressMessage({content: 'cancelling ...'});
+              messageService.endProgressMessage();
+            } else {
+              throw error;
+            }
             eventService.broadcast('GALLERY-UPDATE');
           });
       }
