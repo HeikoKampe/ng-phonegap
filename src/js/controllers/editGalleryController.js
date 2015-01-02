@@ -45,24 +45,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     }
 
-    function removeDeletedAndNotUploadedPhotos() {
-      var
-        i,
-        promises = [],
-        deletedPhotoIds = $filter('notUploadedAndDeletedPhotosFilter')(appDataService.getPhotos(), 'id');
-
-      for (i = 0; i < deletedPhotoIds.length; i++) {
-        promises.push(storageService.removePhoto(deletedPhotoIds[i]));
-        appDataService.removePhoto(deletedPhotoIds[i]);
-      }
-
-      $q.all(promises).then(function () {
-        console.log("photos deleted");
-        eventService.broadcast('GALLERY-UPDATE');
-      });
-
-    }
-
     $scope.removePhoto = function () {
       appDataService.markPhotoAsDeleted(this.thumb.id);
     };
@@ -79,7 +61,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         syncService.checkForRemoteChanges($scope.gallery.galleryId)
           .then(syncService.uploadLocalChanges);
       } else {
-        removeDeletedAndNotUploadedPhotos();
+        syncService.removeLocallyDeletedPhotos();
       }
       updateGalleryStatus();
     };
@@ -112,7 +94,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     };
 
     $scope.onDeleteSelectionBtnClick = function () {
-      removeDeletedAndNotUploadedPhotos();
+      syncService.removeLocallyDeletedPhotos();
       updateGalleryStatus();
     };
 

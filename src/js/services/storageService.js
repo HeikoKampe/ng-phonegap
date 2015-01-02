@@ -58,10 +58,12 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
       fileSystemAPI.writeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + importObj.photoObj.id, importObj.photoObj.thumbDataURI)
         .then(function () {
+          // release memory
           delete importObj.photoObj.thumbDataURI;
           deferred.resolve(importObj);
         },
         function (msg) {
+          // release memory
           delete importObj.photoObj.thumbDataURI;
           deferred.reject(msg);
         });
@@ -75,17 +77,18 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
       fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
         .then(function () {
+          // release memory
           delete importObj.photoObj.mainDataURI;
           deferred.resolve(importObj);
         },
         function (msg) {
+          // release memory
           delete importObj.photoObj.mainDataURI;
           deferred.reject(msg);
         });
 
       return deferred.promise;
     }
-
 
     function saveImageVariants(importObj) {
       var
@@ -103,6 +106,33 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
 
       return deferred.promise;
     }
+
+    function deleteImageVariants(uploadObj) {
+      var
+        deferred = $q.defer();
+
+      if (uploadObj.batchObject && uploadObj.batchObject.cancelObject.isCancelled) {
+        deferred.reject(new Error('cancel batch'));
+      } else {
+        fileSystemAPI.removeFile(uploadObj.photoObj.id)
+          .then(function () {
+            return fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + uploadObj.photoObj.id);
+          })
+          .then(function (uploadObj) {
+            deferred.resolve(uploadObj);
+          });
+      }
+
+      return deferred.promise;
+    }
+
+    function deleteImageVariantsById(photoId) {
+      return fileSystemAPI.removeFile(photoId)
+        .then(function () {
+          return fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photoId);
+        });
+    }
+
 
     function loadImage(photoId) {
       var
@@ -150,47 +180,6 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       });
 
       return deferredThumbnails.promise;
-    }
-
-    function removePhoto(photoId) {
-      var promises = [];
-
-      promises.push(fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photoId));
-      promises.push(fileSystemAPI.removeFile(photoId));
-
-      return $q.all(promises);
-    }
-
-    function removePhotos(photosArray) {
-      var
-        i, promises = [];
-
-      for (i = 0; i < photosArray.length; i++) {
-        promises.push(removePhoto(photosArray[i].id));
-      }
-
-      return $q.all(promises);
-    }
-
-    function renameImageVariants2(photoObj) {
-      var
-        deferred = $q.defer();
-
-      console.log('111', photoObj);
-
-      // rename thumbnail
-      fileSystemAPI.renameFile(appSettingsService.SETTINGS.THUMBNAILS_DIR, photoObj.localId, photoObj.id).then(function () {
-        console.log('222', photoObj);
-        // rename main image
-        fileSystemAPI.renameFile('', photoObj.localId, photoObj.id).then(function () {
-          console.log('333', photoObj);
-          deferred.resolve();
-        });
-      }, function onRenameFileError(e) {
-        throw new Error(angular.toJson(e));
-      });
-
-      return deferred.promise;
     }
 
     function renameImageVariants(oldName, newName) {
@@ -241,15 +230,14 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       saveAppData();
     });
 
-
     return {
       initStorage: initStorage,
       saveAppData: saveAppData,
       restoreAppData: restoreAppData,
       saveImageVariants: saveImageVariants,
+      deleteImageVariants: deleteImageVariants,
+      deleteImageVariantsById: deleteImageVariantsById,
       loadThumbnails: loadThumbnails,
-      removePhoto: removePhoto,
-      removePhotos: removePhotos,
       renameImageVariants: renameImageVariants,
       renameImageVariantsAfterUpload: renameImageVariantsAfterUpload,
       loadImage: loadImage

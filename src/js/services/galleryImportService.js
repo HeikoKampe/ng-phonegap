@@ -16,7 +16,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
 
     appDataService.deleteGallery(galleryObj._id);
     for (i = 0; i < galleryObj.photos.length; i++) {
-      storageService.removePhotos(galleryObj.photos);
+      storageService.deleteImageVariantsById(galleryObj.photos[i].id);
     }
     eventService.broadcast('GALLERY-UPDATE');
   }

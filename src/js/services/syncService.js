@@ -11,7 +11,8 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
                                                             eventService,
                                                             authService,
                                                             exportService,
-                                                            messageService) {
+                                                            messageService,
+                                                            batchFactoryService) {
 
     function createComparisonObj(photos) {
       var i, comparisonObj = {};
@@ -48,95 +49,116 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       return $q.when(comparisonObj);
     }
 
-    function removePhotoOnRemoteAndLocally(photoId, galleryId) {
+    function onRemovePhotoSuccess(uploadObject) {
+      uploadObject.batchObject.onSuccess();
+      appDataService.removePhoto(uploadObject.photoObj.id);
+    }
 
+    function onRemovePhotoError(error, uploadObject) {
+      uploadObject.batchObject.onError(error);
+    }
+
+
+    function removePhotoOnRemoteAndLocally(batchObject, galleryId) {
       var
-        deferred = $q.defer(),
-        dateOfUpload = appDataService.getPhotoById(photoId, galleryId).dateOfUpload;
+      // create an photo upload object with a reference to the batch object
+      // the reference is needed as a handle for cancelling the batch operation (cancel all batch jobs)
+        uploadObject = {
+          'batchObject': batchObject,
+          'photoObj': batchObject.getNext(),
+          'galleryId': galleryId
+        };
 
-      if (dateOfUpload) {
+      if (uploadObject.photoObj.dateOfUpload) {
         // delete from remote server and locally
-        serverAPI.removePhoto(photoId, galleryId)
+        serverAPI.removePhoto(uploadObject.photoObj.id, uploadObject.galleryId)
           .then(function () {
-            storageService.removePhoto(photoId);
-            appDataService.removePhoto(photoId);
-            appDataService.incrSyncId();
-            deferred.resolve();
+            return storageService.deleteImageVariants(uploadObject);
           })
-      } else {
-        storageService.removePhoto(photoId);
-        appDataService.removePhoto(photoId);
-        deferred.resolve();
-      }
+          .then(function () {
+            return appDataService.incrSyncId();
+          })
+          .then(function () {
+            onRemovePhotoSuccess(uploadObject);
+          })
+          .catch(function (error) {
+            onRemovePhotoError(error, uploadObject)
+          });
 
-      return deferred.promise;
+      } else {
+        // only delete locally
+        storageService.deleteImageVariants(uploadObject)
+          .then(function () {
+            onRemovePhotoSuccess(uploadObject);
+          })
+          .catch(function (error) {
+            onRemovePhotoError(error, uploadObject)
+          });
+      }
     }
 
     function removeLocallyDeletedPhotos() {
       var
         i,
         deferred = $q.defer(),
-        promises = [],
         galleryId = appDataService.getActiveGalleryId(),
-        photos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true, 'id');
+        deletedPhotos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true),
+        batchObject = batchFactoryService.createBatchObject(deletedPhotos, {isCancelled: false});
 
-      if (photos.length) {
-
-        for (i = 0; i < photos.length; i++) {
-          promises.push(removePhotoOnRemoteAndLocally(photos[i], galleryId));
+      if (deletedPhotos.length) {
+        messageService.updateProgressMessage({title: 'Delete photos', 'batchObject': batchObject});
+        for (i = 0; i < deletedPhotos.length; i++) {
+          removePhotoOnRemoteAndLocally(batchObject, galleryId);
         }
-
-        $q.all(promises).then(function (result) {
-          deferred.resolve(result);
-          if (result.length) {
-            messageService.addProgressResult(result.length + ' photos deleted');
-          }
-        });
-
       } else {
         //nothing to do here
         deferred.resolve();
       }
+
+      batchObject.deferred.promise.then(function () {
+        deferred.resolve();
+      }, function (error) {
+        deferred.reject(error);
+      });
 
       return deferred.promise;
     }
 
     function removeRemotelyDeletedPhotos(comparisonObj) {
       var
-        deletedPhotos = comparisonObj.local,
-        nDeletedPhotos = 0;
+        deferred = $q.defer(),
+        promises = [],
+        deletedPhotos = comparisonObj.local;
 
-      angular.forEach(deletedPhotos, function (photoObj, photoId) {
-        storageService.removePhoto(photoId);
-        appDataService.removePhoto(photoId);
-        nDeletedPhotos++;
+      angular.forEach(deletedPhotos, function (photoObj) {
+        promises.push(storageService.deleteImageVariantsById(photoObj.id));
       });
 
-      if (nDeletedPhotos) {
-        messageService.addProgressResult(nDeletedPhotos + ' photos deleted');
-      }
+      $q.all(promises).then(function(){
+        deferred.resolve(comparisonObj);
+      }, deferred.reject);
 
-      return comparisonObj;
+      return deferred;
     }
 
-    function updatePhotoStatusToUploaded (photoObj) {
+    function updatePhotoStatusToUploaded(photoObj) {
       var
         deferred = $q.defer();
 
       storageService.renameImageVariants(photoObj.localId, photoObj.id)
-        .then(function() {
+        .then(function () {
           console.log('444', photoObj);
           appDataService.resetPhotoDataAfterUpload(photoObj);
           deferred.resolve();
         })
-        .catch(function(error){
+        .catch(function (error) {
           deferred.reject(error);
         });
 
       return deferred.promise;
     }
 
-    function checkForBrokenUploads (comparisonObj) {
+    function checkForBrokenUploads(comparisonObj) {
       var
         deferred = $q.defer(),
         promises = [],
@@ -152,7 +174,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         }
       });
 
-      $q.all(promises).then(function(){
+      $q.all(promises).then(function () {
         deferred.resolve(comparisonObj);
       });
 
@@ -267,7 +289,8 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       getRemoteUpdatesForGallery: getRemoteUpdatesForGallery,
       getAllRemoteUpdates: getAllRemoteUpdates,
       checkForRemoteChanges: checkForRemoteChanges,
-      uploadLocalChanges: uploadLocalChanges
+      uploadLocalChanges: uploadLocalChanges,
+      removeLocallyDeletedPhotos: removeLocallyDeletedPhotos
     }
 
   }

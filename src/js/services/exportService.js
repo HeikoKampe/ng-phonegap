@@ -67,9 +67,6 @@ angular.module(_SERVICES_).service('exportService', function ($q,
   function onUploadImageSuccess(uploadObject) {
     uploadObject.batchObject.onSuccess();
     updateLocalData(uploadObject);
-    if (uploadObject.batchObject.hasNext()) {
-      //uploadImage(uploadObject.batchObject, uploadObject.galleryId)
-    }
   }
 
   function onUploadImageError(error, uploadObject) {
@@ -80,6 +77,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
   function uploadImage(batchObject, galleryId) {
     var
     // create an photo upload object with a reference to the batch object
+    // the reference is needed as a handle for cancelling the batch operation (cancel all)
       uploadObject = {
         'batchObject': batchObject,
         // use a copy of the photo object for the upload to prevent the loaded data source of the image
@@ -99,6 +97,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
   function uploadGalleryPhotos() {
     var
+      i,
       deferred = $q.defer(),
       galleryId = appDataService.getActiveGalleryId(),
       photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId)),
@@ -107,17 +106,11 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     // if there are new photos
     if (photoObjects && photoObjects.length) {
       messageService.updateProgressMessage({'batchObject': batchObject});
-      //// start serial upload of images
-      //uploadImage(batchObject, galleryId);
-
 
       // start parallel import of images
-      var i;
       for (i = 0; i < batchObject.stackLength; i++) {
         uploadImage(batchObject, galleryId);
       }
-
-
     } else {
       deferred.resolve();
     }
