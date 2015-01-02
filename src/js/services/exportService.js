@@ -68,7 +68,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     uploadObject.batchObject.onSuccess();
     updateLocalData(uploadObject);
     if (uploadObject.batchObject.hasNext()) {
-      uploadImage(uploadObject.batchObject, uploadObject.galleryId)
+      //uploadImage(uploadObject.batchObject, uploadObject.galleryId)
     }
   }
 
@@ -107,8 +107,17 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     // if there are new photos
     if (photoObjects && photoObjects.length) {
       messageService.updateProgressMessage({'batchObject': batchObject});
-      // start serial upload of images
-      uploadImage(batchObject, galleryId);
+      //// start serial upload of images
+      //uploadImage(batchObject, galleryId);
+
+
+      // start parallel import of images
+      var i;
+      for (i = 0; i < batchObject.stackLength; i++) {
+        uploadImage(batchObject, galleryId);
+      }
+
+
     } else {
       deferred.resolve();
     }

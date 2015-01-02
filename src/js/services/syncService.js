@@ -212,6 +212,9 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     }
 
     function checkForRemoteChanges(galleryId) {
+      var
+        deferred = $q.defer();
+
       serverAPI.getGalleryStatus(galleryId)
         .then(function (apiResult) {
           if (appDataService.getSyncId(galleryId) !== apiResult.data.syncId) {
@@ -220,13 +223,19 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
               .then(function () {
                 messageService.endProgressMessage();
                 eventService.broadcast('GALLERY-UPDATE');
+                deferred.resolve();
               }, function (err) {
                 throw new Error('getting remote updates', err);
                 //todo: show error message to user
                 messageService.endProgressMessage();
+                deferred.reject();
               });
+          } else {
+            deferred.resolve();
           }
         });
+
+      return deferred.promise;
     }
 
     function uploadLocalChanges() {

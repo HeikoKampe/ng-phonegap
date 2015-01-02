@@ -74,7 +74,10 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
     $scope.onUpdateBtnClick = function () {
       if ($scope.gallery.dateOfUpload) {
-        syncService.uploadLocalChanges();
+        // to avoid conflict in case of broken uploads
+        // always check remote before updating remote
+        syncService.checkForRemoteChanges($scope.gallery.galleryId)
+          .then(syncService.uploadLocalChanges);
       } else {
         removeDeletedAndNotUploadedPhotos();
       }
