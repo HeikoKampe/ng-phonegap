@@ -14,7 +14,19 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
       DIALOG: 'dialog'
     };
 
+/*
 
+var message = {
+  type: progress,
+  title: 'Main Title',
+  subtitle: 'Subtitle',
+  prefix: 'uploading ...',
+  suffix: 'cancelling',
+  info: '',
+  results: [],
+}
+
+ */
 
   function getMessages() {
     return $rootScope.messages;

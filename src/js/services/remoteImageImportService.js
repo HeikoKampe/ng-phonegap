@@ -78,7 +78,7 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
 
 
     if (photoObjects && photoObjects.length) {
-      messageService.updateProgressMessage({'batchObject': batchObject});
+      messageService.updateProgressMessage({'suffix': 'Importing photos ...','batchObject': batchObject});
 
       // start parallel import of images
       for (i = 0; i < batchObject.stackLength; i++) {

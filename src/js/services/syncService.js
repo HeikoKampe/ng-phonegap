@@ -71,7 +71,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
       if (uploadObject.photoObj.dateOfUpload) {
         // delete from remote server and locally
-        serverAPI.removePhoto(uploadObject.photoObj.id, uploadObject.galleryId)
+        serverAPI.removePhoto(uploadObject.photoObj.id, uploadObject.galleryId, {timeout: uploadObject.batchObject.deferredHttpTimeout.promise})
           .then(function () {
             return storageService.deleteImageVariants(uploadObject);
           })
@@ -106,7 +106,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         batchObject = batchFactoryService.createBatchObject(deletedPhotos, {isCancelled: false});
 
       if (deletedPhotos.length) {
-        messageService.updateProgressMessage({title: 'Delete photos', 'batchObject': batchObject});
+        messageService.updateProgressMessage({'prefix': 'Deleting photos ...', 'batchObject': batchObject});
         for (i = 0; i < deletedPhotos.length; i++) {
           removePhotoOnRemoteAndLocally(batchObject, galleryId);
         }
@@ -147,7 +147,6 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
       storageService.renameImageVariants(photoObj.localId, photoObj.id)
         .then(function () {
-          console.log('444', photoObj);
           appDataService.resetPhotoDataAfterUpload(photoObj);
           deferred.resolve();
         })
@@ -240,7 +239,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       serverAPI.getGalleryStatus(galleryId)
         .then(function (apiResult) {
           if (appDataService.getSyncId(galleryId) !== apiResult.data.syncId) {
-            messageService.startProgressMessage({title: 'Syncing ...'});
+            messageService.startProgressMessage({title: 'Syncing album'});
             getRemoteUpdatesForGallery(galleryId)
               .then(function () {
                 messageService.endProgressMessage();
@@ -272,7 +271,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
           }, function (error) {
             // on error
             if (error.message === 'cancel batch') {
-              messageService.updateProgressMessage({content: 'cancelling ...'});
+              messageService.updateProgressMessage({suffix: 'cancelling ...'});
               messageService.endProgressMessage();
             } else {
               throw error;

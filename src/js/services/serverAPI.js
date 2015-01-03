@@ -84,8 +84,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function removePhoto(photoId, galleryId) {
-    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId)
+  function removePhoto(photoId, galleryId, httpConfig) {
+    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId, httpConfig)
       .success(function (data, status, headers, config) {
         return data;
       })

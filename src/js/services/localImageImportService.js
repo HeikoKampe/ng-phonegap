@@ -64,7 +64,8 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
 
     if (fileObjects && fileObjects.length) {
       messageService.startProgressMessage({
-        title: 'Loading photos',
+        title: 'Loading images',
+        prefix: 'loading',
         'batchObject': batchObject
       });
 
@@ -78,11 +79,17 @@ angular.module(_SERVICES_).service('localImageImportService', function ($rootSco
     }
 
     batchObject.deferred.promise.then(function () {
+      messageService.updateProgressMessage({suffix: 'done'});
       messageService.endProgressMessage();
       deferred.resolve();
     }, function (error) {
-      messageService.endProgressMessage();
-      deferred.reject(error);
+      if (error.message === 'cancel batch') {
+        messageService.updateProgressMessage({suffix: 'cancelling ...'});
+        messageService.endProgressMessage();
+        deferred.reject(error);
+      } else {
+        throw error;
+      }
     });
 
     return deferred.promise;

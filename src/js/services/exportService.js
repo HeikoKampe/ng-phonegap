@@ -105,7 +105,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
     // if there are new photos
     if (photoObjects && photoObjects.length) {
-      messageService.updateProgressMessage({'batchObject': batchObject});
+      messageService.updateProgressMessage({'prefix': 'uploading', 'batchObject': batchObject});
 
       // start parallel import of images
       for (i = 0; i < batchObject.stackLength; i++) {
@@ -146,7 +146,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       }, function (error) {
         // on error
         if (error.message === 'cancel batch') {
-          messageService.updateProgressMessage({content: 'cancelling ...'});
+          messageService.updateProgressMessage({suffix: 'cancelling ...'});
           messageService.endProgressMessage();
           deferred.reject(error);
         } else {
