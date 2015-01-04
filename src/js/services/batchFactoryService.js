@@ -9,7 +9,7 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
       batchStack: [],
       deferred: $q.defer(),
       deferredHttpTimeout: $q.defer(),
-      stackLength: batchCollection.length,
+      stackLength: -1,
       stackIndex: -1,
       progress: 0,
       failures: 0,
@@ -25,9 +25,12 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
 
     // Fill batch stack with items of passed in collection.
     // This is needed when dealing with file lists which do not behave like regular arrays
+    // or with object collection
     angular.forEach(batchCollection, function (batchItem) {
       batchObject.batchStack.push(batchItem);
     });
+
+    batchObject.stackLength = batchObject.batchStack.length;
 
     // abort batch processing
     batchObject.cancel = function () {

@@ -70,11 +70,13 @@ angular.module(_SERVICES_).service('galleryImportService', function (
 
   function rollBackBatchImportOfGalleries(batchObject) {
     var
-      i;
+      i,m;
 
     for (i = 0; i <= batchObject.stackIndex; i++) {
       appDataService.deleteGallery(batchObject.batchStack[i]._id);
-      storageService.removePhotos(batchObject.batchStack[i].photos);
+      for (m = 0; m < batchObject.batchStack[i].photos.length; m++) {
+        storageService.deleteImageVariantsById(batchObject.batchStack[i].photos[m].id);
+      }
     }
     eventService.broadcast('GALLERY-UPDATE');
   }

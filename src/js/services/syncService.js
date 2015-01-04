@@ -124,21 +124,42 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       return deferred.promise;
     }
 
+    function removePhotoLocally(batchObject){
+      var
+        photoObj = batchObject.getNext();
+
+      storageService.deleteImageVariantsById(photoObj.id)
+        .then(function(){
+          appDataService.removePhoto(photoObj.id);
+          batchObject.onSuccess();
+        })
+        .catch(function (error) {
+          batchObject.onError(error);
+        });
+    }
+
     function removeRemotelyDeletedPhotos(comparisonObj) {
       var
         deferred = $q.defer(),
-        promises = [],
-        deletedPhotos = comparisonObj.local;
+        batchObject = batchFactoryService.createBatchObject(comparisonObj.local);
 
-      angular.forEach(deletedPhotos, function (photoObj) {
-        promises.push(storageService.deleteImageVariantsById(photoObj.id));
+      if (_.size(comparisonObj.local)) {
+        messageService.updateProgressMessage({'prefix': 'Deleting photos ...', 'batchObject': batchObject});
+        angular.forEach(comparisonObj.local, function(photoObj){
+          removePhotoLocally(batchObject);
+        });
+      } else {
+        //nothing to do here
+        deferred.resolve(comparisonObj);
+      }
+
+      batchObject.deferred.promise.then(function () {
+        deferred.resolve(comparisonObj);
+      }, function (error) {
+        deferred.reject(error);
       });
 
-      $q.all(promises).then(function(){
-        deferred.resolve(comparisonObj);
-      }, deferred.reject);
-
-      return deferred;
+      return deferred.promise;
     }
 
     function updatePhotoStatusToUploaded(photoObj) {
