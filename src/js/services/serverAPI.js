@@ -17,13 +17,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
    * @returns serverGallerieId
    */
   function createGallery(confObj) {
-    return $http.post(API_BASE_URL + 'galleries', confObj)
+    var
+      deferred = $q.defer();
+
+    $http.post(API_BASE_URL + 'galleries', confObj)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function deleteGallery(galleryId) {
@@ -40,13 +45,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
    * @returns serverPhotoId
    */
   function uploadPhoto(photoObj, galleryId, httpConfig) {
-    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/photo', photoObj, httpConfig)
+    var
+      deferred = $q.defer();
+
+    $http.post(API_BASE_URL + 'galleries/' + galleryId + '/photo', photoObj, httpConfig)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function getGallery(galleryOwnerName, galleryKey) {

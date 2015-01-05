@@ -23,6 +23,7 @@ angular.module(_CONTROLLERS_).controller('createGalleryController', function (
   function init() {
     if ($rootScope.appDataReady) {
       $scope.appData = appDataService.getAppData();
+      $scope.galleriesLimitReached = appDataService.getNumberOfGalleries() >= appDataService.getGalleriesLimit();
     }
   }
 

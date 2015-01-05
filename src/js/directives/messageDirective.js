@@ -38,16 +38,23 @@ angular.module(_DIRECTIVES_).directive('messageDirective', function ($compile, $
     link: function (scope, element, attrs) {
       var
         templateUrl = getTemplateUrl(attrs.messageType),
-        cancelBtn;
+        cancelBtn,
+        closeBtn;
 
       $http.get(templateUrl).then(function (result) {
         element.html(result.data);
         $compile(element.contents())(scope);
-        cancelBtn = angular.element(element[0].querySelector(".test"));
+
+        cancelBtn = angular.element(element[0].querySelector(".cancel-btn"));
         cancelBtn.bind('click', function () {
-          console.log('message', scope.message);
           scope.message.batchObject.cancel();
         });
+
+        closeBtn = angular.element(element[0].querySelector(".close-btn"));
+        closeBtn.bind('click', function () {
+          scope.message.close();
+        });
+
       });
     }
   };

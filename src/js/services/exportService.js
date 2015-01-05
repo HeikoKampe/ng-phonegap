@@ -48,7 +48,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.galleryId, {timeout: uploadObj.batchObject.deferredHttpTimeout.promise})
         .then(function (apiResult) {
           // add received data from API to uploadObj
-          uploadObj.apiResult = apiResult.data;
+          uploadObj.apiResult = apiResult;
           // delete imgDataSrc for releasing memory
           delete uploadObj.photoObj.src;
           deferred.resolve(uploadObj);
@@ -56,7 +56,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
           if (uploadObj.batchObject.cancelObject.isCancelled === true) {
             deferred.reject(new Error('cancel batch'));
           } else {
-            throw new Error('upload to server failed');
+            deferred.reject(new Error(err));
           }
         });
     }
@@ -67,10 +67,16 @@ angular.module(_SERVICES_).service('exportService', function ($q,
   function onUploadImageSuccess(uploadObject) {
     uploadObject.batchObject.onSuccess();
     updateLocalData(uploadObject);
+    if (uploadObject.batchObject.hasNext()){
+      uploadImage(uploadObject.batchObject, uploadObject.galleryId);
+    }
   }
 
   function onUploadImageError(error, uploadObject) {
     uploadObject.batchObject.onError(error);
+    if (uploadObject.batchObject.hasNext()){
+      uploadImage(uploadObject.batchObject, uploadObject.galleryId);
+    }
   }
 
 
@@ -107,10 +113,11 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     if (photoObjects && photoObjects.length) {
       messageService.updateProgressMessage({'prefix': 'uploading', 'batchObject': batchObject});
 
-      // start parallel import of images
-      for (i = 0; i < batchObject.stackLength; i++) {
-        uploadImage(batchObject, galleryId);
-      }
+      // start serial export of images
+      // serial export is more robust against errors (lost connections) and makes it easier
+      // to enforce limits (max. number of photos per gallery) on the server
+      uploadImage(batchObject, galleryId);
+
     } else {
       deferred.resolve();
     }
@@ -135,7 +142,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     serverAPI.createGallery(galleryData)
       .then(function (apiResult) {
         $log.info('success: created remote gallery', galleryData);
-        appDataService.resetGalleryData(apiResult.data);
+        appDataService.resetGalleryData(apiResult);
       })
       .then(uploadGalleryPhotos)
       .then(function () {
@@ -143,18 +150,19 @@ angular.module(_SERVICES_).service('exportService', function ($q,
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
         deferred.resolve();
-      }, function (error) {
+      })
+      .catch(function (error) {
         // on error
         if (error.message === 'cancel batch') {
           messageService.updateProgressMessage({suffix: 'cancelling ...'});
-          messageService.endProgressMessage();
-          deferred.reject(error);
-        } else {
-          throw error;
         }
+        messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
-        console.log('uploadGallery error: ', error);
+        deferred.reject(error);
+        throw new Error(error);
       });
+
+    return deferred.promise;
   }
 
   function uploadGallerySettings(galleryId, gallerySettings) {

@@ -1,4 +1,12 @@
-angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($scope, $rootScope, $q, $interval, $filter, appDataService, storageService) {
+angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($scope,
+                                                                              $rootScope,
+                                                                              $q,
+                                                                              $interval,
+                                                                              $filter,
+                                                                              appDataService,
+                                                                              storageService,
+                                                                              authService,
+                                                                              syncService) {
 
   var
     shuffleInterval,
@@ -123,6 +131,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
     }
   }
 
+  // mark photos as not viewed yet
   function setPhotosViewStatus(galleryId) {
     var
       photosNeverViewedBefore = $filter('photoFilter')($scope.galleries[galleryId].photos, 'viewStatus', 0),
@@ -143,14 +152,19 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   $scope.onGalleryClick = function (galleryId) {
     appDataService.setActiveGallery(galleryId);
     setPhotosViewStatus(galleryId);
-    $rootScope.go('edit-gallery', 'slide-left');
+    if (authService.hasEditPermission(galleryId)) {
+      $rootScope.go('edit-gallery', 'slide-left');
+    } else {
+      $rootScope.go('slideshow', 'slide-left');
+    }
+
   };
 
 
   function init() {
     if ($rootScope.appDataReady) {
       $scope.galleries = appDataService.getGalleries();
-      createPreviews();
+      syncService.checkForRemoteChanges().then(createPreviews);
     }
   }
 

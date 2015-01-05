@@ -12,9 +12,16 @@ angular.module(_SERVICES_).factory('authService', function (appDataService) {
     return  !(uploadToken === '' || uploadToken == undefined) || appDataService.isOwner();
   }
 
+  function hasEditPermission(galleryId) {
+    var gallerySettings = appDataService.getGallerySettings(galleryId);
+
+    return appDataService.isOwner() || gallerySettings.allowForeignUploads === true;
+  }
+
   return {
     isAuthorized: isAuthorized,
-    hasUploadPermission: hasUploadPermission
+    hasUploadPermission: hasUploadPermission,
+    hasEditPermission: hasEditPermission
   };
 
 });

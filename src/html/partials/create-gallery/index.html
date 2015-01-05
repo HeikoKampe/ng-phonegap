@@ -10,15 +10,14 @@
 <div class="center center--show-top">
   <div class="center-inner">
 
-    <!--<div data-ng-if="!appData.galleries || appData.galleries.length < appData.settings.maxGalleries">-->
-    <div>
-    <form class="form"
-          name="createGalleryForm"
-          data-ng-submit="submitForm(createGalleryForm.$valid)"
-          novalidate>
-      <h1>Create a new gallery</h1>
+    <div data-ng-if="!galleriesLimitReached">
+      <form class="form"
+            name="createGalleryForm"
+            data-ng-submit="submitForm(createGalleryForm.$valid)"
+            novalidate>
+        <h1>Create a new gallery</h1>
 
-      <p class="form__label">Enter a gallery title</p>
+        <p class="form__label">Enter a gallery title</p>
       <span class="form__text-input-outer">
         <input class="form__text-input"
                type="text"
@@ -28,16 +27,16 @@
                required/>
       </span>
 
-      <p class="text-right">
-        <button class="btn--white" type="submit" data-ng-disabled="createGalleryForm.$invalid">Continue</button>
-      </p>
-    </form>
+        <p class="text-right">
+          <button class="btn--white" type="submit" data-ng-disabled="createGalleryForm.$invalid">Continue</button>
+        </p>
+      </form>
 
     </div>
 
-    <div data-ng-if="appData.galleries.length >= appData.settings.maxGalleries">
+    <div data-ng-if="galleriesLimitReached">
       <p>REACHED GALLERIES LIMIT</p>
     </div>
 
-    </div>
+  </div>
 </div>

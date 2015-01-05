@@ -22,7 +22,7 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
 
     galleryImportService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey)
       .then(function () {
-        $rootScope.go('edit-gallery', 'slide-left');
+        $rootScope.go('select-gallery', 'slide-left');
       });
   };
 

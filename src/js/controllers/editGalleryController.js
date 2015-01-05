@@ -75,13 +75,18 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     };
 
     $scope.onShareBtnClick = function () {
+      console.log('Dude');
       if (authService.isAuthorized()) {
         // check if gallery is uploaded
         if (!$scope.gallery.dateOfUpload) {
-          // upload to server
-          exportService.uploadGallery();
+          // upload gallery to server
+          exportService.uploadGallery().then(function(){
+            $rootScope.go('share-gallery', 'slide-left');
+          });
+        } else {
+          $rootScope.go('share-gallery', 'slide-left');
         }
-        $rootScope.go('share-gallery', 'slide-left');
+
       } else {
         $rootScope.go('signin', 'slide-left');
       }

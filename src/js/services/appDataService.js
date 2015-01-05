@@ -1,20 +1,22 @@
-angular.module(_SERVICES_).service('appDataService', function ($log, $filter, eventService, uuidService) {
+angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log, $filter, eventService, uuidService) {
 
   'use strict';
 
   var
     appData = {
       userId: uuidService.createUUID(),
-      userName:'',
+      userName: '',
       galleryId: -1,
       activeGalleryId: -1,
       photoId: 0,
       galleries: null,
       settings: {
-        maxGalleries:1,
-        maxPhotos:5
+        allowForeignUploads: false,
+        maxGalleries: 3,
+        maxPhotos: 5
       }
     },
+
     galleryModel = {
       galleryId: 0,
       ownerId: 0,
@@ -25,11 +27,12 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
       uploadToken: '',
       photos: [],
       settings: {
-        allowForeignUploads: false
+        allowForeignUploads: false,
+        maxPhotos: appData.settings.maxPhotos
       }
     };
 
-  function initAppData () {
+  function initAppData() {
 
   }
 
@@ -64,6 +67,14 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
 
   function setGalleries(galleriesData) {
     appData.galleries = galleriesData;
+  }
+
+  function getNumberOfGalleries () {
+    return _.size(appData.galleries);
+  }
+
+  function getGalleriesLimit () {
+    return appData.settings.maxGalleries;
   }
 
   function getGallery(_galleryId) {
@@ -128,11 +139,18 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     }
   }
 
-  function setGallerySettings (settings, _galleryId) {
+  function setGallerySettings(settings, _galleryId) {
     var
       galleryId = _galleryId || appData.activeGalleryId;
 
     appData.galleries[galleryId].settings = settings;
+  }
+
+  function getGallerySettings(settings, _galleryId) {
+    var
+      galleryId = _galleryId || appData.activeGalleryId;
+
+    return appData.galleries[galleryId].settings;
   }
 
   function getPhotos(_galleryId) {
@@ -164,10 +182,12 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
   function removePhoto(photoId) {
     var photos = appData.galleries[appData.activeGalleryId].photos;
 
-    _.remove(photos, function(photo) { return photo.id === photoId });
+    _.remove(photos, function (photo) {
+      return photo.id === photoId
+    });
   }
 
-  function resetPhotoDataAfterUpload (photoObj) {
+  function resetPhotoDataAfterUpload(photoObj) {
     var
       galleryId = photoObj.galleryId || appData.activeGalleryId,
       photo = _.find(appData.galleries[galleryId].photos, {'id': photoObj.localId});
@@ -193,6 +213,18 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     var photo = getPhotoById(photoId, galleryId);
 
     photo.deleted = !photo.deleted;
+  }
+
+  function getNumberOfPhotos(_galleryId) {
+    var galleryId = _galleryId || appData.activeGalleryId;
+
+    return getPhotos(galleryId).length;
+  }
+
+  function getPhotosLimit(_galleryId) {
+    var galleryId = _galleryId || appData.activeGalleryId;
+
+    return appData.galleries[galleryId].settings.maxPhotos;
   }
 
   function getSyncId(_galleryId) {
@@ -277,7 +309,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     return appData.userName;
   }
 
-  function setUserData(userData){
+  function setUserData(userData) {
     var
       oldUserId = appData.userId;
 
@@ -297,7 +329,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     return galleryOwnerId === userId;
   }
 
-  function getGalleryKey (_galleryId) {
+  function getGalleryKey(_galleryId) {
     var galleryId = _galleryId || appData.activeGalleryId;
 
     return appData.galleries[galleryId].galleryKey;
@@ -312,6 +344,8 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
 
     getGalleries: getGalleries,
     setGalleries: setGalleries,
+    getNumberOfGalleries: getNumberOfGalleries,
+    getGalleriesLimit: getGalleriesLimit,
     getGallery: getGallery,
     setActiveGallery: setActiveGallery,
     getActiveGalleryId: getActiveGalleryId,
@@ -322,6 +356,7 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     setSyncId: setSyncId,
     incrSyncId: incrSyncId,
     setGallerySettings: setGallerySettings,
+    getGallerySettings: getGallerySettings,
     getGalleryKey: getGalleryKey,
     deleteGallery: deleteGallery,
 
@@ -329,11 +364,12 @@ angular.module(_SERVICES_).service('appDataService', function ($log, $filter, ev
     getPhotos: getPhotos,
     addPhotoToGallery: addPhotoToGallery,
     removePhoto: removePhoto,
-    //resetPhotoData: resetPhotoData,
     getPhotoById: getPhotoById,
     resetPhotoDataAfterUpload: resetPhotoDataAfterUpload,
     markPhotoAsDeleted: markPhotoAsDeleted,
     toggleMarkPhotoAsDeleted: toggleMarkPhotoAsDeleted,
+    getNumberOfPhotos: getNumberOfPhotos,
+    getPhotosLimit: getPhotosLimit,
 
     setUserId: setUserId,
     getUserId: getUserId,

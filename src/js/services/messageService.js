@@ -7,7 +7,7 @@ angular.module(_SERVICES_).factory('messageService', function ($rootScope,
 
   var
   //message = undefined,
-    MESSAGE_HIDE_DELAY = 3000,
+    MESSAGE_HIDE_DELAY = 2000,
     MESSAGE_TYPES = {
       PROGRESS: 'progress',
       MESSAGE: 'message',
@@ -24,6 +24,12 @@ var message = {
   suffix: 'cancelling',
   info: '',
   results: [],
+};
+
+var message = {
+  type: message,
+  title: 'Main Title',
+  content: 'Some content'
 }
 
  */
@@ -33,7 +39,9 @@ var message = {
   }
 
   function closeMessage () {
-    $rootScope.message = {};
+    $rootScope.$evalAsync(function() {
+      $rootScope.message = {};
+    });
   }
 
   function closeMessageWithDelay() {
@@ -69,9 +77,14 @@ var message = {
 
 
   function showMessage (messageObj) {
-    messageObj.type = MESSAGE_TYPES.MESSAGE;
-    $rootScope.message = messageObj;
-    closeMessageWithDelay();
+    // sometimes without evalAsync angular will not update the scope
+    $rootScope.$evalAsync(function(){
+      $rootScope.message = {};
+      $rootScope.message.close = closeMessage;
+      $rootScope.message.type = MESSAGE_TYPES.MESSAGE;
+      angular.extend($rootScope.message, messageObj);
+    });
+
   }
 
 

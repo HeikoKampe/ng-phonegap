@@ -241,19 +241,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         .then(importNewPhotos)
     }
 
-    function getAllRemoteUpdates() {
-      var
-        promises = [],
-        localGalleries = appDataService.getGalleries();
-
-      angular.forEach(localGalleries, function (localGallery) {
-        promises.push(getRemoteUpdatesForGallery(localGallery.galleryId));
-      });
-
-      return $q.all(promises);
-    }
-
-    function checkForRemoteChanges(galleryId) {
+    function checkForRemoteChangesOfGallery(galleryId) {
       var
         deferred = $q.defer();
 
@@ -278,6 +266,18 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
         });
 
       return deferred.promise;
+    }
+
+    function checkForRemoteChanges() {
+      var
+        promises = [],
+        galleries = appDataService.getGalleries();
+
+      angular.forEach(galleries, function (gallery) {
+        promises.push(checkForRemoteChangesOfGallery(gallery.galleryId));
+      });
+
+      return $q.all(promises);
     }
 
     function uploadLocalChanges() {
@@ -307,7 +307,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
     return {
       getRemoteUpdatesForGallery: getRemoteUpdatesForGallery,
-      getAllRemoteUpdates: getAllRemoteUpdates,
+      checkForRemoteChangesOfGallery: checkForRemoteChangesOfGallery,
       checkForRemoteChanges: checkForRemoteChanges,
       uploadLocalChanges: uploadLocalChanges,
       removeLocallyDeletedPhotos: removeLocallyDeletedPhotos
