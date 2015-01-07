@@ -167,7 +167,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
             deferred.resolve();
           },
           function onReadThumbnailError(e) {
-            throw new Error(angular.toJson(e));
+            throw new Error('reading tumbnail file ' + photo.id);
             // resolve anyway to trigger $q.all
             deferred.resolve();
           }

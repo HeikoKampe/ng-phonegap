@@ -21,6 +21,12 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     eventService.broadcast('GALLERY-UPDATE');
   }
 
+  // override the incrementation of the sync id during image import by resetting it´s value
+  // to the value received from the server
+  function resetSyncId(galleryObj){
+    appDataService.setSyncId(galleryObj.syncId, galleryObj._id);
+  }
+
   function importGallery(apiResult) {
     var
       deferred = $q.defer(),
@@ -30,6 +36,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
 
     remoteImageImportService.importRemoteImages(galleryObj.photos, galleryObj._id)
       .then(function () {
+        resetSyncId(galleryObj);
         deferred.resolve();
       }, function (error) {
         rollbackImportGallery(galleryObj);
@@ -56,13 +63,13 @@ angular.module(_SERVICES_).service('galleryImportService', function (
         // on error
         if (error.message === 'cancel batch') {
           messageService.updateProgressMessage({content: 'cancelling ...'});
-          messageService.endProgressMessage();
-          deferred.reject(error);
-        } else {
-          throw error;
         }
-        eventService.broadcast('GALLERY-UPDATE');
+        deferred.reject(error);
         console.log('importGalleryByUsernameAndKey', error);
+      })
+      .finally(function(){
+        messageService.endProgressMessage();
+        eventService.broadcast('GALLERY-UPDATE');
       });
 
     return deferred.promise;

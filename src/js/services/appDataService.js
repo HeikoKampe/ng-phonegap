@@ -153,6 +153,20 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     return appData.galleries[galleryId].settings;
   }
 
+  function getGalleryOwnerId(_galleryId) {
+    var
+      galleryId = _galleryId || appData.activeGalleryId;
+
+    return appData.galleries[galleryId].ownerId;
+  }
+
+  function getGalleryTitle(_galleryId) {
+    var
+      galleryId = _galleryId || appData.activeGalleryId;
+
+    return appData.galleries[galleryId].title;
+  }
+
   function getPhotos(_galleryId) {
     var
       galleryId = (_galleryId === undefined) ? appData.activeGalleryId : _galleryId,
@@ -179,8 +193,10 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     appData.galleries[galleryId].photos.unshift(photoObj);
   }
 
-  function removePhoto(photoId) {
-    var photos = appData.galleries[appData.activeGalleryId].photos;
+  function removePhoto(photoId, _galleryId) {
+    var
+      galleryId = _galleryId || appData.activeGalleryId,
+      photos = appData.galleries[galleryId].photos;
 
     _.remove(photos, function (photo) {
       return photo.id === photoId
@@ -359,6 +375,8 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     getGallerySettings: getGallerySettings,
     getGalleryKey: getGalleryKey,
     deleteGallery: deleteGallery,
+    getGalleryOwnerId: getGalleryOwnerId,
+    getGalleryTitle: getGalleryTitle,
 
     createPhotoId: createPhotoId,
     getPhotos: getPhotos,

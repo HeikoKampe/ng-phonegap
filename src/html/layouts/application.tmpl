@@ -28,7 +28,7 @@
 </head>
 <body data-ng-cloak data-ng-controller="mainController">
 
-  <div data-ng-if="message.type" data-message-directive data-message="message" data-message-type="{{message.type}}"></div>
+  <div data-ng-if="message.title" data-message-directive data-message="message" data-message-type="{{message.type}}"></div>
 
   <div id="container" class="container">
     <div data-ng-class="{'show-ctrls': showCtrls}" class="page {{ animationClass }} {{ pageClass }}  " data-ng-view data-ng-animate-children></div>

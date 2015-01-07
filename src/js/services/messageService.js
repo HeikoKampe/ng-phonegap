@@ -58,10 +58,12 @@ var message = {
 
   function updateProgressMessage(messageObj) {
     if (!$rootScope.message) {
-      $rootScope.message = {};
+      startProgressMessage(messageObj);
+      console.log('xxx', messageObj);
+    } else {
+      console.log('updateProgressMessage', messageObj);
+      angular.extend($rootScope.message, messageObj);
     }
-    console.log('updateProgressMessage', messageObj);
-    angular.extend($rootScope.message, messageObj);
   }
 
   function addProgressResult(result) {

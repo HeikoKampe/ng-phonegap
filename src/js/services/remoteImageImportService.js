@@ -21,7 +21,7 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
     if (importObj.photoObj.url) {
       deferred.resolve(importObj)
     } else {
-      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id, {timeout: importObj.batchObject.deferredHttpTimeout.promise}).then(function (result) {
+      serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id, {timeout: importObj.batchObject.cancelObject.deferredHttpTimeout.promise}).then(function (result) {
         importObj.photoObj.url = result.data.signedUrl;
         deferred.resolve(importObj);
       }, function (err) {
@@ -39,6 +39,7 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
   function onImportRemoteImageSuccess(importObject) {
     importObject.batchObject.onSuccess();
     appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
+    appDataService.incrSyncId(importObject.galleryId);
   }
 
   function onImportRemoteImageError(error, importObject) {
@@ -74,25 +75,24 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
       cancelObject = _cancelObject || {isCancelled: false},
       batchObject;
 
-    batchObject = batchFactoryService.createBatchObject(photoObjects, cancelObject);
-
-
     if (photoObjects && photoObjects.length) {
+      batchObject = batchFactoryService.createBatchObject(photoObjects, cancelObject);
       messageService.updateProgressMessage({'prefix': 'Importing photos ...','batchObject': batchObject});
 
       // start parallel import of images
       for (i = 0; i < batchObject.stackLength; i++) {
         importRemoteImage(batchObject, galleryId);
       }
+
+      batchObject.deferred.promise.then(function () {
+        deferred.resolve();
+      }, function (error) {
+        deferred.reject(error);
+      });
+
     } else {
       deferred.resolve();
     }
-
-    batchObject.deferred.promise.then(function () {
-      deferred.resolve();
-    }, function (error) {
-      deferred.reject(error);
-    });
 
     return deferred.promise;
   }

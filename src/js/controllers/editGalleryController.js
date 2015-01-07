@@ -39,12 +39,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       });
     }
 
-    function checkForRemoteChanges() {
-      if ($scope.gallery.dateOfUpload) {
-        syncService.checkForRemoteChanges($scope.gallery.galleryId);
-      }
-    }
-
     $scope.removePhoto = function () {
       appDataService.markPhotoAsDeleted(this.thumb.id);
     };
@@ -55,15 +49,19 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     };
 
     $scope.onUpdateBtnClick = function () {
-      if ($scope.gallery.dateOfUpload) {
-        // to avoid conflict in case of broken uploads
-        // always check remote before updating remote
-        syncService.checkForRemoteChanges($scope.gallery.galleryId)
-          .then(syncService.uploadLocalChanges);
+      if (authService.hasUploadPermission()) {
+        if ($scope.gallery.dateOfUpload) {
+          // to avoid conflict in case of broken uploads
+          // always check remote before updating remote
+          syncService.checkForRemoteChangesOfGallery($scope.gallery.galleryId)
+            .then(syncService.uploadLocalChanges);
+        } else {
+          syncService.removeLocallyDeletedPhotos();
+        }
+        updateGalleryStatus();
       } else {
-        syncService.removeLocallyDeletedPhotos();
+        $rootScope.go('upload-auth', 'slide-left');
       }
-      updateGalleryStatus();
     };
 
     $scope.onUploadBtnClick = function () {
@@ -75,7 +73,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     };
 
     $scope.onShareBtnClick = function () {
-      console.log('Dude');
       if (authService.isAuthorized()) {
         // check if gallery is uploaded
         if (!$scope.gallery.dateOfUpload) {
@@ -121,7 +118,6 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if ($rootScope.appDataReady) {
         $scope.gallery = appDataService.getGallery();
         updateThumbnails();
-        checkForRemoteChanges();
         updateGalleryStatus();
       }
     }

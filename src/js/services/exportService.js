@@ -64,6 +64,17 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     return deferred.promise;
   }
 
+  // check photo limit again in case new photos where added right before upload
+  function photosLimitNotReached (galleryId) {
+    var
+      nGalleryPhotos = appDataService.getNumberOfPhotos(galleryId),
+      maxPhotos = appDataService.getPhotosLimit(galleryId);
+
+    console.log('photosLimitNotReached',nGalleryPhotos);
+
+    return nGalleryPhotos <= maxPhotos;
+  }
+
   function onUploadImageSuccess(uploadObject) {
     uploadObject.batchObject.onSuccess();
     updateLocalData(uploadObject);
@@ -92,6 +103,11 @@ angular.module(_SERVICES_).service('exportService', function ($q,
         'galleryId': galleryId
       };
 
+    // adding ownerId makes it easier to get the photos limit for a gallery on the server side
+    // the photos limit of the gallery owner should be deceicive and not the limit of the uploader
+    // (in case it is an upload to an foreign gallery
+    uploadObject.photoObj.galleryOwnerId = appDataService.getGalleryOwnerId(galleryId);
+
     loadImage(uploadObject)
       .then(uploadToServer)
       .then(storageService.renameImageVariantsAfterUpload)
@@ -103,14 +119,13 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
   function uploadGalleryPhotos() {
     var
-      i,
       deferred = $q.defer(),
       galleryId = appDataService.getActiveGalleryId(),
       photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId)),
       batchObject = batchFactoryService.createBatchObject(photoObjects, {isCancelled: false});
 
     // if there are new photos
-    if (photoObjects && photoObjects.length) {
+    if (photoObjects && photoObjects.length && photosLimitNotReached(galleryId)) {
       messageService.updateProgressMessage({'prefix': 'uploading', 'batchObject': batchObject});
 
       // start serial export of images
@@ -147,19 +162,20 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       .then(uploadGalleryPhotos)
       .then(function () {
         // on success
-        messageService.endProgressMessage();
-        eventService.broadcast('GALLERY-UPDATE');
         deferred.resolve();
       })
       .catch(function (error) {
         // on error
         if (error.message === 'cancel batch') {
           messageService.updateProgressMessage({suffix: 'cancelling ...'});
+        } else {
+          throw new Error(error);
         }
+        deferred.reject(error);
+      })
+      .finally(function(){
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
-        deferred.reject(error);
-        throw new Error(error);
       });
 
     return deferred.promise;

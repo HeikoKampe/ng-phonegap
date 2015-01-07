@@ -68,20 +68,25 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
         deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        deferred.reject({'status': false});
+        deferred.reject(data);
       });
 
     return deferred.promise;
   }
 
   function getGalleryById(galleryId) {
-    return $http.get(API_BASE_URL + 'galleries/' + galleryId)
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'galleries/' + galleryId)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function getGalleryStatus(galleryId) {
