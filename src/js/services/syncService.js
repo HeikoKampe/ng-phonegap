@@ -48,7 +48,10 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       }
     });
 
-    return $q.when(comparisonObj);
+    return {
+      'apiResult': apiResult,
+      'comparisonObj': comparisonObj
+    };
   }
 
   function onRemovePhotoSuccess(uploadObject) {
@@ -74,12 +77,13 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     if (uploadObject.photoObj.dateOfUpload) {
       // delete from remote server and locally
       serverAPI.removePhoto(uploadObject.photoObj.id, uploadObject.galleryId, {timeout: uploadObject.batchObject.deferredHttpTimeout.promise})
-        .then(function () {
+        .then(function (apiResult) {
+          uploadObject.apiResult = apiResult;
           return storageService.deleteImageVariants(uploadObject);
         })
         .then(function () {
           // Careful! Only increment syncId if the photo was uploaded
-          appDataService.incrSyncId(uploadObject.galleryId);
+          appDataService.setSyncId(uploadObject.apiResult.syncId, uploadObject.galleryId);
           onRemovePhotoSuccess(uploadObject);
         })
         .catch(function (error) {
@@ -134,7 +138,6 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       .then(function () {
         console.log('removePhoto', photoObj.id);
         appDataService.removePhoto(photoObj.id, galleryId);
-        appDataService.incrSyncId(galleryId);
         batchObject.onSuccess();
       })
       .catch(function (error) {
@@ -142,32 +145,32 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       });
   }
 
-  function removeRemotelyDeletedPhotos(comparisonObj) {
+  function removeRemotelyDeletedPhotos(data) {
     var
       deferred = $q.defer(),
       batchObject;
 
-    if (_.size(comparisonObj.local)) {
+    if (_.size(data.comparisonObj.local)) {
       batchCancelObj.isCancelled = batchCancelObj.isCancelled || false;
-      batchObject = batchFactoryService.createBatchObject(comparisonObj.local, batchCancelObj);
+      batchObject = batchFactoryService.createBatchObject(data.comparisonObj.local, batchCancelObj);
       messageService.updateProgressMessage({'prefix': 'Deleting photos ...', 'batchObject': batchObject});
-      angular.forEach(comparisonObj.local, function () {
-        removePhotoLocally(batchObject, comparisonObj.galleryId);
+      angular.forEach(data.comparisonObj.local, function () {
+        removePhotoLocally(batchObject, data.comparisonObj.galleryId);
       });
       batchObject.deferred.promise.then(function () {
-        deferred.resolve(comparisonObj);
+        deferred.resolve(data);
       }, function (error) {
         deferred.reject(error);
       });
     } else {
       //nothing to do here
-      deferred.resolve(comparisonObj);
+      deferred.resolve(data);
     }
 
     return deferred.promise;
   }
 
-  function updatePhotoStatusToUploaded(photoObj) {
+  function  updatePhotoStatusToUploaded(photoObj) {
     var
       deferred = $q.defer();
 
@@ -184,51 +187,63 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     return deferred.promise;
   }
 
-  function checkForBrokenUploads(comparisonObj) {
+  function checkForBrokenUploads(data) {
     var
       deferred = $q.defer(),
       promises = [],
-      notUploadedPhotos = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(comparisonObj.galleryId));
+      notUploadedPhotos = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(data.comparisonObj.galleryId));
 
-    angular.forEach(comparisonObj.remote, function (photoObj, photoObjKey) {
-      // Double check if photo was not uploaded by this user and this client already and just not marked as uploaded.
+    angular.forEach(data.comparisonObj.remote, function (photoObj, photoObjKey) {
+      // Double check if photo was already uploaded by this user and this client  and just not marked as uploaded.
       // This can happen in case of broken uploads where the server answer does not get back to the client.
       if (_.find(notUploadedPhotos, {'id': photoObj.localId})) {
         promises.push(updatePhotoStatusToUploaded(photoObj));
-        delete comparisonObj.remote[photoObjKey];
+        delete data.comparisonObj.remote[photoObjKey];
       }
     });
 
     $q.all(promises).then(function () {
-      deferred.resolve(comparisonObj);
+      deferred.resolve(data);
     });
 
     return deferred.promise;
   }
 
-  function importNewPhotos(comparisonObj) {
+  function importNewPhotos(data) {
     var
+      deferred = $q.defer(),
       newPhotos = [];
+
     // put photo objects into an array for easier handling
-    angular.forEach(comparisonObj.remote, function (photoObj) {
+    angular.forEach(data.comparisonObj.remote, function (photoObj) {
       newPhotos.push(photoObj)
     });
 
     if (newPhotos.length) {
-      return remoteImageImportService.importRemoteImages(newPhotos, comparisonObj.galleryId, batchCancelObj);
+      remoteImageImportService.importRemoteImages(newPhotos, data.comparisonObj.galleryId, batchCancelObj)
+        .then(function(){
+          deferred.resolve(data)
+        });
     } else {
-      return $q.when(comparisonObj);
+      deferred.resolve(data);
     }
+
+    return deferred.promise;
   }
 
   function compareGallerySettings(apiResult) {
     // update local gallery settings in case the have changed remotely
     if (! _.isEqual(apiResult.settings, appDataService.getGallerySettings(apiResult._id))){
       appDataService.setGallerySettings(apiResult.settings);
-      appDataService.incrSyncId();
     }
 
     return apiResult;
+  }
+
+  // updateSyncId needs to be at the end of the "get remote updates" promise chain
+  // to be only called if there were no errors in the chain
+  function updateSyncId (data) {
+    appDataService.setSyncId(data.apiResult.syncId, data.apiResult._id);
   }
 
   function getRemoteUpdatesForGallery(galleryId) {
@@ -241,6 +256,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       .then(removeRemotelyDeletedPhotos)
       .then(checkForBrokenUploads)
       .then(importNewPhotos)
+      .then(updateSyncId)
   }
 
   function checkForRemoteChangesOfGallery(galleryId) {
@@ -313,19 +329,16 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       messageService.startProgressMessage({title: 'Uploading photos'});
       exportService.uploadGalleryPhotos()
         .then(removeLocallyDeletedPhotos)
-        .then(function () {
-          // on success
-          messageService.endProgressMessage();
-        }, function (error) {
+        .catch(function (error) {
           // on error
           if (error.message === 'cancel batch') {
             messageService.updateProgressMessage({suffix: 'cancelling ...'});
-            messageService.endProgressMessage();
           } else {
             throw error;
           }
         })
         .finally(function(){
+          messageService.endProgressMessage();
           eventService.broadcast('GALLERY-UPDATE');
         });
     }

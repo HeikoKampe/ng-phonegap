@@ -39,7 +39,6 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
   function onImportRemoteImageSuccess(importObject) {
     importObject.batchObject.onSuccess();
     appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
-    appDataService.incrSyncId(importObject.galleryId);
   }
 
   function onImportRemoteImageError(error, importObject) {
@@ -68,11 +67,10 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
   }
 
   // Todo: move galleryId into batchObject
-  function importRemoteImages(photoObjects, galleryId, _cancelObject) {
+  function importRemoteImages(photoObjects, galleryId, cancelObject) {
     var
       i,
       deferred = $q.defer(),
-      cancelObject = _cancelObject || {isCancelled: false},
       batchObject;
 
     if (photoObjects && photoObjects.length) {

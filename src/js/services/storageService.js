@@ -210,9 +210,9 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
         newName = uploadObj.apiResult.id,
         deferred = $q.defer();
 
-      if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
+      if (uploadObj.batchObject && uploadObj.batchObject.cancelObject.isCancelled) {
         console.log("abort");
-        return deferred.reject(new Error('cancel batch'));
+        deferred.reject(new Error('cancel batch'));
       } else {
         renameImageVariants(oldName, newName)
           .then(function () {

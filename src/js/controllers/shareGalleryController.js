@@ -26,8 +26,8 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
       }
     };
 
-    $scope.onSettingsChange = function () {
-      exportService.uploadGallerySettings($scope.gallery.galleryId, $scope.gallery.settings);
+    $scope.onUploadPermissionChange = function () {
+      exportService.updateUploadPermission($scope.gallery.galleryId, {'allowForeignUploads': $scope.gallery.settings.allowForeignUploads});
     };
 
 

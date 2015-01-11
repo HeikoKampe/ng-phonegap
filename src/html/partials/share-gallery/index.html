@@ -45,9 +45,9 @@
 
           <p>
             <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="true"
-                   data-ng-change="onSettingsChange()"> enabled
+                   data-ng-change="onUploadPermissionChange()"> enabled
             <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="false"
-                   data-ng-change="onSettingsChange()"> disabled <br/>
+                   data-ng-change="onUploadPermissionChange()"> disabled <br/>
           </p>
 
           <p data-ng-if="gallery.settings.allowForeignUploads">

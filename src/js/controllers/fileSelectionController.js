@@ -52,7 +52,7 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
   $scope.showLimitReachedMessage = function () {
     messageService.showMessage({
       title: 'Limit reached',
-      content: 'The number of photos is limited to ' + appDataService.getNumberOfPhotos() + '. ' +
+      content: 'The number of photos is limited to ' + appDataService.getPhotosLimit() + '. ' +
       'Remove already loaded photos or upgrade to be able to add new ones.'
     });
   };

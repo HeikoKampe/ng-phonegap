@@ -14,7 +14,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
   function updateLocalData(uploadObj) {
     appDataService.resetPhotoDataAfterUpload(uploadObj.apiResult);
-    appDataService.incrSyncId();
+    appDataService.setSyncId(uploadObj.apiResult.syncId, uploadObj.galleryId);
 
     return uploadObj;
   }
@@ -23,9 +23,8 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     var
       deferred = $q.defer();
 
-    if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
-      console.log("abort");
-      return deferred.reject(new Error('cancel batch'));
+    if (uploadObj.batchObject && uploadObj.batchObject.cancelObject.isCancelled) {
+      deferred.reject(new Error('cancel batch'));
     } else {
       storageService.loadImage(uploadObj.photoObj.id)
         .then(function (imageDataSrc) {
@@ -43,9 +42,9 @@ angular.module(_SERVICES_).service('exportService', function ($q,
 
     if (uploadObj.batchObject && uploadObj.batchObject.isCancelled) {
       console.log("abort");
-      return deferred.reject(new Error('cancel batch'));
+      deferred.reject(new Error('cancel batch'));
     } else {
-      serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.galleryId, {timeout: uploadObj.batchObject.deferredHttpTimeout.promise})
+      serverAPI.uploadPhoto(uploadObj.photoObj, uploadObj.galleryId, {timeout: uploadObj.batchObject.cancelObject.deferredHttpTimeout.promise})
         .then(function (apiResult) {
           // add received data from API to uploadObj
           uploadObj.apiResult = apiResult;
@@ -122,7 +121,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       deferred = $q.defer(),
       galleryId = appDataService.getActiveGalleryId(),
       photoObjects = $filter('notUploadedPhotosFilter')(appDataService.getPhotos(galleryId)),
-      batchObject = batchFactoryService.createBatchObject(photoObjects, {isCancelled: false});
+      batchObject = batchFactoryService.createBatchObject(photoObjects);
 
     // if there are new photos
     if (photoObjects && photoObjects.length && photosLimitNotReached(galleryId)) {
@@ -137,11 +136,8 @@ angular.module(_SERVICES_).service('exportService', function ($q,
       deferred.resolve();
     }
 
-    batchObject.deferred.promise.then(function () {
-      deferred.resolve();
-    }, function (error) {
-      deferred.reject(error);
-    });
+    batchObject.deferred.promise
+      .then(deferred.resolve, deferred.reject);
 
     return deferred.promise;
   }
@@ -160,10 +156,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
         appDataService.resetGalleryData(apiResult);
       })
       .then(uploadGalleryPhotos)
-      .then(function () {
-        // on success
-        deferred.resolve();
-      })
+      .then(deferred.resolve)
       .catch(function (error) {
         // on error
         if (error.message === 'cancel batch') {
@@ -181,10 +174,10 @@ angular.module(_SERVICES_).service('exportService', function ($q,
     return deferred.promise;
   }
 
-  function uploadGallerySettings(galleryId, gallerySettings) {
-    serverAPI.setGallerySettings(galleryId, gallerySettings)
-      .then(function () {
-        appDataService.incrSyncId();
+  function updateUploadPermission(galleryId, uploadPermission) {
+    serverAPI.updateUploadPermission(galleryId, uploadPermission)
+      .then(function (apiResult) {
+        appDataService.setSyncId(apiResult.syncId, apiResult.galleryId);
         eventService.broadcast('GALLERY-UPDATE');
       });
   }
@@ -193,7 +186,7 @@ angular.module(_SERVICES_).service('exportService', function ($q,
   return {
     uploadGalleryPhotos: uploadGalleryPhotos,
     uploadGallery: uploadGallery,
-    uploadGallerySettings: uploadGallerySettings
+    updateUploadPermission: updateUploadPermission
   };
 
 });

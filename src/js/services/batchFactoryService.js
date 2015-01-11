@@ -14,7 +14,7 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
       progress: 0,
       failures: 0,
       successes: 0,
-      cancelObject: cancelObj
+      cancelObject: cancelObj || {isCancelled:false, deferredHttpTimeout: $q.defer()}
     };
 
     if (!batchCollection || batchCollection.length === 0) {
@@ -36,6 +36,7 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
     batchObject.cancel = function () {
       // kill pending requests
       batchObject.cancelObject.deferredHttpTimeout.resolve();
+      //batchObject.deferred.reject(new Error('cancel batch'));
       batchObject.cancelObject.isCancelled = true;
       console.log('canceled batch job');
     };
@@ -56,7 +57,6 @@ angular.module(_SERVICES_).factory('batchFactoryService', function ($rootScope, 
     batchObject.onError = function (error) {
       if (error.message === 'cancel batch') {
         batchObject.deferred.reject(error);
-        batchObject.cancelObject.deferredHttpTimeout.resolve();
       } else {
         $log.error(error);
       }

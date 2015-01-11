@@ -1,12 +1,17 @@
 angular.module(_CONTROLLERS_).controller('authController', function (
   $rootScope,
   $scope,
+  $q,
+  $timeout,
   serverAPI,
   appDataService) {
 
   $scope.pageClass = 'page--signin';
+  $scope.showCtrls = true;
 
   $scope.uploadPassword = '';
+  $scope.uploadAuthSuccess = false;
+  $scope.uploadAuthError = false;
 
   $scope.signinCredentials = {};
   $scope.showSigninFormErrors = false;
@@ -19,6 +24,19 @@ angular.module(_CONTROLLERS_).controller('authController', function (
     console.log("error: ", e.data);
   }
 
+  function onUploadAuthError(){
+    $scope.uploadAuthError = true;
+    $timeout(function(){
+      $scope.uploadAuthError = false;
+      $scope.uploadPassword = '';
+    }, 1000)
+  }
+
+  function onUploadAuthSuccess(apiResult){
+    $scope.uploadAuthSuccess = true;
+    appDataService.setUploadToken(apiResult.uploadToken);
+    $rootScope.back();
+  }
 
   $scope.signinSubmit = function (isValid) {
     var credentials = {};
@@ -41,18 +59,16 @@ angular.module(_CONTROLLERS_).controller('authController', function (
 
 
   $scope.uploadAuthSubmit = function () {
+    var
+      galleryId = appDataService.getActiveGalleryId();
 
-    var galleryId = appDataService.getActiveGalleryId();
+    serverAPI.uploadAuth({'uploadPassword': $scope.uploadPassword, 'galleryId': galleryId})
+      .then(onUploadAuthSuccess, onUploadAuthError);
 
-    console.log("uploadAuthSubmit", $scope.uploadPassword, galleryId);
+  };
 
-    serverAPI.uploadAuth({'uploadPassword': $scope.uploadPassword, 'galleryId': galleryId}).then(function (result) {
-      console.log("upload-auth result:", result);
-      appDataService.setUploadToken(result.data.uploadToken);
-      // todo: show button with 'Proceed upload'
-      $rootScope.back();
-
-    }, error);
+  $scope.test = function () {
+    console.log('onNumberPadSubmit');
   };
 
 

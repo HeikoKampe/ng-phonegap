@@ -10,21 +10,24 @@
 <div class="center">
   <div class="center__inner text-center">
 
-    <form data-ng-submit="uploadAuthSubmit()">
+    <h1>Enter Security-PIN</h1>
 
-      <p>Gallery PIN:</p>
+      <input class="form__text-input upload-pin-input"
+             data-ng-class="{'error': uploadAuthError, 'success': uploadAuthSuccess}"
+             style="width:200px;"
+             type="password"
+             data-ng-model="uploadPassword"/>
 
-      <p><input data-ng-model="uploadPassword"/></p>
-
-      <button type="submit">Submit</button>
-
-    </form>
-
-
+    <div class="text-center">
+      <div
+          data-number-pad-directive
+          data-number-pad-input="uploadPassword"
+          data-number-pad-submit="uploadAuthSubmit()">
+      </div>
+    </div>
 
   </div>
 </div>
-
 
 <div class="bottom">
   <div class="bottom__background"></div>

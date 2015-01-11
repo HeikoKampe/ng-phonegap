@@ -132,6 +132,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       appData.galleries[resultData.remoteGalleryId].galleryId = resultData.remoteGalleryId;
       appData.galleries[resultData.remoteGalleryId].galleryKey = resultData.shortId;
       appData.galleries[resultData.remoteGalleryId].dateOfUpload = resultData.dateOfUpload;
+      appData.galleries[resultData.remoteGalleryId].syncId = resultData.syncId;
       appData.activeGalleryId = resultData.remoteGalleryId;
       delete appData.galleries[resultData.localGalleryId];
     } else {
@@ -256,12 +257,6 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     appData.galleries[galleryId].syncId = newSyncId;
   }
 
-  function incrSyncId(_galleryId) {
-    var galleryId = _galleryId || appData.activeGalleryId;
-
-    appData.galleries[galleryId].syncId++;
-  }
-
   function resetOwnerOfGalleryPhotos(galleryPhotos, userData) {
     angular.forEach(galleryPhotos, function (photo) {
       photo.ownerId = userData.userId;
@@ -370,7 +365,6 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     resetGalleryData: resetGalleryData,
     getSyncId: getSyncId,
     setSyncId: setSyncId,
-    incrSyncId: incrSyncId,
     setGallerySettings: setGallerySettings,
     getGallerySettings: getGallerySettings,
     getGalleryKey: getGalleryKey,

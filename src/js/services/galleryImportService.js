@@ -11,6 +11,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
                                                               batchFactoryService,
                                                               remoteImageImportService) {
 
+
   function rollbackImportGallery(galleryObj) {
     var i;
 
@@ -21,12 +22,6 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     eventService.broadcast('GALLERY-UPDATE');
   }
 
-  // override the incrementation of the sync id during image import by resetting it´s value
-  // to the value received from the server
-  function resetSyncId(galleryObj){
-    appDataService.setSyncId(galleryObj.syncId, galleryObj._id);
-  }
-
   function importGallery(apiResult) {
     var
       deferred = $q.defer(),
@@ -35,10 +30,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     appDataService.addGallery(galleryObj);
 
     remoteImageImportService.importRemoteImages(galleryObj.photos, galleryObj._id)
-      .then(function () {
-        resetSyncId(galleryObj);
-        deferred.resolve();
-      }, function (error) {
+      .then(deferred.resolve, function (error) {
         rollbackImportGallery(galleryObj);
         deferred.reject(error);
       });
@@ -56,8 +48,6 @@ angular.module(_SERVICES_).service('galleryImportService', function (
       .then(importGallery)
       .then(function () {
         // on success
-        messageService.endProgressMessage();
-        eventService.broadcast('GALLERY-UPDATE');
         deferred.resolve();
       }, function (error) {
         // on error
@@ -126,9 +116,11 @@ angular.module(_SERVICES_).service('galleryImportService', function (
   function batchImportOfGalleries(galleriesArray) {
     var
       deferred = $q.defer(),
-      batchObject;
-
-    batchObject = batchFactoryService.createBatchObject(galleriesArray, {isCancelled: false});
+      batchCancelObj = {
+        isCancelled: false,
+        deferredHttpTimeout: $q.defer()
+      },
+      batchObject = batchFactoryService.createBatchObject(galleriesArray, batchCancelObj);
 
     messageService.startProgressMessage({title: 'Importing users galleries'});
 

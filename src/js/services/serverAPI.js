@@ -100,13 +100,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   }
 
   function removePhoto(photoId, galleryId, httpConfig) {
-    return $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId, httpConfig)
+    var
+      deferred = $q.defer();
+
+    $http.delete(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId, httpConfig)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function getSignedImageUrl (galleryId, photoId, httpConfig) {
@@ -152,26 +157,34 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
    * @returns
    */
   function uploadAuth(credentials) {
+    var
+      deferred = $q.defer();
 
-    return $http.post(API_BASE_URL + 'auth/upload', credentials)
+    $http.post(API_BASE_URL + 'auth/upload', credentials)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false, 'message': data}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
 
-  function setGallerySettings (galleryId, gallerySettings) {
+  function updateUploadPermission (galleryId, permissionSettings) {
+    var
+      deferred = $q.defer();
 
-    return $http.post(API_BASE_URL + 'galleries/' + galleryId + '/settings', gallerySettings)
+    $http.put(API_BASE_URL + 'galleries/' + galleryId + '/settings/upload-permission', permissionSettings)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false, 'message': data}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function logErrorToServer (errorObj) {
@@ -253,7 +266,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     login: login,
     uploadAuth: uploadAuth,
     getGalleryStatus: getGalleryStatus,
-    setGallerySettings: setGallerySettings,
+    updateUploadPermission: updateUploadPermission,
     logErrorToServer: logErrorToServer,
     sendInvitation: sendInvitation,
     getSignedImageUrl: getSignedImageUrl,

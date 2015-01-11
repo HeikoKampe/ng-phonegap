@@ -99,6 +99,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
 
     storageService.loadThumbnails(galleryId).then(function (thumbnails) {
       var thumbId = 0;
+
       galleryThumbnails[galleryId] = [];
       $scope.previewThumbnails[galleryId] = [];
       // convert received object collection to array collection for easier shuffling
@@ -107,6 +108,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
           id: thumbId++, // id is needed to prevent ng-repeat getting confused by duplicates
           src: thumbSrc
         };
+
         galleryThumbnails[galleryId].push(thumbObj);
       });
       deferred.resolve();
