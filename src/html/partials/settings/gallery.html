@@ -1,0 +1,23 @@
+<h2>Album settings</h2>
+
+<div class="settings">
+  <div class="settings__block">
+    <div class="settings__item">
+      <span class="settings__item-label">Max number of albums</span>
+      <span class="settings__item-value">{{appSettings.maxGalleries}}</span>
+    </div>
+    <div class="settings__item">
+      <span class="settings__item-label">Max number of photos per album</span>
+      <span class="settings__item-value">{{appSettings.maxPhotos}}</span>
+    </div>
+    <div class="settings__item">
+      <span class="settings__item-label">Guest edit permission</span>
+      <span class="settings__item-value">{{appSettings.allowForeignUploads}}</span>
+      <p class="settings__item-info">Give others the permission to edit your album.</p>
+    </div>
+  </div>
+</div>
+
+<p>You can change these settings by buying an <span data-ng-click="go('upgrade', 'slide-left')">upgrade</span>.</p>
+
+<p><button data-ng-click="go('upgrade', 'slide-left')">Upgrade</button></p>

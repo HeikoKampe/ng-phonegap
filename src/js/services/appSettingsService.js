@@ -5,6 +5,7 @@ angular.module(_SERVICES_).factory('appSettingsService', function () {
     N_PHOTOS_MAX: 30,
 
     APP_DATA_FILE_NAME: 'appData.txt',
+    IMAGES_DIR: 'images',
     THUMBNAILS_DIR: 'thumbnails'
   };
 

@@ -1,0 +1,58 @@
+<form class="form" name="requestPwdForm1"
+      data-ng-submit="requestPasswordPinSubmit(requestPwdForm1.$valid)" novalidate>
+
+  <div class="form__group">
+    <span class="form__label">Email</span>
+
+    <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="email"
+              name="email"
+              data-ng-model="resetPwdObj.email"
+              data-ng-pattern="/^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/"
+              data-ng-focus="onEmailInputFocus()"
+              class="form__text-input"
+              required/>
+          </span>
+      <span class="form__validation-icon icon-check" data-ng-show="!emailNotFoundError && requestPwdForm1.email.$valid"></span>
+          <span class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="emailNotFoundError || (requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern )">
+          </span>
+    </div>
+
+    <span class="form__error-msg" data-ng-show="emailNotFoundError">Email does not match any user!</span>
+        <span class="form__error-msg"
+              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern">Not a valid email format!</span>
+  </div>
+
+  <div class="form__group">
+    <span class="form__label">New password</span>
+
+    <div class="form__ctrl">
+          <span class="form__text-input-outer">
+          <input
+              type="test"
+              name="password"
+              data-ng-model="resetPwdObj.newPassword"
+              class="form__text-input"
+              placeholder=""
+              required/>
+          </span>
+      <span class="form__validation-icon icon-check" data-ng-show="requestPwdForm1.password.$valid"></span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="requestPwdForm1.password.$blurred && requestPwdForm1.password.$error.required"></span>
+    </div>
+
+        <span class="form__error-msg"
+              data-ng-show="requestPwdForm1.password.$blurred && requestPwdForm1.password.$error.required">Password is required!</span>
+  </div>
+
+  <div class="form__ctrl text-right">
+    <button class="btn--white" type="submit">Continue</button>
+  </div>
+</form>
+

@@ -3,20 +3,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
   'use strict';
 
   var
-    appData = {
-      userId: uuidService.createUUID(),
-      userName: '',
-      galleryId: -1,
-      activeGalleryId: -1,
-      photoId: 0,
-      galleries: null,
-      settings: {
-        allowForeignUploads: false,
-        maxGalleries: 3,
-        maxPhotos: 5
-      }
-    },
-
+    appData = {},
     galleryModel = {
       galleryId: 0,
       ownerId: 0,
@@ -28,12 +15,30 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       photos: [],
       settings: {
         allowForeignUploads: false,
-        maxPhotos: appData.settings.maxPhotos
+        maxPhotos: 5
       }
     };
 
-  function initAppData() {
+  function resetAppData () {
+    appData = {
+      userId: '',
+      userName: '',
+      userToken: '',
+      galleryId: -1,
+      activeGalleryId: -1,
+      photoId: 0,
+      galleries: null,
+      settings: {
+        allowForeignUploads: false,
+        maxGalleries: 3,
+        maxPhotos: 5
+      }
+    }
+  }
 
+  function initAppData() {
+    resetAppData();
+    setUserId(uuidService.createUUID());
   }
 
   function createGalleryId() {
@@ -348,6 +353,8 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
 
 
   return {
+    resetAppData: resetAppData,
+    initAppData: initAppData,
     setAppData: setAppData,
     getAppData: getAppData,
     getAppSettings: getAppSettings,

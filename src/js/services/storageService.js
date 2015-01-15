@@ -24,6 +24,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
         appDataService.setAppData(angular.fromJson(content));
         setAppDataReadyStatus();
       }, function onReadFileError(e) {
+        // todo: implement recovery
         console.log('app data file read error: ', angular.toJson(e));
       });
     }
@@ -33,6 +34,8 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
         console.log('checkIfFirstRun', isFirstRun);
         if (isFirstRun) {
           fileSystemAPI.createDir(appSettingsService.SETTINGS.THUMBNAILS_DIR, true);
+          fileSystemAPI.createDir(appSettingsService.SETTINGS.IMAGES_DIR, true);
+          appDataService.initAppData();
           saveAppData();
           setAppDataReadyStatus();
         } else {
@@ -75,7 +78,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       var
         deferred = $q.defer();
 
-      fileSystemAPI.writeFile(importObj.photoObj.id, importObj.photoObj.mainDataURI)
+      fileSystemAPI.writeFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + importObj.photoObj.id, importObj.photoObj.mainDataURI)
         .then(function () {
           // release memory
           delete importObj.photoObj.mainDataURI;
@@ -114,20 +117,18 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       if (uploadObj.batchObject && uploadObj.batchObject.cancelObject.isCancelled) {
         deferred.reject(new Error('cancel batch'));
       } else {
-        fileSystemAPI.removeFile(uploadObj.photoObj.id)
+        fileSystemAPI.removeFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + uploadObj.photoObj.id)
           .then(function () {
             return fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + uploadObj.photoObj.id);
           })
-          .then(function (uploadObj) {
-            deferred.resolve(uploadObj);
-          });
+          .then(deferred.resolve);
       }
 
       return deferred.promise;
     }
 
     function deleteImageVariantsById(photoId) {
-      return fileSystemAPI.removeFile(photoId)
+      return fileSystemAPI.removeFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + photoId)
         .then(function () {
           return fileSystemAPI.removeFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photoId);
         });
@@ -138,7 +139,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       var
         deferredImage = $q.defer();
 
-      fileSystemAPI.readFile(photoId).then(
+      fileSystemAPI.readFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + photoId).then(
         function (imgDataSrc) {
           deferredImage.resolve(imgDataSrc);
         },
@@ -190,7 +191,7 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       fileSystemAPI.renameFile(appSettingsService.SETTINGS.THUMBNAILS_DIR, oldName, newName)
         .then(function () {
           // rename main image
-          return fileSystemAPI.renameFile('', oldName, newName);
+          return fileSystemAPI.renameFile(appSettingsService.SETTINGS.IMAGES_DIR, oldName, newName);
         })
         .then(function () {
           // on success
@@ -230,6 +231,34 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       saveAppData();
     });
 
+    function clearDir (dirPath) {
+      var
+        deferred = $q.defer(),
+        promises = [];
+
+      fileSystemAPI.listDir(dirPath).then(function(fileEntries) {
+        angular.forEach(fileEntries, function (fileEntry){
+          if (fileEntry.isFile) {
+            console.log('fileEntry: ', fileEntry);
+            promises.push(fileSystemAPI.removeFile(fileEntry.fullPath));
+          }
+        });
+        $q.all(promises).then(deferred.resolve, deferred.reject);
+      });
+
+      return deferred.promise;
+    }
+
+    function deleteAllImages () {
+      var
+        promises = [];
+
+      promises.push(clearDir(appSettingsService.SETTINGS.IMAGES_DIR));
+      promises.push(clearDir(appSettingsService.SETTINGS.THUMBNAILS_DIR));
+
+      return $q.all(promises);
+    }
+
     return {
       initStorage: initStorage,
       saveAppData: saveAppData,
@@ -240,7 +269,8 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       loadThumbnails: loadThumbnails,
       renameImageVariants: renameImageVariants,
       renameImageVariantsAfterUpload: renameImageVariantsAfterUpload,
-      loadImage: loadImage
+      loadImage: loadImage,
+      deleteAllImages: deleteAllImages
     };
 
   }

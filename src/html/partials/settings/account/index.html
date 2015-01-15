@@ -1,0 +1,8 @@
+<div data-ng-switch="settingsSection2" data-ng-controller="settingsAccountController">
+  <div data-ng-switch-default>
+    <div data-ng-include="'html/partials/settings/account/account.html'"></div>
+  </div>
+  <div data-ng-switch-when="reset-pwd">
+    <div data-ng-include="'html/partials/settings/account/reset-pwd.html'"></div>
+  </div>
+</div>

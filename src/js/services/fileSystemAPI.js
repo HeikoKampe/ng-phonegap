@@ -14,6 +14,10 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, 
     return fs.createDir(directory, replaceBOOL);
   }
 
+  function listDir (directory) {
+    return fs.listDir(directory)
+  }
+
   function checkFile (filePath) {
     return fs.checkFile(filePath);
   }
@@ -41,6 +45,7 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, 
   return {
     checkDir: checkDir,
     createDir: createDir,
+    listDir: listDir,
     checkFile: checkFile,
     createFile: createFile,
     removeFile: removeFile,

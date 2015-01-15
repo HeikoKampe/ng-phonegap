@@ -1,0 +1,37 @@
+<!--settings view-->
+
+<div class="top">
+  <div class="top__inner">
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
+  </div>
+</div>
+
+<div class="center center--show-top">
+
+    <div class="grid full-height">
+      <div class="grid__item one-third full-height">
+
+      </div>
+
+      <div class="grid__item two-thirds full-height" data-ng-switch="settingsSection">
+        <h2>Upgrade options</h2>
+        <p>The free version of the app allows you to share one album with five photos.<br> For 1.00 € you can share up to
+        five albums with a maximum of 30 photos each.</p>
+        <p><button data-ng-click="onUpgrade1BtnClick()">Upgrade 1</button></p>
+
+        <p>Per default only the gallery owner is allowed to add and upload photos to an album.<br>
+        For 1.00 € you can upgrade the app to allow photos upload for all subscribers of an album.</p>
+        <p><button data-ng-click="onUpgrade2BtnClick()">Upgrade 2</button></p>
+      </div>
+    </div>
+
+</div>
+
+
+<div class="bottom">
+  <div class="bottom__background"></div>
+  <div class="bottom__inner">
+
+  </div>
+</div>
+

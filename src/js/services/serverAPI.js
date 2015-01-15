@@ -142,14 +142,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
    * @returns
    */
   function login(credentials) {
+    var
+      deferred = $q.defer();
 
-    return $http.post(API_BASE_URL + 'login/', credentials)
+    $http.post(API_BASE_URL + 'login/', credentials)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false, 'message': data}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
 
@@ -254,6 +258,21 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
+  function upgrade (userId, settingsUpgrade) {
+    var
+      deferred = $q.defer();
+
+    $http.put(API_BASE_URL + 'users/' + userId + '/settings', settingsUpgrade)
+      .success(function (data, status, headers, config) {
+        deferred.resolve(data);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject(data);
+      });
+
+    return deferred.promise;
+  }
+
   return {
     getGallery: getGallery,
     getGalleryById: getGalleryById,
@@ -272,7 +291,8 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     getSignedImageUrl: getSignedImageUrl,
     validateUsername: validateUsername,
     requestPasswordPin: requestPasswordPin,
-    resetPassword: resetPassword
+    resetPassword: resetPassword,
+    upgrade: upgrade
   }
 
 });

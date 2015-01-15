@@ -6,7 +6,6 @@ angular.module(_CONTROLLERS_).controller('mainController', function (
 
 
   $rootScope.appDataReady = false;
-
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;
   //$scope.messages = messageService.getMessages();

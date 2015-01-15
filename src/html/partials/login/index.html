@@ -10,7 +10,7 @@
 <div class="center center--show-top">
   <div class="center__inner text-center">
 
-    <form class="form" name="loginForm" data-ng-submit="loginSubmit(loginForm.$valid)" novalidate>
+    <form class="form--centered" name="loginForm" data-ng-submit="loginSubmit(loginForm.$valid)" novalidate>
       <h1 style="line-height:1em;">Login,<br>
         <span class="text-large">to share your photos with others.</span></h1>
 
@@ -64,7 +64,9 @@
       </div>
     </form>
     <a href="" data-ng-click="go('/reset-pwd', 'slide-left')">Forgot password</a>
+
+    <p><button data-ng-click="test()">Test</button></p>
+
   </div>
-  <p><button data-ng-click="onCancelBtnClick()">Cancel</button></p>
 </div>
 

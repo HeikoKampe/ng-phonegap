@@ -46,6 +46,14 @@ angular.module(_APP_).config([
         templateUrl: 'html/partials/settings/index.html',
         controller: 'settingsController'
       })
+      .when('/settings/:section1', {
+        templateUrl: 'html/partials/settings/index.html',
+        controller: 'settingsController'
+      })
+      .when('/settings/:section1/:section2', {
+        templateUrl: 'html/partials/settings/index.html',
+        controller: 'settingsController'
+      })
       .when('/signin', {
         templateUrl: 'html/partials/signin/index.html',
         controller: 'signinController'
@@ -65,6 +73,10 @@ angular.module(_APP_).config([
       .when('/reset-pwd', {
         templateUrl: 'html/partials/reset-pwd/index.html',
         controller: 'resetPasswordController'
+      })
+      .when('/upgrade', {
+        templateUrl: 'html/partials/upgrade/index.html',
+        controller: 'upgradeController'
       })
       .otherwise({ redirectTo: '/home' });
 
