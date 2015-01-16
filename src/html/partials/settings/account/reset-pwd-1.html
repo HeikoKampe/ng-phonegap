@@ -15,9 +15,10 @@
               class="form__text-input"
               required/>
           </span>
-      <span class="form__validation-icon icon-check" data-ng-show="!emailNotFoundError && requestPwdForm1.email.$valid"></span>
+      <span class="form__validation-icon icon-check"
+            data-ng-show="!emailNotFoundError && requestPwdForm1.email.$valid"></span>
           <span class="form__validation-icon form__validation-icon--error icon-attention"
-              data-ng-show="emailNotFoundError || (requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern )">
+                data-ng-show="emailNotFoundError || (requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern )">
           </span>
     </div>
 

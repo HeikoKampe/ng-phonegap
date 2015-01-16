@@ -44,7 +44,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
 
     messageService.startProgressMessage({title: 'Importing foreign gallery'});
 
-    serverAPI.getGallery(ownerName, galleryKey)
+    serverAPI.getGalleryByOwnerNameAndKey(ownerName, galleryKey)
       .then(importGallery)
       .then(function () {
         // on success

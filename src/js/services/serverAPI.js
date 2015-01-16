@@ -59,7 +59,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function getGallery(galleryOwnerName, galleryKey) {
+  function getGalleryByOwnerNameAndKey(galleryOwnerName, galleryKey) {
     var
       deferred = $q.defer();
 
@@ -274,7 +274,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   }
 
   return {
-    getGallery: getGallery,
+    getGalleryByOwnerNameAndKey: getGalleryByOwnerNameAndKey,
     getGalleryById: getGalleryById,
     getGalleriesOfOwner: getGalleriesOfOwner,
     uploadPhoto: uploadPhoto,

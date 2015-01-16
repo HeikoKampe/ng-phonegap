@@ -2,66 +2,42 @@
 
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="go('edit-gallery', 'slide-right')"></span>
+    <span class="top-icon-back icon-back" data-ng-click="back()"></span>
   </div>
 </div>
 
 <div class="center center--show-top">
-  <div class="center__inner text-center">
+  <div class="center__inner">
 
-    <h1>Sharing</h1>
+    <div class="grid full-height">
+      <div class="grid__item one-third full-height soft--right">
 
-    <h2>{{gallery.name}}</h2>
+        <ul class="settings-menu">
+          <li class="settings-menu__title"><h2>Settings</h2></li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': sharingSection1 == 'sharing'}"
+              data-ng-click="go('share-gallery/sharing', '')">Sharing
+          </li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': sharingSection1 == 'invite'}"
+              data-ng-click="go('share-gallery/invite', '')">Invite
+          </li>
+        </ul>
+      </div>
 
-    <div data-ng-if="!gallery.dateOfUpload">
-      <p>Upload your photos.</p>
-      <p>
-        <button class="btn--white" data-ng-click="onShareGalleryBtnClick()">Upload</button>
-      </p>
-    </div>
-
-    <div data-ng-if="gallery.dateOfUpload">
-      <div class="details">
-        <div class="details__group">
-          <p class="details__info">Give access to your gallery by sharing your username and gallery key with others.</p>
-
-          <p>
-            <span class="details__label">Your username</span><br>
-            <span class="details__value">{{userName}}</span>
-          </p>
-
-          <span class="details__label">Gallery key</span><br>
-
-          <p class="details__value">
-            {{galleryKeySegments[0]}} - {{galleryKeySegments[1]}} - {{galleryKeySegments[2]}}
-          </p>
-
-          <button class="btn--white" data-ng-click="go('invite', 'slide-left')">Send email invitations</button>
-
+      <div class="grid__item two-thirds full-height soft--left" data-ng-switch="sharingSection1">
+        <div data-ng-switch-default>
+          <div data-ng-include="'html/partials/share-gallery/sharing.html'"></div>
         </div>
-
-        <div class="details__group">
-          <p class="details__info">Allow others to edit (add/delete photos) your gallery</p>
-
-          <p>
-            <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="true"
-                   data-ng-change="onUploadPermissionChange()"> enabled
-            <input type="radio" data-ng-model="gallery.settings.allowForeignUploads" data-ng-value="false"
-                   data-ng-change="onUploadPermissionChange()"> disabled <br/>
-          </p>
-
-          <p data-ng-if="gallery.settings.allowForeignUploads">
-            <span class="details__label">Upload key</span><br>
-            <span class="details__value">{{gallery.uploadPassword}}</span>
-          </p>
-
+        <div data-ng-switch-when="sharing">
+          <div data-ng-include="'html/partials/share-gallery/sharing.html'"></div>
         </div>
-
+        <div data-ng-switch-when="gallery">
+          <div data-ng-include="'html/partials/share-gallery/invite.html'"></div>
+        </div>
       </div>
     </div>
 
   </div>
 
 </div>
-</div>
-

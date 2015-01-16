@@ -38,8 +38,8 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
       }, function (error) {
         console.log('importAllGalleriesOfUser was canceled');
       });
-    }, function (err) {
-      console.log('deleteAllImages error');
+    }, function () {
+      throw new Error('delete all images failed');
     });
   }
 

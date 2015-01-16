@@ -2,7 +2,8 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
   $scope,
   serverAPI,
   appDataService,
-  eventService) {
+  eventService,
+  messageService) {
 
 
   $scope.pageClass = 'page--upgrade';
@@ -10,6 +11,10 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
   function onUpgradeSuccess(data){
     console.log('upgrade success', data);
     eventService.broadcast('GALLERY-UPDATE');
+    messageService.showMessage({
+      title: 'Thank you for upgrading!',
+      content: 'You made me very happy!'
+    });
   }
 
   function updateLocalSettings (data) {
@@ -37,6 +42,7 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
       };
 
     serverAPI.upgrade(appDataService.getUserId(), settingsUpdate)
+      .then(updateLocalSettings)
       .then(onUpgradeSuccess)
   };
 

@@ -10,8 +10,9 @@
 </div>
 
 <div class="center center--show-top center--show-bottom">
-  <div class="center-inner">
+  <div class="center__inner">
     <h1 class="gallery-title">{{gallery.title}}</h1>
+
     <div class="status"><span>{{gallery.photos.length}} of {{gallery.settings.maxPhotos}}</span></div>
 
     <div class="edit-thumbs">
@@ -36,8 +37,8 @@
 
 
 <div class="bottom">
-
   <div class="bottom__inner">
+
     <ul class="bottom-ctrl">
       <li class="bottom-ctrl__item">
         <div class="bottom-ctrl__icon icon-add-images"></div>
@@ -46,7 +47,8 @@
           <input class="file-input" type="file" id="files" name="files[]" multiple data-file-selection-directive/>
         </div>
       </li>
-      <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()" data-ng-class="{'bottom-ctrl__item--green': highlightSharingBtn}">
+      <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()"
+          data-ng-class="{'bottom-ctrl__item--green': highlightSharingBtn}">
         <div class="bottom-ctrl__icon icon-share"></div>
         <div class="bottom-ctrl__label">Share</div>
       </li>
@@ -55,7 +57,8 @@
         <div class="bottom-ctrl__label">Slideshow</div>
       </li>
 
-      <li class="bottom-ctrl__item bottom-ctrl__item--green" data-ng-if="showUpdateBtn" data-ng-click="onUpdateBtnClick()">
+      <li class="bottom-ctrl__item bottom-ctrl__item--green" data-ng-if="showUpdateBtn"
+          data-ng-click="onUpdateBtnClick()">
         <div class="bottom-ctrl__icon icon-sync2"></div>
         <div class="bottom-ctrl__label">Apply changes</div>
       </li>
@@ -68,5 +71,6 @@
         <div class="bottom-ctrl__label">Delete gallery</div>
       </li>
     </ul>
+
   </div>
 </div>

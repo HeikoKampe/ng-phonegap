@@ -1,0 +1,46 @@
+<h2>Album: {{gallery.title}}</h2>
+
+<p>Give access to your gallery by sharing your username and gallery key with others.</p>
+
+<div class="settings__block">
+  <div class="settings__item">
+    <span class="settings__item-label">Your username</span>
+    <span class="settings__item-value">{{userName}}</span>
+  </div>
+
+  <div class="settings__item">
+    <span class="settings__item-label">Album key</span>
+    <span
+        class="settings__item-value">{{galleryKeySegments[0]}} - {{galleryKeySegments[1]}} - {{galleryKeySegments[2]}}</span>
+  </div>
+</div>
+
+<div class="settings__block">
+  <div class="settings__item">
+    <span class="settings__item-label">Send invitations to your friends and family</span>
+    <a class="settings__item-action" href="#invite">send invitation</a>
+  </div>
+</div>
+
+<div class="settings__block">
+  <div class="settings__item">
+    <span class="settings__item-label">Allow public photo uploads</span>
+              <span class="settings__item-value">
+                <input type="radio"
+                       data-ng-model="gallery.settings.allowForeignUploads"
+                       data-ng-value="true"
+                       data-ng-change="onUploadPermissionChange()"> enabled
+                <input type="radio"
+                       data-ng-model="gallery.settings.allowForeignUploads"
+                       data-ng-value="false"
+                       data-ng-change="onUploadPermissionChange()"> disabled <br/>
+              </span>
+
+    <div class="settings__item-info">
+      <p data-ng-if="gallery.settings.allowForeignUploads">
+        <span class="details__label">Security key</span><br>
+        <span class="details__value">{{gallery.uploadPassword}}</span>
+      </p>
+    </div>
+  </div>
+</div>

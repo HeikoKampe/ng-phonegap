@@ -1,10 +1,15 @@
-angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($rootScope, $scope, appDataService, exportService, authService) {
+angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
+    $rootScope,
+    $scope,
+    $routeParams,
+    appDataService,
+    exportService,
+    authService) {
 
 
     $scope.pageClass = 'page--share-gallery';
-    $scope.gallery = appDataService.getGallery();
-    $scope.userName = appDataService.getUserName();
-    $scope.galleryKeySegments = createGalleryKeySegments(appDataService.getGalleryKey());
+    $scope.sharingSection1 = $routeParams.section1;
+
 
     function createGalleryKeySegments(galleryKey) {
       var keySegments = [];
@@ -20,7 +25,7 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
 
     $scope.onShareGalleryBtnClick = function () {
       if (authService.isAuthorized()) {
-        exportService.uploadGallery();
+        //exportService.uploadGallery();
       } else {
         $rootScope.go('signin', 'slide-left');
       }
@@ -30,10 +35,24 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
       exportService.updateUploadPermission($scope.gallery.galleryId, {'allowForeignUploads': $scope.gallery.settings.allowForeignUploads});
     };
 
-
     $scope.$on('GALLERY-UPDATE', function () {
       $scope.galleryKeySegments = createGalleryKeySegments(appDataService.getGalleryKey());
     });
+
+    function init() {
+      if ($rootScope.appDataReady) {
+        $scope.gallery = appDataService.getGallery();
+        $scope.appSettings = appDataService.getAppSettings();
+        $scope.userName = appDataService.getUserName();
+        $scope.galleryKeySegments = createGalleryKeySegments(appDataService.getGalleryKey());
+      }
+    }
+
+    $scope.$on('APP-DATA-READY', function () {
+      init();
+    });
+
+    init();
 
 
   }

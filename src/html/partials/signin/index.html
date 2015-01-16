@@ -29,7 +29,8 @@
                 placeholder="magic"
                 required/>
           </span>
-          <span class="form__validation-icon icon-check" data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken"></span>
+          <span class="form__validation-icon icon-check"
+                data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken"></span>
         </div>
         <span class="form__validation-icon icon-check"
               data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken && signinForm.username.$blurred"></span>
@@ -64,7 +65,8 @@
         </div>
 
 
-        <span class="form__error-msg" data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.required">Your email is required!</span>
+        <span class="form__error-msg"
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.required">Your email is required!</span>
         <span class="form__error-msg"
               data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.pattern">Not a valid email format!</span>
 

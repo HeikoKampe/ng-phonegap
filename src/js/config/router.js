@@ -39,6 +39,10 @@ angular.module(_APP_).config([
         controller: 'selectGalleryController'
       })
       .when('/share-gallery', {
+        templateUrl: 'html/partials/share-gallery/sharing2.html',
+        controller: 'shareGalleryController'
+      })
+      .when('/share-gallery/:section1', {
         templateUrl: 'html/partials/share-gallery/index.html',
         controller: 'shareGalleryController'
       })

@@ -7,37 +7,42 @@
 </div>
 
 <div class="center center--show-top">
+  <div class="center__inner">
 
-    <div class="grid full-height">
-      <div class="grid__item one-third full-height soft--right">
-        <ul class="settings-menu">
-          <!--<li class="settings-menu__title"><h2>Settings</h2></li>-->
-          <li class="settings-menu__item"
-              data-ng-class="{'active': settingsSection1 == 'gallery'}"
-              data-ng-click="go('settings/gallery', '')">Album settings</li>
-          <li class="settings-menu__item"
-              data-ng-class="{'active': settingsSection1 == 'slideshow'}"
-              data-ng-click="go('settings/slideshow', '')">Slideshow settings</li>
-          <li class="settings-menu__item"
-              data-ng-class="{'active': settingsSection1 == 'account'}"
-              data-ng-click="go('settings/account', '')">Your account</ul>
+  <div class="grid full-height">
+    <div class="grid__item one-third full-height soft--right">
+      <ul class="settings-menu">
+        <!--<li class="settings-menu__title"><h2>Settings</h2></li>-->
+        <li class="settings-menu__item"
+            data-ng-class="{'active': settingsSection1 == 'gallery'}"
+            data-ng-click="go('settings/gallery', '')">Album settings
         </li>
-      </div>
-
-      <div class="grid__item two-thirds full-height soft--left" data-ng-switch="settingsSection1">
-        <div data-ng-switch-default>
-          <div data-ng-include="'html/partials/settings/intro.html'"></div>
-        </div>
-        <div data-ng-switch-when="gallery">
-          <div data-ng-include="'html/partials/settings/gallery.html'"></div>
-        </div>
-        <div data-ng-switch-when="slideshow">
-          <div data-ng-include="'html/partials/settings/slideshow.html'"></div>
-        </div>
-        <div data-ng-switch-when="account">
-          <div data-ng-include="'html/partials/settings/account/index.html'"></div>
-        </div>
-      </div>
+        <li class="settings-menu__item"
+            data-ng-class="{'active': settingsSection1 == 'slideshow'}"
+            data-ng-click="go('settings/slideshow', '')">Slideshow settings
+        </li>
+        <li class="settings-menu__item"
+            data-ng-class="{'active': settingsSection1 == 'account'}"
+            data-ng-click="go('settings/account', '')">Your account
+      </ul>
+      </li>
     </div>
 
+    <div class="grid__item two-thirds full-height soft--left" data-ng-switch="settingsSection1">
+      <div data-ng-switch-default>
+        <div data-ng-include="'html/partials/settings/intro.html'"></div>
+      </div>
+      <div data-ng-switch-when="gallery">
+        <div data-ng-include="'html/partials/settings/gallery.html'"></div>
+      </div>
+      <div data-ng-switch-when="slideshow">
+        <div data-ng-include="'html/partials/settings/slideshow.html'"></div>
+      </div>
+      <div data-ng-switch-when="account">
+        <div data-ng-include="'html/partials/settings/account/index.html'"></div>
+      </div>
+    </div>
+  </div>
+
+  </div>
 </div>
