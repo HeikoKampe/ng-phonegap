@@ -39,7 +39,7 @@ angular.module(_APP_).config([
         controller: 'selectGalleryController'
       })
       .when('/share-gallery', {
-        templateUrl: 'html/partials/share-gallery/sharing2.html',
+        templateUrl: 'html/partials/share-gallery/index.html',
         controller: 'shareGalleryController'
       })
       .when('/share-gallery/:section1', {
@@ -77,10 +77,6 @@ angular.module(_APP_).config([
       .when('/reset-pwd', {
         templateUrl: 'html/partials/reset-pwd/index.html',
         controller: 'resetPasswordController'
-      })
-      .when('/upgrade', {
-        templateUrl: 'html/partials/upgrade/index.html',
-        controller: 'upgradeController'
       })
       .otherwise({ redirectTo: '/home' });
 

@@ -121,6 +121,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     }
 
     batchObject.deferred.promise.then(function () {
+      eventService.broadcast('GALLERY-UPDATE');
       deferred.resolve();
     }, function (error) {
       deferred.reject(error);
@@ -259,21 +260,28 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       .then(updateSyncId)
   }
 
-  function checkForRemoteChangesOfGallery(galleryId) {
+  function checkForRemoteChangesOfGallery(galleryObj) {
     var
       deferred = $q.defer();
 
-    serverAPI.getGalleryStatus(galleryId)
-      .then(function (apiResult) {
-        console.log('locale syncId: ', appDataService.getSyncId(galleryId), '/', apiResult.data.syncId);
-        if (appDataService.getSyncId(galleryId) !== apiResult.data.syncId) {
-          messageService.updateProgressMessage({title: 'Syncing album', subtitle:appDataService.getGalleryTitle(galleryId)});
-          getRemoteUpdatesForGallery(galleryId)
-            .then(deferred.resolve, deferred.reject)
-        } else {
-          deferred.resolve();
-        }
-      });
+    if (galleryObj.dateOfUpload) {
+      serverAPI.getGalleryStatus(galleryObj.galleryId)
+        .then(function (apiResult) {
+          console.log('locale syncId: ', appDataService.getSyncId(galleryObj.galleryId), '/', apiResult.data.syncId);
+          if (appDataService.getSyncId(galleryObj.galleryId) !== apiResult.data.syncId) {
+            messageService.updateProgressMessage({
+              title: 'Syncing album',
+              subtitle: appDataService.getGalleryTitle(galleryObj.galleryId)
+            });
+            getRemoteUpdatesForGallery(galleryObj.galleryId)
+              .then(deferred.resolve, deferred.reject)
+          } else {
+            deferred.resolve();
+          }
+        });
+    } else {
+      deferred.resolve();
+    }
 
     return deferred.promise;
   }
@@ -282,7 +290,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     var
       galleryObj = batchObject.getNext();
 
-    checkForRemoteChangesOfGallery(galleryObj.galleryId)
+    checkForRemoteChangesOfGallery(galleryObj)
       .then(function () {
         batchObject.onSuccess();
         if (batchObject.hasNext()) {

@@ -41,6 +41,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.onCenterClick = function () {
     $rootScope.showCtrls();
     $scope.stopSlideshow();
+    setTransitionClass();
     setCtrlTimer();
   };
 

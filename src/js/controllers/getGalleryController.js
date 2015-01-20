@@ -8,13 +8,11 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
   $scope.showCtrls = true;
   $scope.galleryKeySegments = [];
   $scope.galleryOwnerName = '';
+  $scope.showErrorMessage = false;
 
-  function success(data) {
-    console.log("success: ", data);
-  }
 
-  function error(e) {
-    console.log("error: ", e.message);
+  function onImportError () {
+    $scope.showErrorMessage = true;
   }
 
   $scope.onContinueBtnClick = function () {
@@ -22,8 +20,9 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
 
     galleryImportService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey)
       .then(function () {
+        $scope.showErrorMessage = false;
         $rootScope.go('select-gallery', 'slide-left');
-      });
+      }, onImportError);
   };
 
 

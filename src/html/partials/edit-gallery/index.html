@@ -1,11 +1,10 @@
 <!--edit-gallery view-->
-
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="go('/select-gallery', 'slide-right')"></span>
-    <button class="settings-btn btn" data-ng-click="go('/settings', 'slide-left')">
-      <span class="icon icon--settings"></span>
-    </button>
+    <span class="top-icon-back icon-back" data-ng-click="go('select-gallery', 'slide-right')"></span>
+    <span class="float-right" data-ng-click="go('/settings', 'slide-left', true)">
+    <img style="width:30px; position:relative; top:-5px; cursor:pointer;" src="img/settings.png"/>
+  </span>
   </div>
 </div>
 
@@ -18,7 +17,11 @@
     <div class="edit-thumbs">
       <div
           data-ng-repeat="photo in gallery.photos"
-          data-ng-class="{ 'edit-thumbs__thumb': true, 'edit-thumbs__thumb--del': photo.deleted, 'edit-thumbs__thumb--new': !photo.dateOfUpload }"
+          data-ng-class="{
+          'edit-thumbs__thumb': true,
+          'edit-thumbs__thumb--del': photo.deleted,
+          'edit-thumbs__thumb--new': !photo.dateOfUpload && gallery.dateOfUpload
+          }"
           data-ng-click="togglePhoto($index)"
           style="float:left; text-align:center;">
         <img class="edit-thumbs__thumb-img"
@@ -27,9 +30,20 @@
              class="thumb__img"
              title="{{photo.name}}"/>
 
-        <div class="edit-thumbs__thumb-caption"></div>
-        <div class="edit-thumbs__thumb-icon-new icon-upload" data-ng-if="!photo.dateOfUpload && !photo.deleted"></div>
+        <div class="edit-thumbs__thumb-caption">
+          <span data-ng-if="photo.deleted" class="edit-thumbs__thumb-caption-text">
+            {{'LABEL_PHOTO_DELETE' | translate}}
+          </span>
+          <span data-ng-if="!photo.dateOfUpload && !photo.deleted && gallery.dateOfUpload" class="edit-thumbs__thumb-caption-text">
+            {{'LABEL_PHOTO_ADD' | translate}}
+          </span>
+        </div>
+
       </div>
+    </div>
+
+    <div data-ng-if="!gallery.photos.length">
+      <p>{{'EDIT_INTRO' | translate}}</p>
     </div>
 
   </div>
@@ -42,33 +56,28 @@
     <ul class="bottom-ctrl">
       <li class="bottom-ctrl__item">
         <div class="bottom-ctrl__icon icon-add-images"></div>
-        <div class="bottom-ctrl__label">Add images</div>
+        <div class="bottom-ctrl__label">{{ 'BTN_ADD_PHOTOS' | translate }}</div>
         <div id="controller" data-ng-controller="fileSelectionController">
           <input class="file-input" type="file" id="files" name="files[]" multiple data-file-selection-directive/>
         </div>
       </li>
+      <li class="bottom-ctrl__item" data-ng-class="{'bottom-ctrl__item--highlighted ':showUpdateBtn}"
+          data-ng-click="onUpdateBtnClick()">
+        <div class="bottom-ctrl__icon icon-sync2"></div>
+        <div class="bottom-ctrl__label">{{ 'BTN_UPDATE' | translate }}</div>
+      </li>
       <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()"
           data-ng-class="{'bottom-ctrl__item--green': highlightSharingBtn}">
         <div class="bottom-ctrl__icon icon-share"></div>
-        <div class="bottom-ctrl__label">Share</div>
+        <div class="bottom-ctrl__label">{{ 'BTN_SHARE' | translate }}</div>
       </li>
       <li class="bottom-ctrl__item" data-ng-if="gallery.photos.length" data-ng-click="onSlideshowBtnClick()">
         <div class="bottom-ctrl__icon icon-play2"></div>
-        <div class="bottom-ctrl__label">Slideshow</div>
-      </li>
-
-      <li class="bottom-ctrl__item bottom-ctrl__item--green" data-ng-if="showUpdateBtn"
-          data-ng-click="onUpdateBtnClick()">
-        <div class="bottom-ctrl__icon icon-sync2"></div>
-        <div class="bottom-ctrl__label">Apply changes</div>
-      </li>
-      <li class="bottom-ctrl__item" data-ng-if="showDeleteSelectionBtn" data-ng-click="onDeleteSelectionBtnClick()">
-        <div class="bottom-ctrl__icon icon-del-image"></div>
-        <div class="bottom-ctrl__label">Delete selection</div>
+        <div class="bottom-ctrl__label">{{ 'BTN_SLIDESHOW' | translate }}</div>
       </li>
       <li class="bottom-ctrl__item" data-ng-if="showDeleteGalleryBtn" data-ng-click="onDeleteGalleryBtnClick()">
         <div class="bottom-ctrl__icon icon-del-image"></div>
-        <div class="bottom-ctrl__label">Delete gallery</div>
+        <div class="bottom-ctrl__label">{{ 'BTN_DELETE_PHOTOFRAME' | translate }}</div>
       </li>
     </ul>
 

@@ -7,10 +7,13 @@ angular.module(_CONTROLLERS_).controller('settingsController', function (
   $scope.pageClass = 'page--settings';
   $scope.settingsSection1 = $routeParams.section1;
   $scope.settingsSection2 = $routeParams.section2;
+  $scope.showUpgradeInfo = [false, false, false];
 
-  $scope.onUpgradeBtnClick = function () {
 
+  $scope.showUpgradeInfo = function (infoIndex){
+    $scope.showUpgradeInfo[infoIndex] = true;
   };
+
 
   function init() {
     $scope.appSettings = appDataService.getAppSettings();

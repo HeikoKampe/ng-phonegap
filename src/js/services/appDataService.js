@@ -30,7 +30,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       galleries: null,
       settings: {
         allowForeignUploads: false,
-        maxGalleries: 3,
+        maxGalleries: 1,
         maxPhotos: 5
       }
     }
@@ -58,12 +58,25 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     return appData;
   }
 
+  function resetPhotoLimitsForExistingGalleries (maxPhotos) {
+    angular.forEach(appData.galleries, function (gallery, key) {
+      // of course not for foreign galleries
+      if (gallery.ownerId === appData.userId) {
+        gallery.settings.maxPhotos = maxPhotos;
+      }
+    });
+  }
+
   function getAppSettings() {
     return appData.settings;
   }
 
   function setAppSettings(settings) {
     appData.settings = settings;
+    if (settings.maxPhotos) {
+      resetPhotoLimitsForExistingGalleries(settings.maxPhotos);
+    }
+    eventService.broadcast("GALLERY-UPDATE");
   }
 
   function getGalleries() {

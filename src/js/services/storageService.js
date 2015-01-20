@@ -104,7 +104,10 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
           .then(saveThumbnailImage)
           .then(function (importObj) {
             deferred.resolve(importObj);
-          });
+          })
+          .catch(function (error){
+            deferred.reject(error);
+        });
       }
 
       return deferred.promise;

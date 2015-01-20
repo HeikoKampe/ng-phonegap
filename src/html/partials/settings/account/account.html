@@ -1,4 +1,4 @@
-<h2>Your account</h2>
+<h2>{{'SETTINGS_TITLE_ACCOUNT' | translate}}</h2>
 
 <!-- if user already signed up -->
 <div class="settings" data-ng-if="userName">
@@ -10,7 +10,11 @@
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Password</span>
-      <a class="settings__item-action" href="#settings/account/reset-pwd">reset password</a>
+      <span class="settings__item-action" data-ng-click="go('settings/account/reset-pwd', '')">reset password</span>
+    </div>
+    <div class="settings__item">
+      <span class="settings__item-label">Mit anderem Benutzer anmelden</span>
+      <a class="settings__item-action" data-ng-click="go('login', 'slide-left')">zum Login</a>
     </div>
   </div>
 
@@ -23,15 +27,15 @@
   <div class="settings__block">
     <div class="settings__item">
       <span class="settings__item-label">Create an account</span>
-      <a class="settings__item-action" href="#signin">Signin</a>
+      <a class="settings__item-action" data-ng-click="go('signin', '')">Signin</a>
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Use yout existing account</span>
-      <a class="settings__item-action" href="#login">Login</a>
+      <a class="settings__item-action" data-ng-click="go('login', '')">Login</a>
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Forgot your password?</span>
-      <a class="settings__item-action" href="#settings/account/reset-pwd">Reset password</a>
+      <a class="settings__item-action"  data-ng-click="go('settings/account/reset-pwd', 'slide-left')">Reset password</a>
     </div>
   </div>
 

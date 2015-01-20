@@ -7,7 +7,6 @@ angular.module(_CONTROLLERS_).controller('settingsAccountController', function (
                                                                                 eventService,
                                                                                 messageService) {
 
-  $scope.pageClass = 'page--settings';
 
   $scope.resetPwdStep = 1;
   $scope.emailNotFoundError = false;
@@ -52,5 +51,6 @@ angular.module(_CONTROLLERS_).controller('settingsAccountController', function (
       $rootScope.go('login', 'slide-right');
     }, onSecurityPinError);
   };
+
 
 });

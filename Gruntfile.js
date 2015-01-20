@@ -49,6 +49,7 @@ module.exports = function(grunt) {
           '<%= bowerDir %>/angular-route/angular-route.js',
           '<%= bowerDir %>/angular-touch/angular-touch.js',
           '<%= bowerDir %>/angular-animate/angular-animate.js',
+          '<%= bowerDir %>/angular-translate/angular-translate.js',
           '<%= bowerDir %>/lodash/dist/lodash.js',
           '<%= bowerDir %>/ngCordova/dist/ng-cordova.js',
           '<%= bowerDir %>/stacktrace-js/stacktrace.js',

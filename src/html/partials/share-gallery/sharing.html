@@ -1,46 +1,35 @@
-<h2>Album: {{gallery.title}}</h2>
+<h2>{{'TITLE_PHOTOFRAME' | translate}}: {{gallery.title}}</h2>
 
-<p>Give access to your gallery by sharing your username and gallery key with others.</p>
+<p>{{'SHARING_DESCRIPTION' | translate}}</p>
 
 <div class="settings__block">
   <div class="settings__item">
-    <span class="settings__item-label">Your username</span>
-    <span class="settings__item-value">{{userName}}</span>
-  </div>
+    <span class="settings__item-label">{{'SHARING_ACCESS_KEY' | translate}}</span>
+    <span data-ng-if="!showAccessKey"
+        data-ng-click="toggleShowAccessKey()"
+        class="settings__item-action">{{'SHARING_SHOW_ACCESS_KEY' | translate}}</span>
+    <span data-ng-if="showAccessKey"
+        data-ng-click="toggleShowAccessKey()"
+        class="settings__item-action">{{'SHARING_HIDE_ACCESS_KEY' | translate}}</span>
 
-  <div class="settings__item">
-    <span class="settings__item-label">Album key</span>
+    <div class="settings__item-info" data-ng-if="showAccessKey">
+      <span class="settings__item-info-label">&nbsp;</span>
     <span
-        class="settings__item-value">{{galleryKeySegments[0]}} - {{galleryKeySegments[1]}} - {{galleryKeySegments[2]}}</span>
-  </div>
-</div>
+        class="settings__item-info-value">{{galleryKeySegments[0]}} - {{galleryKeySegments[1]}} - {{galleryKeySegments[2]}}</span>
 
-<div class="settings__block">
-  <div class="settings__item">
-    <span class="settings__item-label">Send invitations to your friends and family</span>
-    <a class="settings__item-action" href="#invite">send invitation</a>
-  </div>
-</div>
-
-<div class="settings__block">
-  <div class="settings__item">
-    <span class="settings__item-label">Allow public photo uploads</span>
-              <span class="settings__item-value">
-                <input type="radio"
-                       data-ng-model="gallery.settings.allowForeignUploads"
-                       data-ng-value="true"
-                       data-ng-change="onUploadPermissionChange()"> enabled
-                <input type="radio"
-                       data-ng-model="gallery.settings.allowForeignUploads"
-                       data-ng-value="false"
-                       data-ng-change="onUploadPermissionChange()"> disabled <br/>
-              </span>
-
-    <div class="settings__item-info">
-      <p data-ng-if="gallery.settings.allowForeignUploads">
-        <span class="details__label">Security key</span><br>
-        <span class="details__value">{{gallery.uploadPassword}}</span>
-      </p>
     </div>
+  </div>
+  <div class="settings__item">
+    <span class="settings__item-label">{{'SHARING_OWNER_USERNAME' | translate}}</span>
+    <span class="settings__item-value">{{gallery.ownerName}}</span>
+  </div>
+</div>
+
+<p>Einladung mit Zugangsdaten verschicken:</p>
+
+<div class="settings__block">
+  <div class="settings__item">
+    <span class="settings__item-label">{{'SHARING_SEND_CREDENTIALS_VIA_EMAIL' | translate}}</span>
+    <a class="settings__item-action" data-ng-click="go('invite', '')">{{'BTN_SEND_EMAIL' | translate}}</a>
   </div>
 </div>

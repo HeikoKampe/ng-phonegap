@@ -1,9 +1,9 @@
-<!--home view-->
-
 <div class="top">
-  <div class="top__background"></div>
   <div class="top__inner">
     <span class="top-icon-back icon-back" data-ng-click="back()"></span>
+    <span class="float-right" data-ng-click="go('/settings', 'slide-left', true)">
+    <img style="width:30px; position:relative; top:-5px; cursor:pointer;" src="img/settings.png"/>
+  </span>
   </div>
 </div>
 
@@ -11,11 +11,14 @@
   <div class="center__inner text-center">
 
     <form class="form--centered" name="signinForm" data-ng-submit="signinSubmit(signinForm.$valid)" novalidate>
-      <h1 style="line-height:1em;">Signin,<br>
-        <span class="text-large">to share your photos with others.</span></h1>
+      <h1 style="line-height:1em;">{{'SIGNIN_TITLE' | translate}}</h1>
+
+      <p>{{'SIGNIN_DESCRIPTION' | translate}}</p>
+
+      <p>{{'SIGNIN_QUESTION' | translate}} <span class="link" data-ng-click="go('login', 'slide-left')">{{'SIGNIN_GO_TO_LOGIN' | translate}}</span></p>
 
       <div class="form__group">
-        <span class="form__label">Pic a username</span>
+        <span class="form__label">{{'SIGNIN_LABEL_PIC_USERNAME' | translate}}</span>
 
         <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -45,7 +48,7 @@
       </div>
 
       <div class="form__group">
-        <span class="form__label">Enter your email</span>
+        <span class="form__label">{{'SIGNIN_LABEL_EMAIL' | translate}}</span>
 
         <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -73,7 +76,7 @@
       </div>
 
       <div class="form__group">
-        <span class="form__label">Choose a password</span>
+        <span class="form__label">{{'SIGNIN_LABEL_PASSWORD' | translate}}</span>
 
         <div class="form__ctrl">
           <span class="form__text-input-outer">

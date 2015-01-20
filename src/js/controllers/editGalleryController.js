@@ -25,7 +25,8 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
 
       $scope.highlightSharingBtn = (!$scope.gallery.dateOfUpload && newPhotos.length > 0);
       $scope.showDeleteSelectionBtn = (!$scope.gallery.dateOfUpload && deletedPhotos.length > 0);
-      $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0));
+      $scope.showUpdateBtn = ($scope.gallery.dateOfUpload && (deletedPhotos.length > 0 || newPhotos.length > 0)) ||
+      !$scope.gallery.dateOfUpload && deletedPhotos.length > 0;
       $scope.showDeleteGalleryBtn = ($scope.gallery.photos.length === 0);
     }
 
@@ -68,7 +69,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if (authService.isAuthorized()) {
         uploadGallery();
       } else {
-        $rootScope.go('signin', 'slide-left');
+        $rootScope.go('signin', 'slide-left', true);
       }
     };
 
@@ -85,7 +86,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         }
 
       } else {
-        $rootScope.go('signin', 'slide-left');
+        $rootScope.go('signin', 'slide-left', true);
       }
     };
 
@@ -95,22 +96,26 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       }
     };
 
-    $scope.onDeleteSelectionBtnClick = function () {
-      syncService.removeLocallyDeletedPhotos();
-      updateGalleryStatus();
-    };
-
     $scope.onDeleteGalleryBtnClick = function () {
-      serverAPI.deleteGallery($scope.gallery.galleryId).then(function () {
+      if ($scope.gallery.dateOfUpload) {
+        serverAPI.deleteGallery($scope.gallery.galleryId).then(function () {
+          appDataService.deleteGallery();
+          if (Object.keys(appDataService.getAppData().galleries).length > 0) {
+            $rootScope.go('select-gallery', 'slide-right');
+          } else {
+            $rootScope.go('/home', 'slide-right');
+          }
+        }, function () {
+          throw new Error('could not delete gallery from server');
+        });
+      } else {
         appDataService.deleteGallery();
         if (Object.keys(appDataService.getAppData().galleries).length > 0) {
           $rootScope.go('select-gallery', 'slide-right');
         } else {
           $rootScope.go('/home', 'slide-right');
         }
-      }, function () {
-        throw new Error('could not delete gallery from server');
-      });
+      }
 
     };
 

@@ -9,6 +9,8 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
 
     $scope.pageClass = 'page--share-gallery';
     $scope.sharingSection1 = $routeParams.section1;
+    $scope.showAccessKey = false;
+    $scope.showAllowForeignUploadUpgradeInfo = false;
 
 
     function createGalleryKeySegments(galleryKey) {
@@ -23,6 +25,14 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
       return keySegments;
     }
 
+    $scope.onAllowForeignUploadsClick = function () {
+      $scope.showAllowForeignUploadUpgradeInfo = true;
+    };
+
+    $scope.toggleShowAccessKey = function () {
+      $scope.showAccessKey = !$scope.showAccessKey;
+    };
+    
     $scope.onShareGalleryBtnClick = function () {
       if (authService.isAuthorized()) {
         //exportService.uploadGallery();

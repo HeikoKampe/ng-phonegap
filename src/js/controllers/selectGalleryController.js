@@ -20,6 +20,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   $scope.showCtrls = true;
   $scope.galleries = {};
   $scope.previewThumbnails = {};
+  $scope.showNoGalleriesMessage = false;
 
 
   function createShuffleObj() {
@@ -164,9 +165,13 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
 
 
   function init() {
-    if ($rootScope.appDataReady) {
+    if ($rootScope.appDataReady && appDataService.getActiveGalleryId() !== -1) {
       $scope.galleries = appDataService.getGalleries();
-      syncService.checkForRemoteChanges().then(createPreviews);
+      if (_.size($scope.galleries)) {
+        syncService.checkForRemoteChanges().then(createPreviews);
+      } else {
+        $scope.showNoGalleriesMessage = true;
+      }
     }
   }
 

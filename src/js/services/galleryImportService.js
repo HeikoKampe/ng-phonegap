@@ -42,10 +42,11 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     var
       deferred = $q.defer();
 
-    messageService.startProgressMessage({title: 'Importing foreign gallery'});
-
     serverAPI.getGalleryByOwnerNameAndKey(ownerName, galleryKey)
-      .then(importGallery)
+      .then(function (apiResult){
+        messageService.startProgressMessage({title: 'Importing foreign gallery'});
+        return importGallery(apiResult);
+      })
       .then(function () {
         // on success
         deferred.resolve();

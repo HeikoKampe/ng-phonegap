@@ -28,7 +28,8 @@ angular.module(_APP_, [
   'ngTouch',
   'ngRoute',
   'ngAnimate',
-  'ngCordova'
+  'ngCordova',
+  'pascalprecht.translate'
 
 
 ]);
