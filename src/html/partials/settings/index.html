@@ -12,7 +12,7 @@
       <ul class="settings-menu">
         <li class="settings-menu__title"><h2>{{'SETTINGS_TITLE' | translate}}</h2></li>
         <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'gallery'}"
+            data-ng-class="{'active': settingsSection1 == 'gallery' || !settingsSection1}"
             data-ng-click="go('settings/gallery', '')">{{'SETTINGS_TITLE_GALLERY' | translate}}
         </li>
         <li class="settings-menu__item"
@@ -40,7 +40,7 @@
         <div data-ng-include="'html/partials/settings/gallery.html'"></div>
       </div>
       <div data-ng-switch-when="slideshow">
-        <div data-ng-include="'html/partials/settings/slideshow.html'"></div>
+        <div data-ng-include="'html/partials/settings/slideshow/index.html'"></div>
       </div>
       <div data-ng-switch-when="account">
         <div data-ng-include="'html/partials/settings/account/index.html'"></div>

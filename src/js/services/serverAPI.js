@@ -1,17 +1,6 @@
 angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   'use strict';
 
-  /**
-   *
-   * @param clientId
-   * @param galleries Object {
-   *  id: {
-   *    changeId: int
-   *  }
-   * }
-   */
-  function sync(clientId, galleries) {
-  }
 
   /**
    * @returns serverGallerieId
@@ -213,14 +202,19 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function validateUsername (username) {
-    return $http.get(API_BASE_URL + 'users/validate/' + username)
+  function checkUsername (username) {
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'users/validate/' + username)
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false, 'message': data}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function getGalleriesOfOwner (userId) {
@@ -289,7 +283,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     logErrorToServer: logErrorToServer,
     sendInvitation: sendInvitation,
     getSignedImageUrl: getSignedImageUrl,
-    validateUsername: validateUsername,
+    checkUsername: checkUsername,
     requestPasswordPin: requestPasswordPin,
     resetPassword: resetPassword,
     upgrade: upgrade

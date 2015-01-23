@@ -9,7 +9,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   slideshowTransitionService) {
 
   var
-    SLIDESHOW_DELAY = 10000,
+    slideshowDelay,
     BUFFER_DELTA = 2,
     BUFFER_MAX_LENGTH = 5,
     CTRL_DELAY = 5000,
@@ -107,7 +107,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     if (!$scope.slideshowInterval) {
       $scope.slideshowInterval = $interval(function () {
         $scope.showNextPhoto();
-      }, SLIDESHOW_DELAY);
+      }, slideshowDelay);
     }
   };
 
@@ -183,6 +183,8 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
 
   function init() {
     if ($rootScope.appDataReady) {
+      slideshowDelay = appDataService.getAppSettingsItem('slideshowTransitionDelay');
+      console.log('slideshowDelay', slideshowDelay);
       $scope.gallery = appDataService.getGallery();
       storageService.loadThumbnails().then(function (thumbnails) {
         $scope.thumbnails = thumbnails;

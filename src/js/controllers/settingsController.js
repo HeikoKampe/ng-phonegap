@@ -1,8 +1,7 @@
 angular.module(_CONTROLLERS_).controller('settingsController', function (
   $scope,
   $routeParams,
-  appDataService,
-  eventService) {
+  appDataService) {
 
   $scope.pageClass = 'page--settings';
   $scope.settingsSection1 = $routeParams.section1;

@@ -31,7 +31,9 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       settings: {
         allowForeignUploads: false,
         maxGalleries: 1,
-        maxPhotos: 5
+        maxPhotos: 5,
+        slideshowTransitionEffect: 0,
+        slideshowTransitionDelay:10000
       }
     }
   }
@@ -72,11 +74,15 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
   }
 
   function setAppSettings(settings) {
-    appData.settings = settings;
+    _.extend(appData.settings, settings);
     if (settings.maxPhotos) {
       resetPhotoLimitsForExistingGalleries(settings.maxPhotos);
     }
     eventService.broadcast("GALLERY-UPDATE");
+  }
+
+  function getAppSettingsItem(settingsItemKey) {
+    return appData.settings[settingsItemKey];
   }
 
   function getGalleries() {
@@ -162,7 +168,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     var
       galleryId = _galleryId || appData.activeGalleryId;
 
-    appData.galleries[galleryId].settings = settings;
+    _.extend(appData.galleries[galleryId].settings, settings);
   }
 
   function getGallerySettings(settings, _galleryId) {
@@ -371,6 +377,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     setAppData: setAppData,
     getAppData: getAppData,
     getAppSettings: getAppSettings,
+    getAppSettingsItem: getAppSettingsItem,
     setAppSettings: setAppSettings,
 
     getGalleries: getGalleries,

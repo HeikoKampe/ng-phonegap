@@ -40,11 +40,9 @@ angular.module(_APP_).config([
         TITLE_CREATE_NEW: 'Neuen Fotorahmen erstellen',
 
 
-
         LABEL_ENTER_TITLE: 'Name des Fotorahmens',
         LABEL_PHOTO_ADD: 'hinzufügen',
         LABEL_PHOTO_DELETE: 'entfernen',
-
 
 
         INFO_LIMIT_REACHED_TITLE: 'Sorry, Sie haben Ihr App Limit erreicht!',
@@ -72,7 +70,6 @@ angular.module(_APP_).config([
         EDIT_INTRO: 'Intro text',
 
 
-
         SHARING_DESCRIPTION: 'Sie können den Fotorahmen mit anderen teilen, indem Sie ihnen den Zugangs-Code (s.u.) und Ihren Benutzernahmen geben.',
         SHARING_OWNER_USERNAME: 'Ihr Benutzernahme',
         SHARING_ACCESS_KEY: 'Zugangs-Code zu diesem Fotorahmen',
@@ -85,36 +82,44 @@ angular.module(_APP_).config([
         SHARING_ALLOW_FOREIGN_UPLOADS_UNLOCK_INFO: 'Das gemeinsame Bearbeiten ist ein Premium Feature und kann durch den Kauf eines Upgrades freigeschaltet werden.',
 
         SUBSCRIBE_TITLE: 'Fotorahmen importieren',
-        SUBSCRIBE_DESCRIPTION: 'Bitte geben Sie den Benutzernahmen des Autors und den Zugangs-Code des Fotorahmens ein.',
+        SUBSCRIBE_DESCRIPTION_STEP_1: 'So gehts (Beispiel): Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code. Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig! Viel Spaß!',
+        SUBSCRIBE_DESCRIPTION_STEP_1_bkup: 'Hier können Sie ganz einfach den Fotorahmen eines Freundes, Familienmitglieds oder anderem Bekannten importieren. Sie brauchen dafür nur einen Benutzernamen und einen Zugangs-Code. Beides bekommen Sie vom Autoren des Fotorahmens.',
+        SUBSCRIBE_DESCRIPTION_STEP_2 : 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
         SUBSCRIBE_LABEL_OWNERNAME: 'Benutzername des Autors',
-        SUBSCRIBE_LABEL_ACCESS_CODE: 'Zugangs-Code',
+        SUBSCRIBE_LABEL_ACCESS_CODE: 'Zugangs-Code (6-Ziffern)',
+        SUBSCRIBE_INVALID_ACCESS_CODE: 'ungültig',
 
         SIGNIN_TITLE: 'Anmelden',
         SIGNIN_DESCRIPTION: 'Bitte melden Sie sich an um, Ihre Fotos mit anderen zu teilen.',
-        SIGNIN_QUESTION:  'Bereits angemeldet?',
-        SIGNIN_GO_TO_LOGIN:  'zum Login',
+        SIGNIN_QUESTION: 'Bereits angemeldet?',
+        SIGNIN_GO_TO_LOGIN: 'zum Login',
         SIGNIN_LABEL_PIC_USERNAME: 'Wählen Sie einen Benutzernamen',
         SIGNIN_LABEL_EMAIL: 'Ihre E-Mail Adresse',
         SIGNIN_LABEL_PASSWORD: 'Wählen Sie ein Password',
+
+        LOGIN_TITLE: 'Login',
+        LOGIN_INFO: 'Sie haben sich schon einmal angemeldet und einen Fotorahmen angelegt? Dann können Sie sich hier mit Ihren Zugangsdaten anmelden um Ihre existierenden Fotorahmen zu importieren.',
+        LOGIN_GO_TO: 'zum Login',
 
         SETTINGS_TITLE: 'Einstellungen',
         SETTINGS_TITLE_GALLERY: 'Fotorahmen',
         SETTINGS_TITLE_SLIDESHOW: 'Diashow',
         SETTINGS_TITLE_ACCOUNT: 'Account',
         SETTINGS_TITLE_LANGUAGE: 'Sprache',
-        SETTINGS_TITLE_UPGRADE: 'Upgrade',
+        SETTINGS_TITLE_UPGRADE: 'Premium',
         SETTINGS_ACCOUNT_MAX_GALLERIES: 'Max. Anzahl Fotorahmen',
         SETTINGS_ACCOUNT_MAX_PHOTOS: 'Max. Anzahl Fotos pro Fotorahmen',
         SETTINGS_ACCOUNT_ALLOW_FOREIGN_UPLOADS: 'Gemeinsames bearbeiten',
         SETTINGS_ACCOUNT_ALLOW_FOREIGN_UPLOADS_DESCRIPTION: 'Foto-Uploads für andere erlauben.',
 
-        UPGRADE_OPTIONS: 'Upgrade-Optionen',
-        UPGRADE_LABEL_GO_TO: 'zu den Upgrades',
-        UPGRADE_TYPE_LIMIT: 'Limits-Upgrade',
-        UPGRADE_LIMIT_INFO: 'Mit dem Kauf eines Upgrades können Sie die Anzahl erhöhen.',
-        UPGRADE_TYPE_FEATURE: 'Feature-Upgrade',
-        UPGRADE_FEATURE_INFO: 'Mit dem Kauf eines Upgrades können Sie dieses Feature aktivieren.',
-        UPGRADE_LABEL: 'Upgrade',
+        UPGRADE_FEATURES: 'Premium Features',
+        UPGRADE_LABEL_GO_TO: 'zum Premium Bereich',
+        UPGRADE_DETAILS: 'Details',
+        UPGRADE_TYPE_LIMIT: 'Mehr Fotorahmen mit mehr Fotos',
+        UPGRADE_LIMIT_INFO: 'Das Limit können Sie im Premium-Bereich erhöhen.',
+        UPGRADE_TYPE_FOREIGN_UPLOADS: 'Gemeinsames bearbeiten',
+        UPGRADE_FEATURE_INFO: 'Dieses Feature können Sie im Premium-Bereich aktivieren.',
+        UPGRADE_LABEL: 'Premium',
         UPGRADE_LABEL_FROM: 'von',
         UPGRADE_LABEL_TO: 'auf',
 

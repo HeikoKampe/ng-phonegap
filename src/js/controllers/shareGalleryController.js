@@ -12,19 +12,6 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
     $scope.showAccessKey = false;
     $scope.showAllowForeignUploadUpgradeInfo = false;
 
-
-    function createGalleryKeySegments(galleryKey) {
-      var keySegments = [];
-
-      if (galleryKey) {
-        keySegments[0] = galleryKey.substr(0, 4);
-        keySegments[1] = galleryKey.substr(4, 4);
-        keySegments[2] = galleryKey.substr(8, 4);
-      }
-
-      return keySegments;
-    }
-
     $scope.onAllowForeignUploadsClick = function () {
       $scope.showAllowForeignUploadUpgradeInfo = true;
     };
@@ -46,7 +33,7 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
     };
 
     $scope.$on('GALLERY-UPDATE', function () {
-      $scope.galleryKeySegments = createGalleryKeySegments(appDataService.getGalleryKey());
+
     });
 
     function init() {
@@ -54,7 +41,6 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
         $scope.gallery = appDataService.getGallery();
         $scope.appSettings = appDataService.getAppSettings();
         $scope.userName = appDataService.getUserName();
-        $scope.galleryKeySegments = createGalleryKeySegments(appDataService.getGalleryKey());
       }
     }
 

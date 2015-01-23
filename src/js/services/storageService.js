@@ -262,6 +262,10 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       return $q.all(promises);
     }
 
+    function deleteAppDataFile () {
+      return fileSystemAPI.removeFile(appSettingsService.SETTINGS.APP_DATA_FILE_NAME);
+    }
+
     return {
       initStorage: initStorage,
       saveAppData: saveAppData,
@@ -273,7 +277,8 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       renameImageVariants: renameImageVariants,
       renameImageVariantsAfterUpload: renameImageVariantsAfterUpload,
       loadImage: loadImage,
-      deleteAllImages: deleteAllImages
+      deleteAllImages: deleteAllImages,
+      deleteAppDataFile: deleteAppDataFile
     };
 
   }

@@ -4,8 +4,7 @@ angular.module(_CONTROLLERS_).controller('settingsAccountController', function (
                                                                                 $timeout,
                                                                                 appDataService,
                                                                                 serverAPI,
-                                                                                eventService,
-                                                                                messageService) {
+                                                                                eventService) {
 
 
   $scope.resetPwdStep = 1;

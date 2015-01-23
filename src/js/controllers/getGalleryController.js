@@ -1,28 +1,63 @@
 angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scope,
                                                                            $rootScope,
+                                                                           $timeout,
                                                                            appDataService,
                                                                            serverAPI,
                                                                            galleryImportService) {
 
   $scope.pageClass = 'page--get-gallery';
   $scope.showCtrls = true;
-  $scope.galleryKeySegments = [];
-  $scope.galleryOwnerName = '';
-  $scope.showErrorMessage = false;
+  $scope.getGalleryStep = 1;
+  $scope.galleryCredentials = {
+    ownerName: '',
+    galleryKey: ''
+  };
+  $scope.showForm1Errors = false;
+  $scope.showForm2Errors = false;
+  $scope.galleryOwnerNameError = false;
+  $scope.galleryKeyError = false;
 
 
-  function onImportError () {
-    $scope.showErrorMessage = true;
+  function onGalleryOwnerError() {
+    $scope.galleryOwnerNameError = true;
+    $scope.showForm1Errors = true;
   }
 
-  $scope.onContinueBtnClick = function () {
-    var galleryKey = $scope.galleryKeySegments[0] + $scope.galleryKeySegments[1] + $scope.galleryKeySegments[2];
+  function onGalleryKeyError() {
+    $scope.galleryKeyError = true;
+    $timeout(function () {
+      $scope.galleryKeyError = false;
+      $scope.galleryCredentials.galleryKey = '';
+    }, 1000)
+  }
 
-    galleryImportService.importGalleryByUsernameAndKey($scope.galleryOwnerName, galleryKey)
+  $scope.onOwnerNameInputFocus = function () {
+    $scope.galleryOwnerNameError = false;
+    $scope.showForm1Errors = false;
+  };
+
+  $scope.onGetGalleryStep1Submit = function (isFormValid) {
+    if (isFormValid) {
+      serverAPI.checkUsername($scope.galleryCredentials.ownerName)
+        .then(function (apiResult) {
+          if (apiResult.foundUserByName) {
+            $scope.getGalleryStep = 2;
+          } else {
+            onGalleryOwnerError();
+          }
+        }, onGalleryOwnerError);
+    } else {
+      $scope.showForm1Errors = true;
+    }
+  };
+
+  $scope.onGetGalleryStep2Submit = function () {
+
+    galleryImportService.importGalleryByUsernameAndKey($scope.galleryCredentials.ownerName, $scope.galleryCredentials.galleryKey)
       .then(function () {
         $scope.showErrorMessage = false;
         $rootScope.go('select-gallery', 'slide-left');
-      }, onImportError);
+      }, onGalleryKeyError);
   };
 
 

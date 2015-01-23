@@ -1,14 +1,14 @@
 <div class="top">
   <div class="top__inner">
     <span class="top-icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
-    <span class="float-right" data-ng-click="go('/settings', 'slide-left', true)">
-    <img style="width:30px; position:relative; top:-5px; cursor:pointer;" src="img/settings.png"/>
+    <span class="top-icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
+    <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
 </div>
 
 <div class="center center--show-top">
-  <div class="center__inner">
+  <div class="center__inner text-center">
 
     <h1>{{'TITLE_CREATE_NEW' | translate}}</h1>
 
@@ -30,7 +30,7 @@
       </span>
 
         <p class="text-right">
-          <button class="btn--white" type="submit" data-ng-disabled="createGalleryForm.$invalid">{{'BTN_CONTINUE' |
+          <button class="btn--blue" type="submit" data-ng-disabled="createGalleryForm.$invalid">{{'BTN_CONTINUE' |
             translate}}
           </button>
         </p>
@@ -43,7 +43,7 @@
 
       <p>{{'INFO_GALLERIES_LIMIT_INFO' | translate}}</p>
       <p>{{'INFO_NEED_MORE' | translate}}</p>
-      <p><a href="" data-ng-click="go('upgrade/option1', 'slide-left', true)">{{'UPGRADE_LABEL_GO_TO' | translate}}</a></p>
+      <p><a href="" data-ng-click="go('settings/upgrade/option1', 'slide-left', true)">{{'UPGRADE_LABEL_GO_TO' | translate}}</a></p>
 
     </div>
 

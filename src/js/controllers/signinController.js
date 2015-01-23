@@ -47,14 +47,12 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
   $scope.onUsernameChange = function () {
     $scope.signinForm.username.$error.taken = false;
 
-    serverAPI.validateUsername($scope.signinCredentials.username)
+    serverAPI.checkUsername($scope.signinCredentials.username)
       .then(function (apiResult) {
-        if (apiResult.data.isValid) {
+        if (apiResult.foundUserByName === false) {
           $scope.signinForm.username.$error.taken = false;
-          console.log('is valid username: ', apiResult.data.isValid);
         } else {
           $scope.signinForm.username.$error.taken = true;
-          console.log('is valid username: ', apiResult.data.isValid);
         }
       });
   }

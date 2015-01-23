@@ -1,10 +1,8 @@
-<!--home view-->
-
 <div class="top">
   <div class="top__inner">
     <span class="top-icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
     <span class="float-right" data-ng-click="go('/settings', 'slide-left')">
-    <img style="width:30px; position:relative; top:-5px; cursor:pointer;" src="img/settings.png"/>
+    <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
 </div>
@@ -14,60 +12,16 @@
 
     <div class="grid">
       <div class="grid__item two-thirds">
-        <form class="form" data-ng-submit="onContinueBtnClick()">
-          <h1>{{'SUBSCRIBE_TITLE' | translate}}</h1>
-          <p class="push--bottom">{{'SUBSCRIBE_DESCRIPTION' | translate}}</p>
+        <h1>{{'SUBSCRIBE_TITLE' | translate}}</h1>
 
-          <div class="form__fieldset">
-
-            <p  data-ng-show="showErrorMessage" class="form__error">Wrong username or album key!</p>
-
-            <p class="form__label">{{'SUBSCRIBE_LABEL_OWNERNAME' | translate}}</p>
-
-            <div class="form__text-input-outer push--bottom">
-              <input class="form__text-input"
-                     type="text"
-                     data-ng-model="galleryOwnerName"
-                     placeholder="x8HLo7-f"/>
-            </div>
-
-            <p class="form__label">{{'SUBSCRIBE_LABEL_ACCESS_CODE' | translate}}</p>
-
-            <div class="input-segments">
-              <div class="input-segments__segment form__text-input-outer">
-                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                       data-ng-model="galleryKeySegments[0]"
-                       placeholder="XXXX"/>
-              </div>
-              <span class="input-segments__div">-</span>
-
-              <div class="input-segments__segment form__text-input-outer">
-                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                       data-ng-model="galleryKeySegments[1]"
-                       placeholder="XXXX"/>
-              </div>
-              <span class="input-segments__div">-</span>
-
-              <div class="input-segments__segment form__text-input-outer">
-                <input class="form__text-input text-center" type="text" size="4" maxlength="4"
-                       data-ng-model="galleryKeySegments[2]"
-                       placeholder="XXXX"/>
-              </div>
-            </div>
-
-            <p class="text-right push--top clear">
-              <button class="btn--white" type="submit">{{'BTN_CONTINUE' | translate}}</button>
-            </p>
-
-          </div>
-
-        </form>
+        <div data-ng-if="getGalleryStep == 1" data-ng-include="'html/partials/get-gallery/get-gallery-1.html'"></div>
+        <div data-ng-if="getGalleryStep == 2" data-ng-include="'html/partials/get-gallery/get-gallery-2.html'"></div>
       </div>
       <div class="grid__item one-third">
-        <h2>Login</h2>
+        <h2>{{'LOGIN_TITLE' | translate}}</h2>
 
-        <p>Login with your PhotoFrame account to get and manage your own galleries on this device.</p>
-        <a href="" data-ng-click="go('/login', 'slide-left')">Go to login</a>
+        <p>{{'LOGIN_INFO' | translate}}</p>
+        <a href="" data-ng-click="go('/login', 'slide-left')">{{'LOGIN_GO_TO' | translate}}</a>
       </div>
 
     </div>

@@ -1,0 +1,34 @@
+<form class="form" name="getGalleryForm1" data-ng-submit="onGetGalleryStep1Submit(getGalleryForm1.$valid)" novalidate>
+
+  <p class="push--bottom">{{'SUBSCRIBE_DESCRIPTION_STEP_1' | translate}}</p>
+
+  <div class="form__fieldset">
+
+    <p data-ng-show="showErrorMessage" class="form__error">Wrong username or album key!</p>
+
+    <p class="form__label">{{'SUBSCRIBE_LABEL_OWNERNAME' | translate}}</p>
+
+
+    <div class="form__text-input-outer">
+      <input class="form__text-input"
+             type="text"
+             name="ownerName"
+             data-ng-class="{'form__input-error': showForm1Errors}"
+             data-ng-minlength="8"
+             data-ng-model="galleryCredentials.ownerName"
+             data-ng-focus="onOwnerNameInputFocus()"
+             required/>
+      <span class="form__validation-icon form__validation-icon--error icon-attention"
+            data-ng-show="showForm1Errors"></span>
+    </div>
+    <span class="form__error-msg" data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.required">A username is required!</span>
+    <span class="form__error-msg" data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.minlength">Username is to short.</span>
+    <span class="form__error-msg" data-ng-show="showForm1Errors && galleryOwnerNameError">Invalid username!</span>
+
+    <p class="text-right push--top clear">
+      <button class="btn--blue" type="submit">{{'BTN_CONTINUE' | translate}}</button>
+    </p>
+
+  </div>
+</form>
+

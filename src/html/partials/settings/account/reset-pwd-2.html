@@ -1,6 +1,6 @@
 <div class="text-center">
   <p>Please enter the security PIN<br>we just sent to your email address.</p>
-  <input class="form__text-input upload-pin-input"
+  <input class="form__text-input number-pad-input"
          data-ng-class="{'error': securityPinError}"
          style="width:200px;"
          type="password"
@@ -9,6 +9,7 @@
   <div
       data-number-pad-directive
       data-number-pad-input="resetPwdObj.securityPin"
+      data-number-pad-input="4"
       data-number-pad-submit="resetPasswordSubmit()">
   </div>
 </div>

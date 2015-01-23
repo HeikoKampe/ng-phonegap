@@ -4,6 +4,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
   serverAPI,
   appDataService,
   galleryImportService,
+  eventService,
   storageService) {
 
   $scope.pageClass = 'page--login';
@@ -62,6 +63,18 @@ angular.module(_CONTROLLERS_).controller('loginController', function (
 
       }, onLoginError);
     }
+  };
+
+
+  $scope.resetApp = function () {
+    storageService.deleteAppDataFile()
+      .then(function () {
+        storageService.deleteAllImages();
+        storageService.initStorage();
+        $rootScope.go('home', 'slide-right');
+      }, function (err) {
+        console.log('error deleting app data file!');
+      });
   };
 
 

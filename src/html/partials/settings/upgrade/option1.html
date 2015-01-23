@@ -1,8 +1,8 @@
-<h2>{{'UPGRADE_TYPE_LIMIT' | translate}}</h2>
-
+<h2>{{'UPGRADE_FEATURES' | translate}}</h2>
+<h3>{{'UPGRADE_TYPE_LIMIT' | translate}}</h3>
 <table>
   <tr>
-    <th class="text-left">{{'UPGRADE_LABEL' | translate}}</th>
+    <th class="text-left">{{'UPGRADE_DETAILS' | translate}}</th>
     <th class="text-center">{{'UPGRADE_LABEL_FROM' | translate}}</th>
     <th class="text-center">{{'UPGRADE_LABEL_TO' | translate}}</th>
   </tr>
@@ -13,23 +13,23 @@
   </tr>
   <tr>
     <td>{{'SETTINGS_ACCOUNT_MAX_PHOTOS' | translate}}</td>
-    <td class="text-center">{{upgrade1.maxPhotos}}</td>
+    <td class="text-center">{{appSettings.maxPhotos}}</td>
     <td class="text-center">{{upgrade1.maxPhotos}}</td>
   </tr>
 </table>
 
 <p data-ng-if="appSettings.maxGalleries == 1">
-  <button data-ng-click="onUpgrade1BtnClick()">Buy upgrade for 1.00 €</button>
+  <button class="btn--blue" data-ng-click="onUpgrade1BtnClick()">Buy upgrade for 1.00 €</button>
 </p>
 <p data-ng-if="appSettings.maxGalleries > 1">Thank you for your upgrade!</p>
 <br/>
-<h2>Feature upgrade: Gemeinsames bearbeiten</h2>
 
+<h3>{{'UPGRADE_TYPE_FOREIGN_UPLOADS' | translate}}</h3>
 <p>Nach diesem Upgrade können Sie Fotorahmen für die gemeinsame Bearbeitung freigeben. Andere Benutzer können dann ebenfalls
   Fotos hinzufügen und löschen.</p>
 <table>
   <tr>
-    <th class="text-left">{{'UPGRADE_LABEL' | translate}}</th>
+    <th class="text-left">{{'UPGRADE_DETAILS' | translate}}</th>
     <th class="text-center">{{'UPGRADE_LABEL_FROM' | translate}}</th>
     <th class="text-center">{{'UPGRADE_LABEL_TO' | translate}}</th>
   </tr>
@@ -44,7 +44,7 @@
 </table>
 
 <p data-ng-if="appSettings.allowForeignUploads == false">
-  <button data-ng-click="onUpgrade2BtnClick()">Buy upgrade for 1.00 €</button>
+  <button class="btn--blue" data-ng-click="onUpgrade2BtnClick()">Buy upgrade for 1.00 €</button>
 </p>
 <p data-ng-if="appSettings.allowForeignUploads == true">
   Thank you for your upgrade!

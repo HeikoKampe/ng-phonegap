@@ -2,8 +2,7 @@ angular.module(_DIRECTIVES_).directive('numberPadDirective', function ($timeout)
   'use strict';
 
   var
-    TEMPLATE_BASE_PATH = 'html/partials/global/',
-    INPUT_LENGTH = 4;
+    TEMPLATE_BASE_PATH = 'html/partials/global/';
 
   return {
 
@@ -11,6 +10,7 @@ angular.module(_DIRECTIVES_).directive('numberPadDirective', function ($timeout)
     templateUrl: TEMPLATE_BASE_PATH + 'number-pad.html',
     scope: {
       numberPadInput: '=',
+      numberPadInputLength: '=',
       numberPadSubmit: '&'
     },
 
@@ -18,7 +18,7 @@ angular.module(_DIRECTIVES_).directive('numberPadDirective', function ($timeout)
       angular.element(element[0].querySelectorAll(".number-pad__item--number-btn")).on('click', function (e) {
         // on number button click
         var numberBtnValue = angular.element(this).text();
-        if (scope.numberPadInput.length < INPUT_LENGTH) {
+        if (scope.numberPadInput.length < scope.numberPadInputLength) {
           scope.$apply(function () {
             scope.numberPadInput += numberBtnValue;
           });

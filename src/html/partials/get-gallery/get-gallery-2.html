@@ -1,0 +1,24 @@
+<form class="form" data-ng-submit="onGetGalleryStep2Submit()">
+
+  <p class="push--bottom">{{'SUBSCRIBE_DESCRIPTION_STEP_2' | translate}}</p>
+
+  <p class="form__label">{{'SUBSCRIBE_LABEL_ACCESS_CODE' | translate}}
+    <span class="text-red" data-ng-if="galleryKeyError">{{'SUBSCRIBE_INVALID_ACCESS_CODE' | translate}} </span>
+  </p>
+
+  <div class="text-center">
+    <input class="form__text-input number-pad-input"
+           data-ng-class="{'error': galleryKeyError}"
+           style="width:200px;"
+           type="password"
+           data-ng-model="galleryCredentials.galleryKey"/>
+
+    <div
+        data-number-pad-directive
+        data-number-pad-input="galleryCredentials.galleryKey"
+        data-number-pad-input-length="6"
+        data-number-pad-submit="onGetGalleryStep2Submit()">
+    </div>
+  </div>
+
+</form>
