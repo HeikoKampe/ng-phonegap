@@ -1,33 +1,33 @@
-<h2>{{'TITLE_PHOTOFRAME' | translate}}: {{gallery.title}}</h2>
+<h2>{{'LABEL_GALLERY' | translate}} {{gallery.title}}</h2>
 
-<p>{{'SHARING_ALLOW_FOREIGN_UPLOADS_DESCRIPTION' | translate}}</p>
+<p>{{'DESC_ALLOW_FOREIGN_UPLOADS_DESCRIPTION' | translate}}</p>
 
 <div class="settings__block">
   <div class="settings__item" data-ng-click="onAllowForeignUploadsClick()">
-    <span class="settings__item-label">{{'SHARING_ALLOW_FOREIGN_UPLOADS_LABEL' | translate}}</span>
+    <span class="settings__item-label">{{'LABEL_ALLOW_FOREIGN_UPLOADS' | translate}}</span>
     <span class="settings__item-value" data-ng-if="appSettings.allowForeignUploads">
       <input type="radio"
              data-ng-model="gallery.settings.allowForeignUploads"
              data-ng-value="true"
              data-ng-click="onAllowForeignUploadsClick()"
              data-ng-change="onUploadPermissionChange()">
-      <span>{{'OPTIONS_ON' | translate}}</span>
+      <span>{{'LABEL_ON' | translate}}</span>
       <input type="radio"
              data-ng-model="gallery.settings.allowForeignUploads"
              data-ng-value="false"
              data-ng-change="onUploadPermissionChange()">
-      <span>{{'OPTIONS_OFF' | translate}}</span> <br/>
+      <span>{{'LABEL_OFF' | translate}}</span> <br/>
     </span>
     <span class="settings__item-action"
           data-ng-if="!appSettings.allowForeignUploads">
-      {{'OPTIONS_OFF' | translate}}
+      {{'LABEL_OFF' | translate}}
     </span>
     
     <div class="settings__item-info" data-ng-if="showAllowForeignUploadUpgradeInfo && !appSettings.allowForeignUploads">
-      <p class="settings__item-info-label">{{'SHARING_ALLOW_FOREIGN_UPLOADS_UNLOCK_INFO' | translate}}
+      <p class="settings__item-info-label">{{'INFO_FEATURE_UPGRADE' | translate}}
       </p>
       <span class="settings__item-info-action"
-            data-ng-click="go('settings/upgrade/options.html', 'slide-left', true)">{{'UPGRADE_LABEL_GO_TO' | translate}}</span>
+            data-ng-click="go('settings/upgrade/options.html', 'slide-left', true)">{{'NAVI_GO_UPGRADE' | translate}}</span>
     </div>
 
   </div>

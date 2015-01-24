@@ -1,32 +1,26 @@
 <!--home view-->
 <div class="center">
 
-  <div class="grid main-menu">
-    <div class="grid__item one-whole lap-and-up-one-third main-menu__item main-menu__item--create"
+  <div class="grid home-menu">
+    <div class="grid__item one-whole lap-and-up-one-third home-menu__item home-menu__item--create"
          data-ng-click="go('/create-gallery', 'slide-left')">
-      <div class="main-menu__item-inner">
-        <span class="main-menu__item-title">
-          {{ 'HOME_MENU_CREATE_TITLE' | translate }}
-          <span class="main-menu__item-subtitle">{{ 'HOME_MENU_CREATE_SUBTITLE' | translate }}</span></span>
-        <span class="main-menu__item-icon icon-add"></span>
+      <div class="home-menu__item-inner">
+        <span class="home-menu__item-title">{{ 'TITLE_NEW' | translate }}</span>
+        <span class="home-menu__item-icon icon-add"></span>
       </div>
     </div>
-    <div class="grid__item one-whole lap-and-up-one-third main-menu__item main-menu__item--import"
+    <div class="grid__item one-whole lap-and-up-one-third home-menu__item home-menu__item--import"
          data-ng-click="go('/get-gallery', 'slide-left')">
-      <div class="main-menu__item-inner">
-        <span class="main-menu__item-title">
-          {{ 'HOME_MENU_SUBSCRIBE_TITLE' | translate }}
-          <span class="main-menu__item-subtitle">{{ 'HOME_MENU_SUBSCRIBE_SUBTITLE' | translate }}</span></span>
-        <span class="main-menu__item-icon icon-download"></span>
+      <div class="home-menu__item-inner">
+        <span class="home-menu__item-title">{{ 'TITLE_IMPORT' | translate }}</span>
+        <span class="home-menu__item-icon icon-download"></span>
       </div>
     </div>
-    <div class="grid__item one-whole lap-and-up-one-third main-menu__item main-menu__item--select"
+    <div class="grid__item one-whole lap-and-up-one-third home-menu__item home-menu__item--select"
          data-ng-click="go('/select-gallery', 'slide-left')">
-      <div class="main-menu__item-inner">
-        <span class="main-menu__item-title">
-          {{ 'HOME_MENU_SHOW_TITLE' | translate }}
-          <span class="main-menu__item-subtitle">{{ 'HOME_MENU_SHOW_SUBTITLE' | translate }}</span></span>
-        <span class="main-menu__item-icon icon-select"></span>
+      <div class="home-menu__item-inner">
+        <span class="home-menu__item-title">{{ 'TITLE_SHOW_GALLERIES' | translate }}</span>
+        <span class="home-menu__item-icon icon-select"></span>
       </div>
     </div>
   </div>

@@ -1,20 +1,20 @@
-<h2>{{'SETTINGS_TITLE_ACCOUNT' | translate}}</h2>
+<h2>{{'NAVI_ACCOUNT' | translate}}</h2>
 
 <!-- if user already signed up -->
 <div class="settings" data-ng-if="userName">
 
   <div class="settings__block">
     <div class="settings__item">
-      <span class="settings__item-label">Your username</span>
+      <span class="settings__item-label">{{'LABEL_YOUR_USERNAME' | translate}}</span>
       <span class="settings__item-value">{{userName}}</span>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">Password</span>
-      <span class="settings__item-action" data-ng-click="go('settings/account/reset-pwd', '')">reset password</span>
+      <span class="settings__item-label">{{'LABEL_PASSWORD' | translate}}</span>
+      <span class="settings__item-action" data-ng-click="go('settings/account/reset-pwd', '')">{{'ACTION_CHANGE_PASSWORD' | translate}}</span>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">Mit anderem Benutzer anmelden</span>
-      <a class="settings__item-action" data-ng-click="go('login', 'slide-left')">zum Login</a>
+      <span class="settings__item-label">{{'LABEL_LOGIN_WITH_DIFFERENT_USER' | translate}}</span>
+      <a class="settings__item-action" data-ng-click="go('login', 'slide-left')">{{'NAVI_GO_LOGIN' | translate}}</a>
     </div>
   </div>
 
@@ -31,11 +31,11 @@
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Use yout existing account</span>
-      <a class="settings__item-action" data-ng-click="go('login', '')">Login</a>
+      <a class="settings__item-action" data-ng-click="go('login', '')">{{'NAVI_GO_LOGIN' | translate}}</a>
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Forgot your password?</span>
-      <a class="settings__item-action"  data-ng-click="go('settings/account/reset-pwd', 'slide-left')">Reset password</a>
+      <a class="settings__item-action"  data-ng-click="go('settings/account/reset-pwd', 'slide-left')">{{'ACTION_CHANGE_PASSWORD' | translate}}</a>
     </div>
   </div>
 

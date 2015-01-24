@@ -1,7 +1,8 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
-    <span class="top-icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
+    <h1 class="top__title">{{'TITLE_SHOW_GALLERIES' | translate}}</h1>
+    <span class="top__icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
+    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
@@ -10,7 +11,7 @@
 <div class="center center--show-top">
   <div class="center__inner">
 
-    <h1>{{'TITLE_SELECT_PHOTOFRAME' | translate}}</h1>
+    <h1>{{'TITLE_ALL_GALLERIES' | translate}}</h1>
 
     <div class="preview"
          data-ng-click="onGalleryClick(gallery.galleryId)"

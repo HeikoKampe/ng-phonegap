@@ -1,4 +1,11 @@
-angular.module(_SERVICES_).service('storageService', function ($rootScope, $log, $q, fileSystemAPI, eventService, appDataService, appSettingsService) {
+angular.module(_SERVICES_).service('storageService', function (
+    $rootScope,
+    $log,
+    $q,
+    fileSystemAPI,
+    eventService,
+    appDataService,
+    appSettingsService) {
 
     'use strict';
 
@@ -138,6 +145,19 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
     }
 
 
+    function loadImage2 (photoId) {
+      var
+        galleryId = appDataService.getActiveGalleryId();
+
+      return fileSystemAPI.checkFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + photoId)
+        .then($q.when, function () {
+          return remoteImageImportService.cacheImage(photoId, galleryId);
+        })
+        .then(function (){
+          return loadImage(photoId);
+        })
+    }
+
     function loadImage(photoId) {
       var
         deferredImage = $q.defer();
@@ -163,7 +183,6 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       angular.forEach(photos, function (photo, key) {
         var deferred = $q.defer();
 
-        // Fixme: thumb directory as global constant
         fileSystemAPI.readFile(appSettingsService.SETTINGS.THUMBNAILS_DIR + '/' + photo.id).then(
           function (imgDataSrc) {
             // add image src to photo object
@@ -274,9 +293,9 @@ angular.module(_SERVICES_).service('storageService', function ($rootScope, $log,
       deleteImageVariants: deleteImageVariants,
       deleteImageVariantsById: deleteImageVariantsById,
       loadThumbnails: loadThumbnails,
+      loadImage: loadImage,
       renameImageVariants: renameImageVariants,
       renameImageVariantsAfterUpload: renameImageVariantsAfterUpload,
-      loadImage: loadImage,
       deleteAllImages: deleteAllImages,
       deleteAppDataFile: deleteAppDataFile
     };

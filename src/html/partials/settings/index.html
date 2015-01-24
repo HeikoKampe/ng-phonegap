@@ -1,6 +1,7 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="back(true)"></span>
+    <h1 class="top__title">{{'TITLE_SETTINGS' | translate}}</h1>
+    <span class="top__icon-back icon-back" data-ng-click="back(true)"></span>
   </div>
 </div>
 
@@ -10,24 +11,23 @@
   <div class="grid full-height">
     <div class="grid__item one-third full-height soft--right">
       <ul class="settings-menu">
-        <li class="settings-menu__title"><h2>{{'SETTINGS_TITLE' | translate}}</h2></li>
         <li class="settings-menu__item"
             data-ng-class="{'active': settingsSection1 == 'gallery' || !settingsSection1}"
-            data-ng-click="go('settings/gallery', '')">{{'SETTINGS_TITLE_GALLERY' | translate}}
+            data-ng-click="go('settings/gallery', '')">{{'NAVI_GALLERY' | translate}}
         </li>
         <li class="settings-menu__item"
             data-ng-class="{'active': settingsSection1 == 'slideshow'}"
-            data-ng-click="go('settings/slideshow', '')">{{'SETTINGS_TITLE_SLIDESHOW' | translate}}
+            data-ng-click="go('settings/slideshow', '')">{{'NAVI_SLIDESHOW' | translate}}
         </li>
         <li class="settings-menu__item"
             data-ng-class="{'active': settingsSection1 == 'account'}"
-            data-ng-click="go('settings/account', '')">{{'SETTINGS_TITLE_ACCOUNT' | translate}}
+            data-ng-click="go('settings/account', '')">{{'NAVI_ACCOUNT' | translate}}
         <li class="settings-menu__item"
             data-ng-class="{'active': settingsSection1 == 'language'}"
-            data-ng-click="go('settings/language', '')">{{'SETTINGS_TITLE_LANGUAGE' | translate}}
+            data-ng-click="go('settings/language', '')">{{'NAVI_LANGUAGE' | translate}}
         <li class="settings-menu__item"
             data-ng-class="{'active': settingsSection1 == 'upgrade'}"
-            data-ng-click="go('settings/upgrade', '')">{{'SETTINGS_TITLE_UPGRADE' | translate}}
+            data-ng-click="go('settings/upgrade', '')">{{'NAVI_UPGRADE' | translate}}
       </ul>
       </li>
     </div>

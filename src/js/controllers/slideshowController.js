@@ -6,6 +6,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   appDataService,
   fileSystemAPI,
   storageService,
+  imageCachingService,
   slideshowTransitionService) {
 
   var
@@ -129,13 +130,15 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   }
 
   function loadPhotoInBuffer(photoId) {
-    storageService.loadImage(photoId).then(function (imageDataSrc) {
+    imageCachingService.loadImage(photoId).then(function (imageDataSrc) {
       checkBufferLimit();
       // check buffer again because of loading delay
       if (!$scope.photoBuffer[photoId]) {
         $scope.photoBuffer[photoId] = imageDataSrc;
         photoBufferHistory.push(photoId);
       }
+    }, function () {
+      console.log('loading photo failed 1', photoId);
     });
   }
 
@@ -165,13 +168,15 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
 
   function loadPhotoAndBufferNeighbours(photoId) {
     if (!$scope.photoBuffer[photoId]) {
-      storageService.loadImage(photoId).then(function (imageDataSrc) {
+      imageCachingService.loadImage(photoId).then(function (imageDataSrc) {
         // check again because of race condition
         if (!$scope.photoBuffer[photoId]) {
           $scope.photoBuffer[photoId] = imageDataSrc;
           photoBufferHistory.push(photoId);
         }
         bufferPhotos();
+      }, function () {
+        console.log('loading photo failed 2', photoId);
       });
     }
   }

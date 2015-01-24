@@ -1,6 +1,7 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="go('edit-gallery', 'slide-right', true)"></span>
+    <h1 class="top__title">{{'TITLE_SHARING' | translate}}</h1>
+    <span class="top__icon-back icon-back" data-ng-click="go('edit-gallery', 'slide-right', true)"></span>
     <span class="float-right" data-ng-click="go('settings', 'slide-left')">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
@@ -14,14 +15,13 @@
       <div class="grid__item one-third full-height soft--right">
 
         <ul class="settings-menu">
-          <li class="settings-menu__title"><h2>{{'TITLE_SHARING' | translate}}</h2></li>
           <li class="settings-menu__item"
               data-ng-class="{'active': sharingSection1 == 'sharing' || !sharingSection1}"
-              data-ng-click="go('share-gallery/sharing', '')">{{'TITLE_SHARING_CREDENTIALS' | translate}}
+              data-ng-click="go('share-gallery/sharing', '')">{{'NAVI_SHARING_CREDENTIALS' | translate}}
           </li>
           <li class="settings-menu__item"
               data-ng-class="{'active': sharingSection1 == 'options'}"
-              data-ng-click="go('share-gallery/options', '')">{{'TITLE_SHARING_OPTIONS' | translate}}
+              data-ng-click="go('share-gallery/options', '')">{{'NAVI_OPTIONS' | translate}}
           </li>
         </ul>
       </div>

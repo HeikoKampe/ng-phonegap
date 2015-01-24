@@ -1,16 +1,15 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top-icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
-    <span class="top-icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
-    <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
+    <span class="top__icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
+    <h1 class="top__title">{{'TITLE_NEW' | translate}}</h1>
+    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
+    <img style="width:30px;" src="img/settings.png"/>
   </span>
   </div>
 </div>
 
 <div class="center center--show-top">
   <div class="center__inner text-center">
-
-    <h1>{{'TITLE_CREATE_NEW' | translate}}</h1>
 
     <div data-ng-if="!galleriesLimitReached">
       <form class="form--centered"
@@ -19,7 +18,7 @@
             novalidate>
 
 
-        <p class="form__label">{{'LABEL_ENTER_TITLE' | translate}}</p>
+        <p class="form__label">{{'LABEL_GALLERY_TITLE' | translate}}</p>
       <span class="form__text-input-outer">
         <input class="form__text-input"
                type="text"
@@ -30,7 +29,7 @@
       </span>
 
         <p class="text-right">
-          <button class="btn--blue" type="submit" data-ng-disabled="createGalleryForm.$invalid">{{'BTN_CONTINUE' |
+          <button class="btn--blue" type="submit" data-ng-disabled="createGalleryForm.$invalid">{{'ACTION_CONTINUE' |
             translate}}
           </button>
         </p>
@@ -39,11 +38,11 @@
     </div>
 
     <div data-ng-if="galleriesLimitReached">
-      <h2>{{'INFO_LIMIT_REACHED_TITLE' | translate}}</h2>
+      <h2>{{'INFO_LIMIT_REACHED' | translate}}</h2>
 
-      <p>{{'INFO_GALLERIES_LIMIT_INFO' | translate}}</p>
+      <p>{{'INFO_GALLERIES_LIMIT' | translate}}</p>
       <p>{{'INFO_NEED_MORE' | translate}}</p>
-      <p><a href="" data-ng-click="go('settings/upgrade/option1', 'slide-left', true)">{{'UPGRADE_LABEL_GO_TO' | translate}}</a></p>
+      <p><a href="" data-ng-click="go('settings/upgrade/option1', 'slide-left', true)">{{'NAVI_GO_UPGRADE' | translate}}</a></p>
 
     </div>
 

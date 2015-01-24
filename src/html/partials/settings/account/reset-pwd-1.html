@@ -2,7 +2,7 @@
       data-ng-submit="requestPasswordPinSubmit(requestPwdForm1.$valid)" novalidate>
 
   <div class="form__group">
-    <span class="form__label">Email</span>
+    <span class="form__label">{{'LABEL_EMAIL' | translate}}</span>
 
     <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -22,15 +22,15 @@
           </span>
     </div>
 
-    <span class="form__error-msg" data-ng-show="emailNotFoundError">Email does not match any user!</span>
+    <span class="form__error-msg" data-ng-show="emailNotFoundError">{{'ERROR_EMAIL_NOT_FOUND' | translate}}</span>
         <span class="form__error-msg"
-              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.required">Your email is required!</span>
+              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.required">{{'ERROR_EMAIL_REQUIRED' | translate}}</span>
         <span class="form__error-msg"
-              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern">Not a valid email format!</span>
+              data-ng-show="requestPwdForm1.email.$blurred && requestPwdForm1.email.$error.pattern">{{'ERROR_EMAIL_INVALID_FORMAT' | translate}}</span>
   </div>
 
   <div class="form__group">
-    <span class="form__label">New password</span>
+    <span class="form__label">{{'LABEL_PIC_NEW_PASSWORD' | translate}}</span>
 
     <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -49,11 +49,11 @@
     </div>
 
         <span class="form__error-msg"
-              data-ng-show="requestPwdForm1.password.$blurred && requestPwdForm1.password.$error.required">Password is required!</span>
+              data-ng-show="requestPwdForm1.password.$blurred && requestPwdForm1.password.$error.required">{{'ERROR_PASSWORD_REQUIRED' | translate}}</span>
   </div>
 
   <div class="form__ctrl text-right">
-    <button class="btn--blue" type="submit">Continue</button>
+    <button class="btn--blue" type="submit">{{'ACTION_CONTINUE' | translate}}</button>
   </div>
 </form>
 

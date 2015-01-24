@@ -10,7 +10,7 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
                                                                          batchFactoryService) {
 
 
-  function getSignedUrl(importObj) {
+  function getSignedUrlBatch(importObj) {
     var deferred = $q.defer();
 
     if (importObj.batchObject && importObj.batchObject.cancelObject.isCancelled) {
@@ -36,67 +36,98 @@ angular.module(_SERVICES_).service('remoteImageImportService', function ($q,
     return deferred.promise;
   }
 
-  function onImportRemoteImageSuccess(importObject) {
-    importObject.batchObject.onSuccess();
-    appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
-  }
+  function getSignedUrl(importObj) {
+    var deferred = $q.defer();
 
-  function onImportRemoteImageError(error, importObject) {
-    importObject.batchObject.onError(error);
-  }
+    serverAPI.getSignedImageUrl(importObj.galleryId, importObj.photoObj.id).then(function (result) {
+      importObj.photoObj.url = result.data.signedUrl;
+      deferred.resolve(importObj);
+    }, function(){
+      console.log('caching image failed');
+      deferred.reject();
+    });
 
-  function importRemoteImage(batchObject, galleryId) {
-    var
-    // create an import object with a reference to the batch object
-      importObject = {
-        'batchObject': batchObject,
-        'photoObj': batchObject.getNext(),
-        'galleryId': galleryId
-      };
+  return deferred.promise;
+}
 
-    // mark photo as not viewed
-    importObject.photoObj.viewStatus = 0;
+function onImportRemoteImageSuccess(importObject) {
+  importObject.batchObject.onSuccess();
+  appDataService.addPhotoToGallery(importObject.photoObj, importObject.galleryId);
+}
 
-    getSignedUrl(importObject)
-      .then(imageVariantsService.createVariants)
-      .then(storageService.saveImageVariants)
-      .then(onImportRemoteImageSuccess)
-      .catch(function (error) {
-        onImportRemoteImageError(error, importObject)
-      });
-  }
+function onImportRemoteImageError(error, importObject) {
+  importObject.batchObject.onError(error);
+}
 
-  // Todo: move galleryId into batchObject
-  function importRemoteImages(photoObjects, galleryId, cancelObject) {
-    var
-      i,
-      deferred = $q.defer(),
-      batchObject;
+function importRemoteImage(batchObject, galleryId) {
+  var
+  // create an import object with a reference to the batch object
+    importObject = {
+      'batchObject': batchObject,
+      'photoObj': batchObject.getNext(),
+      'galleryId': galleryId
+    };
 
-    if (photoObjects && photoObjects.length) {
-      batchObject = batchFactoryService.createBatchObject(photoObjects, cancelObject);
-      messageService.updateProgressMessage({'prefix': 'Importing photos ...','batchObject': batchObject});
+  // mark photo as not viewed
+  importObject.photoObj.viewStatus = 0;
 
-      // start parallel import of images
-      for (i = 0; i < batchObject.stackLength; i++) {
-        importRemoteImage(batchObject, galleryId);
-      }
+  getSignedUrlBatch(importObject)
+    .then(imageVariantsService.createVariants)
+    .then(storageService.saveImageVariants)
+    .then(onImportRemoteImageSuccess)
+    .catch(function (error) {
+      onImportRemoteImageError(error, importObject)
+    });
+}
 
-      batchObject.deferred.promise.then(function () {
-        deferred.resolve();
-      }, function (error) {
-        deferred.reject(error);
-      });
+// Todo: move galleryId into batchObject
+function importRemoteImages(photoObjects, galleryId, cancelObject) {
+  var
+    i,
+    deferred = $q.defer(),
+    batchObject;
 
-    } else {
-      deferred.resolve();
+  if (photoObjects && photoObjects.length) {
+    batchObject = batchFactoryService.createBatchObject(photoObjects, cancelObject);
+    messageService.updateProgressMessage({'prefix': 'Importing photos ...', 'batchObject': batchObject});
+
+    // start parallel import of images
+    for (i = 0; i < batchObject.stackLength; i++) {
+      importRemoteImage(batchObject, galleryId);
     }
 
-    return deferred.promise;
+    batchObject.deferred.promise.then(function () {
+      deferred.resolve();
+    }, function (error) {
+      deferred.reject(error);
+    });
+
+  } else {
+    deferred.resolve();
   }
 
-  return {
-    importRemoteImages: importRemoteImages
-  }
+  return deferred.promise;
+}
 
-});
+// if image was imported before but not found on local filesystem anymore, try to save it to local filesystem again
+function cacheImage(photoId, galleryId) {
+  var
+    importObject = {
+      'photoObj': {
+        id: photoId
+      },
+      'galleryId': galleryId
+    };
+
+  return getSignedUrl(importObject)
+    .then(imageVariantsService.createVariants)
+    .then(storageService.saveImageVariants);
+}
+
+return {
+  importRemoteImages: importRemoteImages,
+  cacheImage: cacheImage
+}
+
+})
+;

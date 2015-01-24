@@ -79,13 +79,18 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   }
 
   function getGalleryStatus(galleryId) {
-    return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/status')
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'galleries/' + galleryId + '/status')
       .success(function (data, status, headers, config) {
-        return data;
+        deferred.resolve(data);
       })
       .error(function (data, status, headers, config) {
-        return {'status': false}
+        deferred.reject(data);
       });
+
+    return deferred.promise;
   }
 
   function removePhoto(photoId, galleryId, httpConfig) {

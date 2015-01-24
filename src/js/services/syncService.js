@@ -267,8 +267,8 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     if (galleryObj.dateOfUpload) {
       serverAPI.getGalleryStatus(galleryObj.galleryId)
         .then(function (apiResult) {
-          console.log('locale syncId: ', appDataService.getSyncId(galleryObj.galleryId), '/', apiResult.data.syncId);
-          if (appDataService.getSyncId(galleryObj.galleryId) !== apiResult.data.syncId) {
+          console.log('locale syncId: ', appDataService.getSyncId(galleryObj.galleryId), '/', apiResult.syncId);
+          if (appDataService.getSyncId(galleryObj.galleryId) !== apiResult.syncId) {
             messageService.updateProgressMessage({
               title: 'Syncing album',
               subtitle: appDataService.getGalleryTitle(galleryObj.galleryId)
@@ -278,7 +278,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
           } else {
             deferred.resolve();
           }
-        });
+        }, deferred.reject);
     } else {
       deferred.resolve();
     }
