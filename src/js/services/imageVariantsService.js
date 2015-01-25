@@ -22,6 +22,51 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
     },
     IMAGE_FILE_TYPE = 'image/jpeg';
 
+  /**
+   * Detecting vertical squash in loaded image.
+   * Fixes a bug which squash image vertically while drawing into canvas for some images.
+   * This is a bug in iOS6 devices. This function from https://github.com/stomita/ios-imagefile-megapixel
+   *
+   */
+  function detectVerticalSquash(img) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = ih;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var data = ctx.getImageData(0, 0, 1, ih).data;
+    // search image edge pixel position in case it is squashed vertically.
+    var sy = 0;
+    var ey = ih;
+    var py = ih;
+    while (py > sy) {
+      var alpha = data[(py - 1) * 4 + 3];
+      if (alpha === 0) {
+        ey = py;
+      } else {
+        sy = py;
+      }
+      py = (ey + sy) >> 1;
+    }
+    var ratio = (py / ih);
+    return (ratio===0)?1:ratio;
+  }
+
+  /**
+   * A replacement for context.drawImage
+   * (args are for source and destination).
+   */
+  function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var vertSquashRatio = detectVerticalSquash(img);
+    // Works only if whole image is displayed:
+    // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+    // The following works correct also when only a part of the image is displayed:
+    ctx.drawImage(img, sx * vertSquashRatio, sy * vertSquashRatio,
+      sw * vertSquashRatio, sh * vertSquashRatio,
+      dx, dy, dw, dh );
+  }
+
   function createVariants(importObj) {
     var
       deferred = $q.defer(),
@@ -40,15 +85,20 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
       imageFactoryService.createImageInstance(importObj.photoObj.url, function () {
           var
           //minVal = Math.min(this.width, this.height) * 0.9,
-            minVal = Math.min(this.width, this.height) * 1,
+            minVal = Math.min(this.width, this.height),
+            sourceX,
             scaleRatio;
 
+          // if landscape
           if (this.width > this.height) {
-            ctxThumb.drawImage(this, (this.width - minVal) / 2, 0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
-            scaleRatio = IMAGE_VARIANTS.main.width / this.width;
+            sourceX = Math.floor((this.width - minVal) / 2);
+            //ctxThumb.drawImage(this, sourceX ,0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
+            drawImageIOSFix(ctxThumb, this, sourceX ,0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
+            scaleRatio = Math.floor(IMAGE_VARIANTS.main.width / this.width);
             canvasMain.width = IMAGE_VARIANTS.main.width;
             canvasMain.height = this.height * scaleRatio;
             ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+          // if portrait
           } else {
             ctxThumb.drawImage(this, 0, (this.height - minVal) / 2, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
             scaleRatio = IMAGE_VARIANTS.main.height / this.height;

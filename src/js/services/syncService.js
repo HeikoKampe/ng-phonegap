@@ -82,7 +82,6 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
           return storageService.deleteImageVariants(uploadObject);
         })
         .then(function () {
-          // Careful! Only increment syncId if the photo was uploaded
           appDataService.setSyncId(uploadObject.apiResult.syncId, uploadObject.galleryId);
           onRemovePhotoSuccess(uploadObject);
         })
@@ -108,7 +107,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       deferred = $q.defer(),
       galleryId = appDataService.getActiveGalleryId(),
       deletedPhotos = $filter('photoFilter')(appDataService.getPhotos(), 'deleted', true),
-      batchObject = batchFactoryService.createBatchObject(deletedPhotos, {isCancelled: false});
+      batchObject = batchFactoryService.createBatchObject(deletedPhotos);
 
     if (deletedPhotos.length) {
       messageService.updateProgressMessage({'prefix': 'Deleting photos ...', 'batchObject': batchObject});

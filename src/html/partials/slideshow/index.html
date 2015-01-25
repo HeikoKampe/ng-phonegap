@@ -14,7 +14,7 @@
 
     <div class="slideshow-thumbs">
       <div class="slideshow-thumbs__thumb"
-           data-ng-repeat="photo in gallery.photos"
+           data-ng-repeat="photo in photos"
            data-ng-class="{ 'thumb': true, 'slideshow-thumbs__thumb--active': activePhotoArrayIndex === $index, 'slideshow-thumbs__thumb--new': photo.viewStatus === 1}"
            data-ng-click="onThumbnailClick(photo.id, $index)">
         <img class="slideshow-thumbs__thumb-img"
@@ -28,7 +28,7 @@
     <div class="slideshow-main">
       <div class="slideshow-main__img-outer"
            data-ng-class="transitionClass"
-           data-ng-repeat="photo in gallery.photos"
+           data-ng-repeat="photo in photos"
            data-ng-if="photo.id === activePhotoId"
            data-ng-class="{'slideshow__img--new': photo.viewStatus === 1}">
         <img class="slideshow-main__img" data-ng-src="{{ photoBuffer[photo.id] }}"/>

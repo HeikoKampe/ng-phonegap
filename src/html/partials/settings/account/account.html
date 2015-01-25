@@ -1,20 +1,23 @@
-<h2>{{'NAVI_ACCOUNT' | translate}}</h2>
+<h2 data-translate="NAVI_ACCOUNT"></h2>
 
 <!-- if user already signed up -->
 <div class="settings" data-ng-if="userName">
 
   <div class="settings__block">
     <div class="settings__item">
-      <span class="settings__item-label">{{'LABEL_YOUR_USERNAME' | translate}}</span>
-      <span class="settings__item-value">{{userName}}</span>
+      <span class="settings__item-label" data-translate="LABEL_YOUR_USERNAME"></span>
+      <span class="settings__item-value" data-ng-bind="userName"></span>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">{{'LABEL_PASSWORD' | translate}}</span>
-      <span class="settings__item-action" data-ng-click="go('settings/account/reset-pwd', '')">{{'ACTION_CHANGE_PASSWORD' | translate}}</span>
+      <span class="settings__item-label" data-translate="LABEL_PASSWORD"></span>
+      <span class="settings__item-action"
+            data-ng-click="go('settings/account/reset-pwd', '')"
+          data-translate="ACTION_CHANGE_PASSWORD"></span>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">{{'LABEL_LOGIN_WITH_DIFFERENT_USER' | translate}}</span>
-      <a class="settings__item-action" data-ng-click="go('login', 'slide-left')">{{'NAVI_GO_LOGIN' | translate}}</a>
+      <span class="settings__item-label" data-translate="LABEL_LOGIN_WITH_DIFFERENT_USER"></span>
+      <a class="settings__item-action"
+         data-ng-click="go('login', 'slide-left')" data-translate="NAVI_GO_LOGIN"></a>
     </div>
   </div>
 
@@ -31,11 +34,13 @@
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Use yout existing account</span>
-      <a class="settings__item-action" data-ng-click="go('login', '')">{{'NAVI_GO_LOGIN' | translate}}</a>
+      <a class="settings__item-action" data-ng-click="go('login', '')" data-translate="NAVI_GO_LOGIN"></a>
     </div>
     <div class="settings__item">
       <span class="settings__item-label">Forgot your password?</span>
-      <a class="settings__item-action"  data-ng-click="go('settings/account/reset-pwd', 'slide-left')">{{'ACTION_CHANGE_PASSWORD' | translate}}</a>
+      <a class="settings__item-action"
+         data-ng-click="go('settings/account/reset-pwd', 'slide-left')"
+          data-translate="ACTION_CHANGE_PASSWORD"></a>
     </div>
   </div>
 

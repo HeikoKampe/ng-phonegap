@@ -1,6 +1,6 @@
 <div class="top">
   <div class="top__inner">
-    <h1 class="top__title">{{'TITLE_SETTINGS' | translate}}</h1>
+    <h1 class="top__title" data-translate="TITLE_SETTINGS"></h1>
     <span class="top__icon-back icon-back" data-ng-click="back(true)"></span>
   </div>
 </div>
@@ -8,51 +8,59 @@
 <div class="center center--show-top">
   <div class="center__inner">
 
-  <div class="grid full-height">
-    <div class="grid__item one-third full-height soft--right">
-      <ul class="settings-menu">
-        <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'gallery' || !settingsSection1}"
-            data-ng-click="go('settings/gallery', '')">{{'NAVI_GALLERY' | translate}}
-        </li>
-        <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'slideshow'}"
-            data-ng-click="go('settings/slideshow', '')">{{'NAVI_SLIDESHOW' | translate}}
-        </li>
-        <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'account'}"
-            data-ng-click="go('settings/account', '')">{{'NAVI_ACCOUNT' | translate}}
-        <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'language'}"
-            data-ng-click="go('settings/language', '')">{{'NAVI_LANGUAGE' | translate}}
-        <li class="settings-menu__item"
-            data-ng-class="{'active': settingsSection1 == 'upgrade'}"
-            data-ng-click="go('settings/upgrade', '')">{{'NAVI_UPGRADE' | translate}}
-      </ul>
-      </li>
-    </div>
+    <div class="grid full-height">
+      <div class="grid__item one-third full-height soft--right">
+        <ul class="settings-menu">
+          <li class="settings-menu__item"
+              data-ng-class="{'active': settingsSection1 == 'gallery' || !settingsSection1}"
+              data-ng-click="go('settings/gallery', '')"
+              data-translate="NAVI_GALLERY">
+          </li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': settingsSection1 == 'slideshow'}"
+              data-ng-click="go('settings/slideshow', '')"
+              data-translate="NAVI_SLIDESHOW">
+          </li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': settingsSection1 == 'account'}"
+              data-ng-click="go('settings/account', '')"
+              data-translate="NAVI_ACCOUNT">
+          </li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': settingsSection1 == 'language'}"
+              data-ng-click="go('settings/language', '')"
+              data-translate="NAVI_LANGUAGE">
+          </li>
+          <li class="settings-menu__item"
+              data-ng-class="{'active': settingsSection1 == 'upgrade'}"
+              data-ng-click="go('settings/upgrade', '')"
+              data-translate="NAVI_UPGRADE">
+          </li>
+        </ul>
 
-    <div class="grid__item two-thirds full-height soft--left" data-ng-switch="settingsSection1">
-      <div data-ng-switch-default>
-        <div data-ng-include="'html/partials/settings/gallery.html'"></div>
       </div>
-      <div data-ng-switch-when="gallery">
-        <div data-ng-include="'html/partials/settings/gallery.html'"></div>
-      </div>
-      <div data-ng-switch-when="slideshow">
-        <div data-ng-include="'html/partials/settings/slideshow/index.html'"></div>
-      </div>
-      <div data-ng-switch-when="account">
-        <div data-ng-include="'html/partials/settings/account/index.html'"></div>
-      </div>
-      <div data-ng-switch-when="language">
-        <div data-ng-include="'html/partials/settings/language.html'"></div>
-      </div>
-      <div data-ng-switch-when="upgrade">
-        <div data-ng-include="'html/partials/settings/upgrade/index.html'"></div>
+
+      <div class="grid__item two-thirds full-height soft--left" data-ng-switch="settingsSection1">
+        <div data-ng-switch-default>
+          <div data-ng-include="'html/partials/settings/gallery.html'"></div>
+        </div>
+        <div data-ng-switch-when="gallery">
+          <div data-ng-include="'html/partials/settings/gallery.html'"></div>
+        </div>
+        <div data-ng-switch-when="slideshow">
+          <div data-ng-include="'html/partials/settings/slideshow/index.html'"></div>
+        </div>
+        <div data-ng-switch-when="account">
+          <div data-ng-include="'html/partials/settings/account/index.html'"></div>
+        </div>
+        <div data-ng-switch-when="language">
+          <div data-ng-include="'html/partials/settings/language.html'"></div>
+        </div>
+        <div data-ng-switch-when="upgrade">
+          <div data-ng-include="'html/partials/settings/upgrade/index.html'"></div>
+        </div>
       </div>
     </div>
-  </div>
 
   </div>
 </div>

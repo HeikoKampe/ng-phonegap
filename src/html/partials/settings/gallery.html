@@ -1,35 +1,42 @@
-<h2>{{'NAVI_GALLERY' | translate}}</h2>
+<h2 data-translate="NAVI_GALLERY"></h2>
 
 <div class="settings">
   <div class="settings__block">
     <div class="settings__item" data-ng-click="showUpgradeInfo(0)">
-      <span class="settings__item-label">{{'LABEL_MAX_GALLERIES' | translate}}</span>
-      <span class="settings__item-action">{{appSettings.maxGalleries}}</span>
+      <span class="settings__item-label" data-translate="LABEL_MAX_GALLERIES"></span>
+      <span class="settings__item-action" data-ng-bind="appSettings.maxGalleries"></span>
       </span>
       <div class="settings__item-info" data-ng-if="showUpgradeInfo[0]">
-        <span class="settings__item-info-label">{{'INFO_LIMIT_UPGRADE' | translate}}</span>
-        <span class="settings__item-info-action" data-ng-click="go('settings/upgrade', '')">{{'NAVI_GO_UPGRADE' | translate}}</span>
+        <span class="settings__item-info-label" data-translate="INFO_LIMIT_UPGRADE"></span>
+        <span class="settings__item-info-action"
+              data-ng-click="go('settings/upgrade', '')"
+              data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>
     <div class="settings__item" data-ng-click="showUpgradeInfo(1)">
-      <span class="settings__item-label">{{'LABEL_MAX_PHOTOS' | translate}}</span>
-      <span class="settings__item-action">{{appSettings.maxPhotos}}</span>
+      <span class="settings__item-label" data-translate="LABEL_MAX_PHOTOS"></span>
+      <span class="settings__item-action" data-ng-bind="appSettings.maxPhotos"></span>
+
       <div class="settings__item-info" data-ng-if="showUpgradeInfo[1]">
-        <span class="settings__item-info-label">{{'INFO_LIMIT_UPGRADE' | translate}}</span>
-        <span class="settings__item-info-action" data-ng-click="go('settings/upgrade', '')">{{'NAVI_GO_UPGRADE' | translate}}</span>
+        <span class="settings__item-info-label" data-translate="INFO_LIMIT_UPGRADE"></span>
+        <span class="settings__item-info-action"
+              data-ng-click="go('settings/upgrade', '')"
+              data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>
     <div class="settings__item" data-ng-click="showUpgradeInfo(2)">
-      <span class="settings__item-label">{{'LABEL_ALLOW_FOREIGN_UPLOADS' | translate}}</span>
+      <span class="settings__item-label" data-translate="LABEL_ALLOW_FOREIGN_UPLOADS"></span>
       <span class="settings__item-action">
-        <span data-ng-if="appSettings.allowForeignUploads">{{'LABEL_ON' | translate}}</span>
-        <span data-ng-if="!appSettings.allowForeignUploads">{{'LABEL_OFF' | translate}}</span>
+        <span data-ng-if="appSettings.allowForeignUploads" data-translate="LABEL_ON"></span>
+        <span data-ng-if="!appSettings.allowForeignUploads" data-translate="LABEL_OFF"></span>
       </span>
 
       <div class="settings__item-info" data-ng-if="showUpgradeInfo[2]">
-        <span>{{'DESC_ALLOW_FOREIGN_UPLOADS' | translate}}</span><br>
-        <span class="settings__item-info-label">{{'INFO_FEATURE_UPGRADE' | translate}}</span>
-        <span class="settings__item-info-action" data-ng-click="go('settings/upgrade', '')">{{'NAVI_GO_UPGRADE' | translate}}</span>
+        <span data-translate="DESC_ALLOW_FOREIGN_UPLOADS"></span><br>
+        <span class="settings__item-info-label" data-translate="INFO_FEATURE_UPGRADE"></span>
+        <span class="settings__item-info-action"
+              data-ng-click="go('settings/upgrade', '')"
+              data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>
   </div>

@@ -28,7 +28,6 @@ angular.module(_APP_, [
   'ngTouch',
   'ngRoute',
   'ngAnimate',
-  'ngCordova',
   'pascalprecht.translate'
 
 
@@ -36,12 +35,20 @@ angular.module(_APP_, [
 
 angular.module(_APP_).run([
   '$log',
+  '$window',
   'storageService',
-  function($log, storageService) {
+  function($log, $window, storageService) {
 
-    // intial run code here
-    $log.info('angular app ready');
+    // initial run code here
+    console.log('angular app ready');
     storageService.initStorage();
+
+
+    //console.log('*** dataDirectory ***', $window.cordova.file.dataDirectory);
+    //console.log('*** cacheDirectory ***', $window.cordova.file.cacheDirectory);
+    //console.log('*** syncedDataDirectory ***', $window.cordova.file.syncedDataDirectory);
+
+
 
   }
 ]);

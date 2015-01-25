@@ -9,21 +9,19 @@
 
 angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $timeout, $log) {
 
-  var DEFAULT_QUOTA_MB = 100;
-
   return {
-    checkDir: function (dir) {
-      return getDirectory(dir, {create: false});
+    checkDir: function (dir, fileSystemId) {
+      return getDirectory(dir, {create: false}, fileSystemId);
     },
 
-    createDir: function (dir, replaceBOOL) {
-      return getDirectory(dir, {create: true, exclusive: replaceBOOL});
+    createDir: function (dir, replaceBOOL, fileSystemId) {
+      return getDirectory(dir, {create: true, exclusive: replaceBOOL}, fileSystemId);
     },
 
-    listDir: function (filePath) {
+    listDir: function (filePath, fileSystemId) {
       var q = $q.defer();
 
-      getDirectory(filePath, {create: false})
+      getDirectory(filePath, {create: false}, fileSystemId)
         .then(function (parent) {
           var reader = parent.createReader();
           reader.readEntries(
@@ -40,34 +38,18 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
       return q.promise;
     },
 
-    checkFile: function (filePath) {
-      // Backward compatibility for previous function checkFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
-
-      return getFileEntry(filePath, {create: false});
+    checkFile: function (filePath, fileSystemId) {
+      return getFileEntry(filePath, {create: false}, fileSystemId);
     },
 
-    createFile: function (filePath, replaceBOOL) {
-      // Backward compatibility for previous function createFile(filepath replaceBOOL)
-      if (arguments.length == 3) {
-        filePath = '/' + filePath + '/' + arguments[1];
-        replaceBOOL = arguments[2];
-      }
-
-      return getFileEntry(filePath, {create: true, exclusive: replaceBOOL});
+    createFile: function (filePath, replaceBOOL, fileSystemId) {
+      return getFileEntry(filePath, {create: true, exclusive: replaceBOOL}, fileSystemId);
     },
 
-    removeFile: function (filePath) {
+    removeFile: function (filePath, fileSystemId) {
       var q = $q.defer();
 
-      // Backward compatibility for previous function removeFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
-
-      getFileEntry(filePath, {create: false})
+      getFileEntry(filePath, {create: false}, fileSystemId)
         .then(function (fileEntry) {
           fileEntry.remove(q.resolve, q.reject);
         }, q.reject);
@@ -77,10 +59,10 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
     // options is a dict with possible keys :
     // - append : true/false (if true, append data on EOF)
-    writeFile: function (filePath, data, options) {
+    writeFile: function (filePath, data, options, fileSystemId) {
       var q = $q.defer();
 
-      getFileWriter(filePath, {create: true})
+      getFileWriter(filePath, {create: true}, fileSystemId)
         .then(function (fileWriter) {
           var truncated = false;
           if (options['append'] === true) {
@@ -108,20 +90,10 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
       return q.promise;
     },
 
-    readFile: function (filePath) {  /// now deprecated in new ng-cordova version
-      $log.log('readFile is now deprecated as of v0.1.4-alpha, use readAsText instead');
-      return this.readAsText(filePath);
-    },
-
-    readAsText: function (filePath) {
+    readAsText: function (filePath, fileSystemId) {
       var q = $q.defer();
 
-      // Backward compatibility for previous function readFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
-
-      getFile(filePath, {create: false})
+      getFile(filePath, {create: false}, fileSystemId)
         .then(function (file) {
           getPromisedFileReader(q).readAsText(file);
         }, q.reject);
@@ -132,11 +104,6 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
     readAsDataURL: function (filePath) {
       var q = $q.defer();
-
-      // Backward compatibility for previous function readFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
 
       getFile(filePath, {create: false})
         .then(function (file) {
@@ -149,11 +116,6 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
     readAsBinaryString: function (filePath) {
       var q = $q.defer();
 
-      // Backward compatibility for previous function readFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
-
       getFile(filePath, {create: false})
         .then(function (file) {
           getPromisedFileReader(q).readAsBinaryString(file);
@@ -164,11 +126,6 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
     readAsArrayBuffer: function (filePath) {
       var q = $q.defer();
-
-      // Backward compatibility for previous function readFile(dir, file)
-      if (arguments.length == 2) {
-        filePath = '/' + filePath + '/' + arguments[1];
-      }
 
       getFile(filePath, {create: false})
         .then(function (file) {
@@ -218,13 +175,13 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
     // CUSTOM FUNCTION
     // CAREFUL WHEN UPDATING
-    renameFile: function (dir, oldFileName, newFileName) {
+    renameFile: function (dir, oldFileName, newFileName, fileSystemId) {
       var q = $q.defer();
 
-       getDirectory(dir, {})
+       getDirectory(dir, {}, fileSystemId)
         .then(function (dirEntry) {
           var filePath = (dir === '' || dir === '/') ? oldFileName : dir + '/' + oldFileName;
-          getFileEntry(filePath, {})
+          getFileEntry(filePath, {}, fileSystemId)
             .then(function (fileEntry) {
               fileEntry.moveTo(dirEntry, newFileName, q.resolve, q.reject)
             }, q.reject);
@@ -254,9 +211,9 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * Returns a promise that will be resolved with the requested File object
    * or rejected if an error occurs attempting to retreive it.
    */
-  function getFile(path, options) {
+  function getFile(path, options, fileSystemId) {
     var q = $q.defer();
-    getFileEntry(path, options)
+    getFileEntry(path, options, fileSystemId)
       .then(function (fileEntry) {
         fileEntry.file(q.resolve, q.reject);
       }, q.reject);
@@ -268,9 +225,9 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * in the provided path or rejected if an error occurs while attempting to initialize
    * the writer.
    */
-  function getFileWriter(path, options) {
+  function getFileWriter(path, options, fileSystemId) {
     var q = $q.defer();
-    getFileEntry(path, options)
+    getFileEntry(path, options, fileSystemId)
       .then(function (fileEntry) {
         fileEntry.createWriter(q.resolve, q.reject);
       }, q.reject);
@@ -282,9 +239,9 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * to the provided path or rejected if an error occurs while attempting to retrieve the
    * FileEntry.
    */
-  function getFileEntry(path, options) {
+  function getFileEntry(path, options, fileSystemId) {
     var q = $q.defer();
-    getFilesystem().then(
+    getFilesystem(fileSystemId).then(
       function (filesystem) {
         filesystem.root.getFile(path, options, q.resolve, q.reject);
       }, q.reject);
@@ -308,9 +265,9 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * Returns a promise that will either be resolved with the Directory object associated with
    * the requested directory or rejected if an error occurs while atempting to access that directory.
    */
-  function getDirectory(dir, options) {
+  function getDirectory(dir, options, fileSystemId) {
     var q = $q.defer();
-    getFilesystem().then(
+    getFilesystem(fileSystemId).then(
       function (filesystem) {
         filesystem.root.getDirectory(dir, options, q.resolve, q.resolve);
       }, q.reject);
@@ -322,15 +279,18 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
    * with the device's persistent file system and with 1MB of storage reserved for it,
    * or rejected if an error occurs while trying to accessing the FileSystem
    */
-  function getFilesystem(quota) {
+  function getFilesystem(fileSystemId) {
     var
-      q = $q.defer(),
-      quota = (typeof quota == 'undefined' ? DEFAULT_QUOTA_MB : quota);
+      q = $q.defer();
 
-    navigator.webkitPersistentStorage.requestQuota(quota * 1024 * 1024, function (grantedBytes) {
-      $window.webkitRequestFileSystem($window.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
-    });
-//      $window.requestFileSystem(LocalFileSystem.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
+    if (navigator.webkitPersistentStorage) {
+      navigator.webkitPersistentStorage.requestQuota(100 * 1024 * 1024, function (grantedBytes) {
+        $window.webkitRequestFileSystem($window.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
+      });
+    } else {
+      $window.requestFileSystem(fileSystemId, 0, q.resolve, q.reject);
+    }
+
     return q.promise;
   }
 

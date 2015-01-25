@@ -10,7 +10,7 @@
 
 <div class="center center--show-top center--show-bottom">
   <div class="center__inner">
-    <h1 class="gallery-title">{{gallery.title}}</h1>
+    <h1 class="gallery-title" data-ng-bind="gallery.title"></h1>
 
     <div class="status"><span>{{gallery.photos.length}} of {{gallery.settings.maxPhotos}}</span></div>
 
@@ -31,11 +31,13 @@
              title="{{photo.name}}"/>
 
         <div class="edit-thumbs__thumb-caption">
-          <span data-ng-if="photo.deleted" class="edit-thumbs__thumb-caption-text">
-            {{'ACTION_DELETE' | translate}}
+          <span data-ng-if="photo.deleted"
+                data-translate="ACTION_DELETE"
+                class="edit-thumbs__thumb-caption-text">
           </span>
-          <span data-ng-if="!photo.dateOfUpload && !photo.deleted && gallery.dateOfUpload" class="edit-thumbs__thumb-caption-text">
-            {{'ACTION_ADD' | translate}}
+          <span data-ng-if="!photo.dateOfUpload && !photo.deleted && gallery.dateOfUpload"
+                data-translate="ACTION_ADD"
+                class="edit-thumbs__thumb-caption-text">
           </span>
         </div>
 
@@ -43,7 +45,7 @@
     </div>
 
     <div data-ng-if="!gallery.photos.length">
-      <p>{{'INFO_EDIT_GALLERY_INTRO' | translate}}</p>
+      <p data-translate="INFO_EDIT_GALLERY_INTRO"></p>
     </div>
 
   </div>
@@ -56,7 +58,7 @@
     <ul class="bottom-ctrl">
       <li class="bottom-ctrl__item">
         <div class="bottom-ctrl__icon icon-add-images"></div>
-        <div class="bottom-ctrl__label">{{ 'ACTION_ADD_PHOTOS' | translate }}</div>
+        <div class="bottom-ctrl__label" data-translate="ACTION_ADD_PHOTOS"></div>
         <div id="controller" data-ng-controller="fileSelectionController">
           <input class="file-input" type="file" id="files" name="files[]" multiple data-file-selection-directive/>
         </div>
@@ -64,20 +66,20 @@
       <li class="bottom-ctrl__item" data-ng-class="{'bottom-ctrl__item--highlighted ':showUpdateBtn}"
           data-ng-click="onUpdateBtnClick()">
         <div class="bottom-ctrl__icon icon-sync2"></div>
-        <div class="bottom-ctrl__label">{{ 'ACTION_UPDATE' | translate }}</div>
+        <div class="bottom-ctrl__label" translate="ACTION_UPDATE"></div>
       </li>
       <li class="bottom-ctrl__item" data-ng-click="onShareBtnClick()"
           data-ng-class="{'bottom-ctrl__item--green': highlightSharingBtn}">
         <div class="bottom-ctrl__icon icon-share"></div>
-        <div class="bottom-ctrl__label">{{ 'ACTION_SHARE' | translate }}</div>
+        <div class="bottom-ctrl__label" data-translate="ACTION_SHARE"></div>
       </li>
       <li class="bottom-ctrl__item" data-ng-if="gallery.photos.length" data-ng-click="onSlideshowBtnClick()">
         <div class="bottom-ctrl__icon icon-play2"></div>
-        <div class="bottom-ctrl__label">{{ 'ACTION_SLIDESHOW' | translate }}</div>
+        <div class="bottom-ctrl__label" data-translate="ACTION_SLIDESHOW"></div>
       </li>
       <li class="bottom-ctrl__item" data-ng-if="showDeleteGalleryBtn" data-ng-click="onDeleteGalleryBtnClick()">
         <div class="bottom-ctrl__icon icon-del-image"></div>
-        <div class="bottom-ctrl__label">{{ 'ACTION_DELETE_GALLERY' | translate }}</div>
+        <div class="bottom-ctrl__label" data-translate="ACTION_DELETE_GALLERY"></div>
       </li>
     </ul>
 

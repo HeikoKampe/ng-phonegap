@@ -1,6 +1,6 @@
 <div class="top">
   <div class="top__inner">
-    <h1 class="top__title">{{'TITLE_SHOW_GALLERIES' | translate}}</h1>
+    <span class="top__title" data-translate="TITLE_SHOW_GALLERIES"></span>
     <span class="top__icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
     <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
@@ -11,27 +11,28 @@
 <div class="center center--show-top">
   <div class="center__inner">
 
-    <h1>{{'TITLE_ALL_GALLERIES' | translate}}</h1>
+    <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
 
     <div class="preview"
          data-ng-click="onGalleryClick(gallery.galleryId)"
          data-ng-repeat="gallery in galleries">
 
-      <h1 class="preview__title">{{gallery.title}}</h1>
+      <h1 class="preview__title" data-ng-bind="gallery.title"></h1>
 
       <ul class="preview__details">
         <li class="preview__details-item"
             data-ng-if="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length">
           <span class="preview__icon icon-new-image"></span>
-          <span class="preview__details-value">{{ (galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length }}</span>
+          <span class="preview__details-value"
+              data-ng-bind="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length "></span>
         </li>
         <li class="preview__details-item">
           <span class="preview__icon icon-images"></span>
-          <span class="preview__details-value">{{galleries[gallery.galleryId].photos.length}}</span>
+          <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].photos.length"></span>
         </li>
         <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].ownerName">
           <span class="preview__icon icon-user"></span>
-          <span class="preview__details-value">{{galleries[gallery.galleryId].ownerName}}</span>
+          <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].ownerName"></span>
         </li>
         <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].dateOfUpload">
           <span class="preview__icon icon-share"></span>

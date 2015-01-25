@@ -71,14 +71,14 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   function getArrayIndexOfNextPhoto(_delta) {
     var delta = (_delta === undefined) ? 1 : _delta;
 
-    return ($scope.activePhotoArrayIndex + delta) % $scope.gallery.photos.length;
+    return ($scope.activePhotoArrayIndex + delta) % $scope.photos.length;
   }
 
   function getArrayIndexOfPrevPhoto(_delta) {
     var
       delta = (_delta === undefined) ? 1 : _delta;
 
-    return ((($scope.activePhotoArrayIndex - delta) % $scope.gallery.photos.length) + $scope.gallery.photos.length) % $scope.gallery.photos.length;
+    return ((($scope.activePhotoArrayIndex - delta) % $scope.photos.length) + $scope.photos.length) % $scope.photos.length;
   }
 
   function setTransitionClass () {
@@ -91,13 +91,13 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   $scope.showNextPhoto = function () {
     setTransitionClass();
     $scope.activePhotoArrayIndex = getArrayIndexOfNextPhoto();
-    $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
+    $scope.activePhotoId = $scope.photos[$scope.activePhotoArrayIndex].id;
     bufferPhotos();
   };
 
   $scope.showPrevPhoto = function () {
     $scope.activePhotoArrayIndex = getArrayIndexOfPrevPhoto();
-    $scope.activePhotoId = $scope.gallery.photos[$scope.activePhotoArrayIndex].id;
+    $scope.activePhotoId = $scope.photos[$scope.activePhotoArrayIndex].id;
     bufferPhotos();
   };
 
@@ -129,6 +129,12 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     }
   }
 
+  function removePhotoFromSlideshow (photoId) {
+    $scope.photos = _.filter($scope.photos, function (photo){
+      return photo.id != photoId;
+    });
+  }
+
   function loadPhotoInBuffer(photoId) {
     imageCachingService.loadImage(photoId).then(function (imageDataSrc) {
       checkBufferLimit();
@@ -138,7 +144,9 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
         photoBufferHistory.push(photoId);
       }
     }, function () {
-      console.log('loading photo failed 1', photoId);
+      console.log('loading photo failed 1', photoId, $scope.photos);
+      // if photo is not in cache and cannot re-cached then remove it from slideshow
+      removePhotoFromSlideshow(photoId);
     });
   }
 
@@ -154,8 +162,8 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
     for (i = 1; i <= BUFFER_DELTA; i++) {
       arrayIndexOfNextPhoto = getArrayIndexOfNextPhoto(i);
       arrayIndexOfPrevPhoto = getArrayIndexOfPrevPhoto(i);
-      photoIdOfNextPhoto = $scope.gallery.photos[arrayIndexOfNextPhoto].id;
-      photoIdOfPrevPhoto = $scope.gallery.photos[arrayIndexOfPrevPhoto].id;
+      photoIdOfNextPhoto = $scope.photos[arrayIndexOfNextPhoto].id;
+      photoIdOfPrevPhoto = $scope.photos[arrayIndexOfPrevPhoto].id;
       // buffer image if it is not already in the buffer
       if (!$scope.photoBuffer[photoIdOfNextPhoto]) {
         loadPhotoInBuffer(photoIdOfNextPhoto);
@@ -177,6 +185,8 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
         bufferPhotos();
       }, function () {
         console.log('loading photo failed 2', photoId);
+        // if photo is not in cache and cannot re-cached then remove it from slideshow
+        removePhotoFromSlideshow(photoId);
       });
     }
   }
@@ -189,13 +199,12 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   function init() {
     if ($rootScope.appDataReady) {
       slideshowDelay = appDataService.getAppSettingsItem('slideshowTransitionDelay');
-      console.log('slideshowDelay', slideshowDelay);
-      $scope.gallery = appDataService.getGallery();
+      $scope.photos = angular.copy(appDataService.getPhotos());
       storageService.loadThumbnails().then(function (thumbnails) {
         $scope.thumbnails = thumbnails;
       });
       // load first photo and it´ s neighbours
-      loadPhotoAndBufferNeighbours($scope.gallery.photos[0].id);
+      loadPhotoAndBufferNeighbours($scope.photos[0].id);
       // autostart slideshow
       $scope.startSlideshow();
     }

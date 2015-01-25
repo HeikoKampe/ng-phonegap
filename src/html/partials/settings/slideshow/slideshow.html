@@ -1,7 +1,7 @@
-<h2>{{'NAVI_SLIDESHOW' | translate}}</h2>
+<h2 data-translate="NAVI_SLIDESHOW"></h2>
 <div class="settings__block">
   <div class="settings__item">
-    <div class="settings__item-label">Ken-Burns</div>
+    <div class="settings__item-label" data-translate="LABEL_TRANS_KENBURNS"></div>
     <div class="settings__item-value">
       <input type="radio"
              data-ng-model="appSettings.slideshowTransitionEffect"
@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="settings__item">
-    <div class="settings__item-label">Cross-Fade</div>
+    <div class="settings__item-label" data-translate="LABEL_TRANS_CROSSFADE"></div>
     <div class="settings__item-value">
       <input type="radio"
              data-ng-model="appSettings.slideshowTransitionEffect"
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="settings__item">
-    <div class="settings__item-label">Slide-In/Out</div>
+    <div class="settings__item-label" data-translate="LABEL_TRANS_SLIDE"></div>
     <div class="settings__item-value">
       <input type="radio"
              data-ng-model="appSettings.slideshowTransitionEffect"
@@ -31,7 +31,7 @@
 
 <div class="settings__block" data-ng-if="appSettings.slideshowTransitionEffect != 0">
   <div class="settings__item">
-    <div class="settings__item-label">{{'LABEL_SLIDESHOW_DELAY' | translate}}</div>
+    <div class="settings__item-label" data-translate="LABEL_SLIDESHOW_DELAY"></div>
     <div class="settings__item-value"></div>
 
     <div class="settings__item-info">

@@ -1,46 +1,56 @@
-angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, $cordovaFile, html5FileSystem) {
+angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, html5FileSystem) {
   'use strict';
 
-  //Filesystem (checkDir, createDir, checkFile, creatFile, removeFile, writeFile, readFile)
+  /**
+   * ios filesystem ids:
+   * 0: /tmp
+   * 1: /Documents
+   * 3: /Library                                             --> for the app data file
+   * 4: /Library/NoCloud      (cordova.file.dataDirectory)   --> for the thumbnails
+   * 5: /Documents
+   * 6: /Documents/NoCloud
+   * 7: /Library/Caches       (cordova.file.cacheDirectory)   --> for the large images
+   */
 
   var fs = html5FileSystem;
   //var fs = $cordovaFile;
 
-  function checkDir (directory) {
-    return fs.checkDir(directory);
+  function checkDir (directory, fileSystemId) {
+    return fs.checkDir(directory, fileSystemId);
   }
 
-  function createDir (directory, replaceBOOL) {
-    return fs.createDir(directory, replaceBOOL);
+  function createDir (directory, replaceBOOL, fileSystemId) {
+    return fs.createDir(directory, replaceBOOL, fileSystemId);
   }
 
-  function listDir (directory) {
-    return fs.listDir(directory)
+  function listDir (directory, fileSystemId) {
+    return fs.listDir(directory, fileSystemId)
   }
 
-  function checkFile (filePath) {
-    return fs.checkFile(filePath);
+  function checkFile (filePath, fileSystemId) {
+    return fs.checkFile(filePath, fileSystemId);
   }
 
-  function createFile (filePath, replaceBOOL) {
-    return fs.createFile(filePath, replaceBOOL);
+  function createFile (filePath, replaceBOOL, fileSystemId) {
+    return fs.createFile(filePath, replaceBOOL, fileSystemId);
   }
 
-  function removeFile (filePath) {
-    return fs.removeFile(filePath);
+  function removeFile (filePath, fileSystemId) {
+    return fs.removeFile(filePath, fileSystemId);
   }
 
-  function writeFile (filePath, data) {
-    return fs.writeFile(filePath, data, {});
+  function writeFile (filePath, data, fileSystemId) {
+    return fs.writeFile(filePath, data, {}, fileSystemId);
   }
 
-  function readFile (filePath) {
-    return fs.readAsText(filePath);
+  function readFile (filePath, fileSystemId) {
+    return fs.readAsText(filePath, fileSystemId);
   }
 
-  function renameFile (dir, oldFileName, newFileName) {
-    return fs.renameFile(dir, oldFileName, newFileName);
+  function renameFile (dir, oldFileName, newFileName, fileSystemId) {
+    return fs.renameFile(dir, oldFileName, newFileName, fileSystemId);
   }
+
 
   return {
     checkDir: checkDir,

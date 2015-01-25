@@ -26,10 +26,10 @@ angular.module(_APP_).config([
       })
       .translations('de', {
 
-        TITLE_: '',
         TITLE_NEW: 'Neu',
-        TITLE_IMPORT: 'Importieren',
-        TITLE_IMPORT_GALLERIES: 'Fotorahmen importieren',
+        TITLE_CREATE_NEW_GALLERY: 'Fotorahmen erstellen',
+        TITLE_IMPORT: 'Import',
+        TITLE_IMPORT_GALLERY: 'Fotorahmen importieren',
         TITLE_SHOW_GALLERIES: 'Anzeigen',
         TITLE_GALLERIES: 'Fotorahmen',
         TITLE_ALL_GALLERIES: 'Alle Fotorahmen',
@@ -40,6 +40,7 @@ angular.module(_APP_).config([
         TITLE_SHARING: 'Teilen',
         TITLE_CHANGE_PASSWORD: 'Passwort ändern',
         TITLE_UPGRADE: 'Premium',
+
 
 
         ACTION_SHARE: 'Teilen',
@@ -57,6 +58,7 @@ angular.module(_APP_).config([
         ACTION_SHOW: 'anzeigen',
         ACTION_HIDE: 'ausblenden',
         ACTION_SHOW_ACCESS_CODE: 'Zugangs-Code anzeigen',
+        ACTION_HIDE_ACCESS_CODE: 'Zugangs-Code ausblenden',
         ACTION_CHANGE_PASSWORD: 'Passwort ändern',
 
 
@@ -86,6 +88,7 @@ angular.module(_APP_).config([
         LABEL_YOUR_USERNAME: 'Ihr Benutzernahme',
         LABEL_USERNAME_AUTHOR: 'Benutzername des Autors',
         LABEL_ACCESS_CODE: 'Zugangs-Code (6-Ziffern)',
+        LABEL_INVALID_ACCESS_CODE: 'Zugangs-Code ist ungültig',
         LABEL_ACCESS_CODE_FOTOFRAME: 'Zugangs-Code zu diesem Fotorahmen',
         LABEL_ALLOW_FOREIGN_UPLOADS: 'Gemeinsames bearbeiten',
         LABEL_PASSWORD: 'Passwort',
@@ -101,6 +104,10 @@ angular.module(_APP_).config([
         LABEL_LOGIN_WITH_DIFFERENT_USER: 'Mit anderem Benutzer anmelden',
         LABEL_UPGRADE_LIMITS: 'Limits erhöhen',
         LABEL_FEATURE_UPGRADE: 'Premium-Funtionen',
+        LABEL_HOW_IT_WORKS: 'So geht´s:',
+        LABEL_TRANS_KENBURNS: 'Ken-Burns',
+        LABEL_TRANS_CROSSFADE: 'Cross-Fade',
+        LABEL_TRANS_SLIDE: 'Slide-In/Out',
 
 
 
@@ -130,7 +137,7 @@ angular.module(_APP_).config([
         DESC_ALLOW_FOREIGN_UPLOADS: 'Das Hinzufügen und Löschen von Fotos für alle Benutzer des Fotorahmens erlauben.',
         DESC_: '',
         DESC_SHARING: 'Sie können den Fotorahmen mit anderen teilen, indem Sie ihnen den Zugangs-Code (s.u.) und Ihren Benutzernahmen geben.',
-        DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel): Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code. Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig! Viel Spaß!',
+        DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel):<br/><br/>Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code.<br/><br/>Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig!',
         DESC_SUBSCRIBE_STEP_2 : 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
         DESC_LOGIN: 'Sie haben sich schon einmal angemeldet und einen Fotorahmen angelegt? Dann können Sie sich hier mit Ihren Zugangsdaten anmelden um Ihre existierenden Fotorahmen zu importieren.',
         DESC_CHANGE_PASSWORD: 'Geben Sie dafür zuerst Ihre E-Mail Adresse ein, mit der Sie sich angemeldet haben und ein neues Passwort. Sie erhalten danach einen Sicherheits-Code per E-Mail, mit dem Sie im nächsten Schritt die Änderung authorisieren können.',
