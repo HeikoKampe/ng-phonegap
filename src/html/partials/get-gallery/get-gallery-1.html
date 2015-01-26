@@ -22,14 +22,17 @@
     </div>
 
     <span class="form__error-msg"
-          data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.required">
-      A username is required!</span>
+          data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.required"
+        data-translate="ERROR_USERNAME_REQUIRED">
+    </span>
     <span class="form__error-msg"
-          data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.minlength">
-      Username is to short.</span>
+          data-ng-show="showForm1Errors && getGalleryForm1.ownerName.$error.minlength"
+          data-translate="ERROR_USERNAME_TOO_SHORT">
+      </span>
     <span class="form__error-msg"
-          data-ng-show="showForm1Errors && galleryOwnerNameError">
-      Invalid username!</span>
+          data-ng-show="showForm1Errors && galleryOwnerNameError"
+          data-translate="ERROR_USERNAME_INVALID">
+      </span>
 
     <p class="text-right push--top clear">
       <button class="btn--blue" type="submit" data-translate="ACTION_CONTINUE"></button>

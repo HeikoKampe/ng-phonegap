@@ -1,1 +1,12 @@
-<h2>{{'TITLE_LANGUAGE' | translate}}</h2>
+<h2 data-translate="TITLE_LANGUAGE"></h2>
+
+<div class="settings__block">
+  <div class="settings__item">
+    <div class="settings__item-label" data-translate="LABEL_LANG_DE"></div>
+    <div class="settings__item-value">
+      <input type="radio"
+             data-ng-model="appSettings.language"
+             data-ng-value="de"
+             data-ng-change="onSettingsChange()"/>
+    </div>
+  </div>

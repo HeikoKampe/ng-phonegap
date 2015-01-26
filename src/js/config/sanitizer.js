@@ -9,7 +9,8 @@ angular.module(_APP_).config([
   function($compileProvider) {
 
     // sanitize white list for angular/phonegap
-    var sanitation = new RegExp('^\s*(https?|ftp|mailto|file|tel|comgooglemaps|sms):');
+    var sanitation = new RegExp('^\s*(https?|ftp|mailto|file|tel|comgooglemaps|sms|data):');
     $compileProvider.aHrefSanitizationWhitelist(sanitation);
+    $compileProvider.imgSrcSanitizationWhitelist(sanitation);
   }
 ]);

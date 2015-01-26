@@ -33,7 +33,8 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
         maxGalleries: 1,
         maxPhotos: 5,
         slideshowTransitionEffect: 0,
-        slideshowTransitionDelay:10000
+        slideshowTransitionDelay:10000,
+        language: 'de'
       }
     }
   }

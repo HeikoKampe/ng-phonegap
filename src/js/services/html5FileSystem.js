@@ -102,10 +102,10 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
     },
 
 
-    readAsDataURL: function (filePath) {
+    readAsDataURL: function (filePath, fileSystemId) {
       var q = $q.defer();
 
-      getFile(filePath, {create: false})
+      getFile(filePath, {create: false}, fileSystemId)
         .then(function (file) {
           getPromisedFileReader(q).readAsDataURL(file);
         }, q.reject);
@@ -285,7 +285,7 @@ angular.module(_SERVICES_).factory('html5FileSystem', function ($window, $q, $ti
 
     if (navigator.webkitPersistentStorage) {
       navigator.webkitPersistentStorage.requestQuota(100 * 1024 * 1024, function (grantedBytes) {
-        $window.webkitRequestFileSystem($window.PERSISTENT, 1024 * 1024, q.resolve, q.reject);
+        $window.webkitRequestFileSystem($window.PERSISTENT, grantedBytes, q.resolve, q.reject);
       });
     } else {
       $window.requestFileSystem(fileSystemId, 0, q.resolve, q.reject);

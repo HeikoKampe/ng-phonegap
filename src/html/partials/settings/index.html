@@ -1,7 +1,7 @@
 <div class="top">
   <div class="top__inner">
     <h1 class="top__title" data-translate="TITLE_SETTINGS"></h1>
-    <span class="top__icon-back icon-back" data-ng-click="back(true)"></span>
+    <span class="top__icon-back icon-back" data-ng-click="back()"></span>
   </div>
 </div>
 
@@ -13,27 +13,27 @@
         <ul class="settings-menu">
           <li class="settings-menu__item"
               data-ng-class="{'active': settingsSection1 == 'gallery' || !settingsSection1}"
-              data-ng-click="go('settings/gallery', '')"
+              data-ng-click="go('settings/gallery', '', true)"
               data-translate="NAVI_GALLERY">
           </li>
           <li class="settings-menu__item"
               data-ng-class="{'active': settingsSection1 == 'slideshow'}"
-              data-ng-click="go('settings/slideshow', '')"
+              data-ng-click="go('settings/slideshow', '', true)"
               data-translate="NAVI_SLIDESHOW">
           </li>
           <li class="settings-menu__item"
               data-ng-class="{'active': settingsSection1 == 'account'}"
-              data-ng-click="go('settings/account', '')"
+              data-ng-click="go('settings/account', '', true)"
               data-translate="NAVI_ACCOUNT">
           </li>
           <li class="settings-menu__item"
               data-ng-class="{'active': settingsSection1 == 'language'}"
-              data-ng-click="go('settings/language', '')"
+              data-ng-click="go('settings/language', '', true)"
               data-translate="NAVI_LANGUAGE">
           </li>
           <li class="settings-menu__item"
               data-ng-class="{'active': settingsSection1 == 'upgrade'}"
-              data-ng-click="go('settings/upgrade', '')"
+              data-ng-click="go('settings/upgrade', '', true)"
               data-translate="NAVI_UPGRADE">
           </li>
         </ul>

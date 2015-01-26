@@ -87,6 +87,8 @@ angular.module(_SERVICES_).service('storageService', function (
 
       fileSystemAPI.writeFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + importObj.photoObj.id, importObj.photoObj.mainDataURI, 7)
         .then(function () {
+          console.log('saved main image', importObj.photoObj.id);
+          console.log('saved main image', importObj.photoObj.mainDataURI);
           // release memory
           delete importObj.photoObj.mainDataURI;
           deferred.resolve(importObj);

@@ -1,6 +1,6 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top__icon-back icon-back" data-ng-click="back()"></span>
+    <span class="top__icon-back icon-back" data-ng-click="back(true)"></span>
     <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
@@ -11,12 +11,15 @@
   <div class="center__inner text-center">
 
     <form class="form--centered" name="loginForm" data-ng-submit="loginSubmit(loginForm.$valid)" novalidate>
-      <h1 style="line-height:1em;">Login,<br>
-        <span class="text-large">to share your photos with others.</span></h1>
+      <h1 data-translate="TITLE_LOGIN"></h1>
 
+      <p class="push--bottom">
+        <span data-translate="INFO_LOGIN_NO_SIGNIN"></span>
+        <span class="link" data-ng-click="go('signin', 'slide-left')" data-translate="NAVI_GO_SIGNIN"></span>
+      </p>
 
       <div class="form__group">
-        <span class="form__label">Username or email</span>
+        <span class="form__label" data-translate="LABEL_USERNAME_OR_EMAIL"></span>
 
         <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -34,14 +37,17 @@
               data-ng-show="(showLoginFormErrors || loginForm.email.$blurred) && loginForm.email.$error.email"></span>
         </div>
 
-        <span class="form__error-msg" data-ng-show="showLoginFormErrors && loginForm.email.$error.required">Your email is required!</span>
         <span class="form__error-msg"
-              data-ng-show="(showLoginFormErrors || loginForm.email.$blurred) && loginForm.email.$error.email">Not a valid email format!</span>
+              data-ng-show="showLoginFormErrors && loginForm.email.$error.required"
+              data-translate="ERROR_EMAIL_REQUIRED"></span>
+        <span class="form__error-msg"
+              data-ng-show="(showLoginFormErrors || loginForm.email.$blurred) && loginForm.email.$error.email"
+              data-translate="ERROR_EMAIL_INVALID_FORMAT"></span>
 
       </div>
 
       <div class="form__group">
-        <span class="form__label">Password</span>
+        <span class="form__label" data-translate="LABEL_PASSWORD"></span>
 
         <div class="form__ctrl">
           <span class="form__text-input-outer">
@@ -56,14 +62,20 @@
         </div>
 
         <span class="form__error-msg"
-              data-ng-show="(showLoginFormErrors || loginForm.password.$blurred) && loginForm.password.$error.required">A password is required!</span>
+              data-ng-show="(showLoginFormErrors || loginForm.password.$blurred) && loginForm.password.$error.required"
+            data-translate="ERROR_PASSWORD_REQUIRED"></span>
       </div>
 
       <div class="form__ctrl text-right">
-        <button class="btn--blue" type="submit">Continue</button>
+        <button class="btn--blue" type="submit" data-translate="ACTION_CONTINUE"></button>
       </div>
+      <br>
+      <p class="push--top">
+        <span data-translate="LABEL_PASSWORD_FORGOTTEN"></span>
+        <span class="link" data-ng-click="go('settings/account/reset-pwd', 'slide-left', true)" data-translate="ACTION_CHANGE_PASSWORD"></span>
+      </p>
     </form>
-    <a href="" data-ng-click="go('settings/account/reset-pwd', 'slide-left', true)">Forgot password</a>
+
 
     <p>
       <button data-ng-click="resetApp()">!!! RESET APP !!!</button>

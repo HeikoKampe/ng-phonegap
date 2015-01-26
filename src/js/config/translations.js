@@ -30,17 +30,18 @@ angular.module(_APP_).config([
         TITLE_CREATE_NEW_GALLERY: 'Fotorahmen erstellen',
         TITLE_IMPORT: 'Import',
         TITLE_IMPORT_GALLERY: 'Fotorahmen importieren',
-        TITLE_SHOW_GALLERIES: 'Anzeigen',
+        TITLE_SHOW_GALLERIES: 'Fotorahmen',
         TITLE_GALLERIES: 'Fotorahmen',
         TITLE_ALL_GALLERIES: 'Alle Fotorahmen',
-        TITLE_SIGNIN: 'Anmelden',
+        TITLE_SIGNIN: 'Anmeldung',
         TITLE_LOGIN: 'Login',
         TITLE_UPGRADE_FEATURES: 'Premium Features',
         TITLE_SETTINGS: 'Einstellungen',
         TITLE_SHARING: 'Teilen',
         TITLE_CHANGE_PASSWORD: 'Passwort ändern',
         TITLE_UPGRADE: 'Premium',
-
+        TITLE_LANGUAGE: 'Ausgewählte Sprache',
+        TITLE_ACCOUNT: 'Benutzerkonto',
 
 
         ACTION_SHARE: 'Teilen',
@@ -59,17 +60,18 @@ angular.module(_APP_).config([
         ACTION_HIDE: 'ausblenden',
         ACTION_SHOW_ACCESS_CODE: 'Zugangs-Code anzeigen',
         ACTION_HIDE_ACCESS_CODE: 'Zugangs-Code ausblenden',
-        ACTION_CHANGE_PASSWORD: 'Passwort ändern',
+        ACTION_CHANGE_PASSWORD: 'Passwort neu setzen',
 
 
 
         NAVI_GALLERY: 'Fotorahmen',
         NAVI_SLIDESHOW: 'Diashow',
-        NAVI_ACCOUNT: 'Account',
+        NAVI_ACCOUNT: 'Benutzerkonto',
         NAVI_LANGUAGE: 'Sprache',
         NAVI_UPGRADE: 'Premium',
         NAVI_GO_UPGRADE: 'zum Premium Bereich',
         NAVI_GO_LOGIN: 'zum Login',
+        NAVI_GO_SIGNIN: 'zur Anmeldung',
         NAVI_SHARING_CREDENTIALS: 'Zugangsdaten',
         NAVI_OPTIONS: 'Optionen',
 
@@ -92,50 +94,65 @@ angular.module(_APP_).config([
         LABEL_ACCESS_CODE_FOTOFRAME: 'Zugangs-Code zu diesem Fotorahmen',
         LABEL_ALLOW_FOREIGN_UPLOADS: 'Gemeinsames bearbeiten',
         LABEL_PASSWORD: 'Passwort',
-        LABEL_PIC_USERNAME: 'Wählen Sie einen Benutzernamen',
-        LABEL_PIC_PASSWORD: 'Wählen Sie ein Password',
+        LABEL_PIC_USERNAME: 'Wählen Sie einen Benutzernamen (min. 6 Zeichen)',
+        LABEL_PIC_PASSWORD: 'Wählen Sie ein Password (min. 8 Zeichen)',
         LABEL_PIC_NEW_PASSWORD: 'Wählen Sie ein neues Password',
         LABEL_EMAIL: 'Ihre E-Mail Adresse',
-        LABEL_MAX_GALLERIES: 'Max. Anzahl Fotorahmen',
+        LABEL_USERNAME_OR_EMAIL: 'Ihr Benutzername oder Ihre E-Mail',
+        LABEL_MAX_GALLERIES: 'Max. Anzahl eigener Fotorahmen',
         LABEL_MAX_PHOTOS: 'Max. Anzahl Fotos pro Fotorahmen',
         LABEL_ALLOW_FOREIGN_UPLOADS_DESCRIPTION: 'Foto-Uploads für andere erlauben.',
         LABEL_DETAILS: 'Details',
         LABEL_SLIDESHOW_DELAY: 'Geschwindigkeit',
+        LABEL_SIGNIN: 'Neu hier? Melden Sie sich jetzt an.',
+        LABEL_LOGIN: 'Bereits angemeldet? Gehen Sie zum Login.',
         LABEL_LOGIN_WITH_DIFFERENT_USER: 'Mit anderem Benutzer anmelden',
+        LABEL_PASSWORD_FORGOTTEN: 'Sie haben Ihr Passwort verloren?',
         LABEL_UPGRADE_LIMITS: 'Limits erhöhen',
         LABEL_FEATURE_UPGRADE: 'Premium-Funtionen',
         LABEL_HOW_IT_WORKS: 'So geht´s:',
         LABEL_TRANS_KENBURNS: 'Ken-Burns',
         LABEL_TRANS_CROSSFADE: 'Cross-Fade',
         LABEL_TRANS_SLIDE: 'Slide-In/Out',
+        LABEL_LANG_DE: 'Deutsch',
+        LABEL_LANG_EN: 'Englisch',
+        LABEL_LANG_ES: 'Spanisch',
+        LABEL_LANG_FR: 'Französisch',
+
 
 
 
 
         ERROR_INVALID: 'ungültig',
         ERROR_EMAIL_NOT_FOUND: 'Diese E-Mail Adresse wurde nicht gefunden!',
-        ERROR_EMAIL_REQUIRED: 'Eine E-Mail Adresse wird benötigt!',
+        ERROR_EMAIL_REQUIRED: 'Geben Sie Ihre E-Mail Adresse ein!',
         ERROR_EMAIL_INVALID_FORMAT: 'Kein gültiges E-Mail format!',
         ERROR_PASSWORD_REQUIRED: 'Ein Passwort wird wird benötigt!!',
+        ERROR_USERNAME_REQUIRED: 'Geben Sie einen Benutzernamen ein!',
+        ERROR_USERNAME_TOO_SHORT: 'Der Benutzername ist zu kurz!',
+        ERROR_USERNAME_TOO_LONG: 'Der Benutzername ist zu lang!',
+        ERROR_USERNAME_INVALID: 'Dieser Benutzername wurde nicht gefunden!',
+        ERROR_USERNAME_NOT_AVAILABLE: 'Dieser Benutzername ist schon vergeben!',
 
 
         SUCCESS_THANKS_FOR_UPGRADE: 'Vielen Dank für dieses Upgrade!',
 
 
-        INFO_: '',
         INFO_LIMIT_REACHED: 'Sorry, Sie haben Ihr App Limit erreicht!',
         INFO_GALLERIES_LIMIT: 'Mit der kostenlosen App können Sie genau einen Fotorahmen erstellen und mit anderen teilen.',
         INFO_NEED_MORE: 'Wollen Sie mehr?',
         INFO_ALLOW_FOREIGN_UPLOADS_UNLOCK_INFO: 'Das gemeinsame Bearbeiten ist ein Premium Feature und kann durch den Kauf eines Upgrades freigeschaltet werden.',
-        INFO_SIGNIN: 'Bitte melden Sie sich an um, Ihre Fotos mit anderen zu teilen.',
+        INFO_SIGNIN: 'Hier können Sie sich als neuer Nutzer anmelden, um Ihre Fotorahmen mit anderen zu teilen.',
+        INFO_SIGNIN_ALREADY: 'Bereits angemeldet?',
+        INFO_LOGIN_NO_SIGNIN: 'Neu hier? Dann melden Sie sich bitte zuerst an.',
         INFO_LIMIT_UPGRADE: 'Das Limit können Sie im Premium-Bereich erhöhen.',
         INFO_FEATURE_UPGRADE: 'Dieses Feature können Sie im Premium-Bereich aktivieren.',
-        INFO_EDIT_GALLERY_INTRO: 'Hier können Sie Fotos hinzufügen ...',
-        INFO_CHANGE_PASSWORD: 'Hier können Sie das Passwort ändern.',
-
+        INFO_EDIT_GALLERY_INTRO: 'Ihr Fotorahmen ist leer. Klicken Sie auf "Fotos hinzufügen"',
+        INFO_CHANGE_PASSWORD: 'Hier können Sie Ihr Passwort neu setzen.',
+        INFO_UPGRADE_INTRO: 'Mit dem Kauf eines Upgrades können Sie den Funktionsumfang der App erweitern und unterstützen deren Weiterentwicklung.',
+        INFO_NOT_LOGGED_IN: 'Sie sind zur Zeit nicht angemeldet.',
 
         DESC_ALLOW_FOREIGN_UPLOADS: 'Das Hinzufügen und Löschen von Fotos für alle Benutzer des Fotorahmens erlauben.',
-        DESC_: '',
         DESC_SHARING: 'Sie können den Fotorahmen mit anderen teilen, indem Sie ihnen den Zugangs-Code (s.u.) und Ihren Benutzernahmen geben.',
         DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel):<br/><br/>Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code.<br/><br/>Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig!',
         DESC_SUBSCRIBE_STEP_2 : 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
@@ -146,7 +163,6 @@ angular.module(_APP_).config([
         MISC_: '',
         SHARING_SEND_CREDENTIALS_VIA_EMAIL: 'Zugangsdaten per E-Mail versenden',
         SHARING_SEND_CREDENTIALS_VIA_SMS: 'Zugangsdaten per SMS versenden',
-        SIGNIN_QUESTION: 'Bereits angemeldet?',
 
 
       });

@@ -94,17 +94,17 @@ angular.module(_SERVICES_).service('imageVariantsService', function ($rootScope,
             sourceX = Math.floor((this.width - minVal) / 2);
             //ctxThumb.drawImage(this, sourceX ,0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
             drawImageIOSFix(ctxThumb, this, sourceX ,0, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
-            scaleRatio = Math.floor(IMAGE_VARIANTS.main.width / this.width);
+            scaleRatio = IMAGE_VARIANTS.main.width / this.width;
             canvasMain.width = IMAGE_VARIANTS.main.width;
-            canvasMain.height = this.height * scaleRatio;
-            ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+            canvasMain.height = Math.floor(this.height * scaleRatio);
+            ctxMain.drawImage(this, 0, 0, Math.floor(this.width * scaleRatio), Math.floor(this.height * scaleRatio));
           // if portrait
           } else {
             ctxThumb.drawImage(this, 0, (this.height - minVal) / 2, minVal, minVal, 0, 0, IMAGE_VARIANTS.thumbnail.width, IMAGE_VARIANTS.thumbnail.height);
             scaleRatio = IMAGE_VARIANTS.main.height / this.height;
-            canvasMain.width = this.width * scaleRatio;
+            canvasMain.width = Math.floor(this.width * scaleRatio);
             canvasMain.height = IMAGE_VARIANTS.main.height;
-            ctxMain.drawImage(this, 0, 0, this.width * scaleRatio, this.height * scaleRatio);
+            ctxMain.drawImage(this, 0, 0, Math.floor(this.width * scaleRatio), Math.floor(this.height * scaleRatio));
           }
           importObj.photoObj.thumbDataURI = canvasThumb.toDataURL(IMAGE_FILE_TYPE, 0.7);
           importObj.photoObj.mainDataURI = canvasMain.toDataURL(IMAGE_FILE_TYPE, 0.9);

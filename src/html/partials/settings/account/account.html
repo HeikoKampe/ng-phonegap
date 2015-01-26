@@ -1,4 +1,4 @@
-<h2 data-translate="NAVI_ACCOUNT"></h2>
+<h2 data-translate="TITLE_ACCOUNT"></h2>
 
 <!-- if user already signed up -->
 <div class="settings" data-ng-if="userName">
@@ -25,21 +25,21 @@
 
 <!-- if user has not signed up/logged in yet -->
 <div data-ng-if="!userName">
-  <p>You do not have an account or have not logged in yet.</p>
+  <p data-translate="INFO_NOT_LOGGED_IN"></p>
 
   <div class="settings__block">
     <div class="settings__item">
-      <span class="settings__item-label">Create an account</span>
-      <a class="settings__item-action" data-ng-click="go('signin', '')">Signin</a>
+      <span class="settings__item-label" data-translate="LABEL_SIGNIN"></span>
+      <a class="settings__item-action" data-ng-click="go('signin', 'slide-left')" data-translate="NAVI_GO_SIGNIN"></a>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">Use yout existing account</span>
-      <a class="settings__item-action" data-ng-click="go('login', '')" data-translate="NAVI_GO_LOGIN"></a>
+      <span class="settings__item-label" data-translate="LABEL_LOGIN"></span>
+      <a class="settings__item-action" data-ng-click="go('login', 'slide-left')" data-translate="NAVI_GO_LOGIN"></a>
     </div>
     <div class="settings__item">
-      <span class="settings__item-label">Forgot your password?</span>
+      <span class="settings__item-label" data-translate="LABEL_PASSWORD_FORGOTTEN"></span>
       <a class="settings__item-action"
-         data-ng-click="go('settings/account/reset-pwd', 'slide-left')"
+         data-ng-click="go('settings/account/reset-pwd', '')"
           data-translate="ACTION_CHANGE_PASSWORD"></a>
     </div>
   </div>

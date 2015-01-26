@@ -9,23 +9,18 @@ angular.module(_CONTROLLERS_).controller('mainController', function ($rootScope,
   $scope.animationClass = '';
   $scope.ctrlsVisible = true;
 
-  $rootScope.go = function (path, animationClass, setReturnLocation) {
-    if (setReturnLocation) {
-      returnLocation = $location.url();
-    }
+  $rootScope.go = function (path, animationClass, noHistoryEntry) {
     $scope.animationClass = animationClass;
     $location.url(path);
-    console.log('go: ', path, animationClass);
+    if (noHistoryEntry) {
+      $location.replace();
+    }
+
   };
 
-  $rootScope.back = function (goBackToReturnLocation) {
+  $rootScope.back = function () {
     $scope.animationClass = 'slide-right';
-    if (goBackToReturnLocation && returnLocation){
-      $location.url(returnLocation);
-      returnLocation = '';
-    } else {
-      $window.history.back();
-    }
+    $window.history.back();
   };
 
   $rootScope.showCtrls = function () {

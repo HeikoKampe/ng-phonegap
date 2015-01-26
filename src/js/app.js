@@ -1,5 +1,5 @@
 // some globals.
-var _APP_         = 'yourappname'
+var _APP_         = 'sharedPhotoFrame'
   , _CONTROLLERS_ = _APP_ + '.controllers'
   , _DIRECTIVES_  = _APP_ + '.directives'
   , _FILTERS_     = _APP_ + '.filters'
@@ -44,9 +44,10 @@ angular.module(_APP_).run([
     storageService.initStorage();
 
 
-    //console.log('*** dataDirectory ***', $window.cordova.file.dataDirectory);
-    //console.log('*** cacheDirectory ***', $window.cordova.file.cacheDirectory);
-    //console.log('*** syncedDataDirectory ***', $window.cordova.file.syncedDataDirectory);
+    console.log('*** dataDirectory ***', $window.cordova.file.dataDirectory);
+    console.log('*** cacheDirectory ***', $window.cordova.file.cacheDirectory);
+    console.log('*** syncedDataDirectory ***', $window.cordova.file.syncedDataDirectory);
+
 
 
 

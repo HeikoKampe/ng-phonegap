@@ -51,6 +51,10 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, html5FileSyste
     return fs.renameFile(dir, oldFileName, newFileName, fileSystemId);
   }
 
+  function readAsDataURL (filePath, fileSystemId) {
+    return fs.readAsDataURL(filePath, fileSystemId);
+  }
+
 
   return {
     checkDir: checkDir,
@@ -61,7 +65,8 @@ angular.module(_SERVICES_).factory('fileSystemAPI', function ($q, html5FileSyste
     removeFile: removeFile,
     writeFile: writeFile,
     readFile: readFile,
-    renameFile: renameFile
+    renameFile: renameFile,
+    readAsDataURL: readAsDataURL
   }
 
 });
