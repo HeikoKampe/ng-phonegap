@@ -1,8 +1,8 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top__title" data-translate="TITLE_SHOW_GALLERIES"></span>
+    <span class="top__title" data-translate="TITLE_APP"></span>
     <span class="top__icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
-    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
+    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left')">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
@@ -11,109 +11,128 @@
 <div class="center center--show-top">
   <div class="center__inner">
 
-    <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
+    <div data-ng-if="numberOfGalleries > 0" class="">
 
-    <div class="preview"
-         data-ng-click="onGalleryClick(gallery.galleryId)"
-         data-ng-repeat="gallery in galleries">
+      <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
 
-      <h1 class="preview__title" data-ng-bind="gallery.title"></h1>
+      <div class="preview"
+           data-ng-click="onGalleryClick(gallery.galleryId)"
+           data-ng-repeat="gallery in galleries">
 
-      <ul class="preview__details">
-        <li class="preview__details-item"
-            data-ng-if="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length">
-          <span class="preview__icon icon-new-image"></span>
+        <h1 class="preview__title" data-ng-bind="gallery.title"></h1>
+
+        <ul class="preview__details">
+          <li class="preview__details-item"
+              data-ng-if="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length">
+            <span class="preview__icon icon-new-image"></span>
           <span class="preview__details-value"
-              data-ng-bind="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length "></span>
-        </li>
-        <li class="preview__details-item">
-          <span class="preview__icon icon-images"></span>
-          <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].photos.length"></span>
-        </li>
-        <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].ownerName">
-          <span class="preview__icon icon-user"></span>
-          <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].ownerName"></span>
-        </li>
-        <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].dateOfUpload">
-          <span class="preview__icon icon-share"></span>
-          <span class="preview__details-value">shared</span>
-        </li>
-      </ul>
+                data-ng-bind="(galleries[gallery.galleryId].photos | photoFilter : 'viewStatus' : 0).length "></span>
+          </li>
+          <li class="preview__details-item">
+            <span class="preview__icon icon-images"></span>
+            <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].photos.length"></span>
+          </li>
+          <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].ownerName">
+            <span class="preview__icon icon-user"></span>
+            <span class="preview__details-value" data-ng-bind="galleries[gallery.galleryId].ownerName"></span>
+          </li>
+          <li class="preview__details-item" data-ng-if="galleries[gallery.galleryId].dateOfUpload">
+            <span class="preview__icon icon-share"></span>
+            <span class="preview__details-value">shared</span>
+          </li>
+        </ul>
 
-      <div class="preview__images">
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 0" data-ng-src="{{ thumb.src }}">
+        <div class="preview__images">
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 0" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 1" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 2" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 3" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 4" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 5" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 6" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 7" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 8" data-ng-src="{{ thumb.src }}">
+            </div>
+          </div>
+          <div class="preview__img-outer ">
+            <div class="flip-container">
+              <img class="preview__img flipper"
+                   data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
+                   data-ng-if="$index == 9" data-ng-src="{{ thumb.src }}">
+            </div>
           </div>
         </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 1" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 2" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 3" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 4" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 5" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 6" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 7" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 8" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
-        <div class="preview__img-outer ">
-          <div class="flip-container">
-            <img class="preview__img flipper"
-                 data-ng-repeat="thumb in previewThumbnails[gallery.galleryId] track by thumb.id"
-                 data-ng-if="$index == 9" data-ng-src="{{ thumb.src }}">
-          </div>
-        </div>
+
       </div>
 
     </div>
+
+    <div data-ng-if="numberOfGalleries == 0" class="center__box">
+
+      <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
+
+      <div class="push--bottom" data-translate="INFO_NO_GALLERIES"></div>
+      <p>
+        <button class="btn--blue push--right" data-translate="ACTION_NEW"
+                data-ng-click="go('create-gallery', 'slide-left')"></button>
+        <button class="btn--blue" data-translate="ACTION_IMPORT"
+                data-ng-click="go('get-gallery', 'slide-left')"></button>
+      </p>
+    </div>
+
+
   </div>
 
 </div>

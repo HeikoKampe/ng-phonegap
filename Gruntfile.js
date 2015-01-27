@@ -15,6 +15,7 @@ module.exports = function(grunt) {
     appDir: 'app/www',
     tmpDir: 'tmp',
     srcDir: 'src',
+    confDir: 'app',
     bowerDir: 'vendor',
     vendorDir: 'src/js/vendor',
     releaseDir: '<%= appDir %>',
@@ -405,7 +406,7 @@ module.exports = function(grunt) {
 
     // generate main index.html file
     grunt.file.write(opts.dest, template);
-    grunt.log.write('Generating ' + opts.dest + '...').ok();
+    grunt.log.write('Generating ' + opts.dest + '.. ..').ok();
 
   });
 

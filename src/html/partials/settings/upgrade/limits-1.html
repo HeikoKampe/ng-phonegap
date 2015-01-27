@@ -1,0 +1,25 @@
+
+<h2>{{'LABEL_UPGRADE_LIMITS' | translate}}</h2>
+<p>{{'INFO_UPGRADE_LIMITS' | translate}}</p>
+<table>
+  <tr>
+    <th class="text-left">{{'LABEL_DETAILS' | translate}}</th>
+    <th class="text-center">{{'LABEL_FROM' | translate}}</th>
+    <th class="text-center">{{'LABEL_TO' | translate}}</th>
+  </tr>
+  <tr>
+    <td>{{'LABEL_MAX_GALLERIES' | translate}}</td>
+    <td class="text-center">{{appSettings.maxGalleries}}</td>
+    <td class="text-center">{{upgrade1.maxGalleries}}</td>
+  </tr>
+  <tr>
+    <td>{{'LABEL_MAX_PHOTOS' | translate}}</td>
+    <td class="text-center">{{appSettings.maxPhotos}}</td>
+    <td class="text-center">{{upgrade1.maxPhotos}}</td>
+  </tr>
+</table>
+
+<p data-ng-if="appSettings.maxGalleries == 1">
+  <button class="btn--blue" data-ng-click="onUpgrade1BtnClick()">Buy upgrade for 1.00 €</button>
+</p>
+<p data-ng-if="appSettings.maxGalleries > 1">Thank you for your upgrade!</p>

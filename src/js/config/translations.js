@@ -26,6 +26,7 @@ angular.module(_APP_).config([
       })
       .translations('de', {
 
+        TITLE_APP: 'SharedPhotoFrame',
         TITLE_NEW: 'Neu',
         TITLE_CREATE_NEW_GALLERY: 'Fotorahmen erstellen',
         TITLE_IMPORT: 'Import',
@@ -39,16 +40,21 @@ angular.module(_APP_).config([
         TITLE_SETTINGS: 'Einstellungen',
         TITLE_SHARING: 'Teilen',
         TITLE_CHANGE_PASSWORD: 'Passwort ändern',
-        TITLE_UPGRADE: 'Premium',
+        TITLE_UPGRADE: 'Premium-Bereich',
         TITLE_LANGUAGE: 'Ausgewählte Sprache',
         TITLE_ACCOUNT: 'Benutzerkonto',
+        TITLE_PHOTOS_LIMIT_REACHED: 'Foto-Limit',
+        TITLE_LOGIN_NEEDED: 'Anmeldung erforderlich',
 
 
         ACTION_SHARE: 'Teilen',
+        ACTION_NEW: 'Neu',
+        ACTION_IMPORT: 'Import',
         ACTION_NEW_GALLERY: 'Fotorahmen erstellen',
         ACTION_ADD: 'hinzufügen',
         ACTION_DELETE: 'entfernen',
-        ACTION_CONTINUE: 'Weiter',
+        ACTION_CONTINUE: 'weiter',
+        ACTION_CLOSE: 'schließen',
         ACTION_ADD_PHOTOS: 'Fotos hinzufügen',
         ACTION_SLIDESHOW: 'Diashow',
         ACTION_UPDATE: 'Aktualisieren',
@@ -61,7 +67,6 @@ angular.module(_APP_).config([
         ACTION_SHOW_ACCESS_CODE: 'Zugangs-Code anzeigen',
         ACTION_HIDE_ACCESS_CODE: 'Zugangs-Code ausblenden',
         ACTION_CHANGE_PASSWORD: 'Passwort neu setzen',
-
 
 
         NAVI_GALLERY: 'Fotorahmen',
@@ -120,9 +125,6 @@ angular.module(_APP_).config([
         LABEL_LANG_FR: 'Französisch',
 
 
-
-
-
         ERROR_INVALID: 'ungültig',
         ERROR_EMAIL_NOT_FOUND: 'Diese E-Mail Adresse wurde nicht gefunden!',
         ERROR_EMAIL_REQUIRED: 'Geben Sie Ihre E-Mail Adresse ein!',
@@ -147,22 +149,31 @@ angular.module(_APP_).config([
         INFO_LOGIN_NO_SIGNIN: 'Neu hier? Dann melden Sie sich bitte zuerst an.',
         INFO_LIMIT_UPGRADE: 'Das Limit können Sie im Premium-Bereich erhöhen.',
         INFO_FEATURE_UPGRADE: 'Dieses Feature können Sie im Premium-Bereich aktivieren.',
-        INFO_EDIT_GALLERY_INTRO: 'Ihr Fotorahmen ist leer. Klicken Sie auf "Fotos hinzufügen"',
+        INFO_EDIT_GALLERY_INTRO: 'Ihr Fotorahmen ist leer. Bitte klicken Sie auf "Fotos hinzufügen".',
         INFO_CHANGE_PASSWORD: 'Hier können Sie Ihr Passwort neu setzen.',
-        INFO_UPGRADE_INTRO: 'Mit dem Kauf eines Upgrades können Sie den Funktionsumfang der App erweitern und unterstützen deren Weiterentwicklung.',
+        INFO_UPGRADE: 'Hier haben Sie die Möglichkeit mit dem Kauf eines Upgrades den Funktionsumfang der App zu erweitern und deren Weiterentwicklung zu unterstützen.',
+        INFO_UPGRADE_LIMITS: 'Erhöhen Sie die Anzahl an eigenen Fotorahmen und die Menge der Fotos je Rahmen um noch mehr Fotos mit anderen zu teilen.',
         INFO_NOT_LOGGED_IN: 'Sie sind zur Zeit nicht angemeldet.',
+        INFO_NO_GALLERIES: '<p>Hier finden Sie eine Übersicht über Ihre importierten und eigenen Fotorahmen.</p>' +
+        '<p>Klicken Sie auf "Neu" um einen eigenen Fotorahmen anzulegen oder auf "Import", um den Fotorahmen eines Bekannten zu importieren.</p>',
 
         DESC_ALLOW_FOREIGN_UPLOADS: 'Das Hinzufügen und Löschen von Fotos für alle Benutzer des Fotorahmens erlauben.',
         DESC_SHARING: 'Sie können den Fotorahmen mit anderen teilen, indem Sie ihnen den Zugangs-Code (s.u.) und Ihren Benutzernahmen geben.',
         DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel):<br/><br/>Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code.<br/><br/>Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig!',
-        DESC_SUBSCRIBE_STEP_2 : 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
+        DESC_SUBSCRIBE_STEP_2: 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
         DESC_LOGIN: 'Sie haben sich schon einmal angemeldet und einen Fotorahmen angelegt? Dann können Sie sich hier mit Ihren Zugangsdaten anmelden um Ihre existierenden Fotorahmen zu importieren.',
         DESC_CHANGE_PASSWORD: 'Geben Sie dafür zuerst Ihre E-Mail Adresse ein, mit der Sie sich angemeldet haben und ein neues Passwort. Sie erhalten danach einen Sicherheits-Code per E-Mail, mit dem Sie im nächsten Schritt die Änderung authorisieren können.',
-        DESC_UPGRADE_ALLOW_FOREIGN_UPLOADS: 'Nach diesem Upgrade können Sie Fotorahmen für die gemeinsame Bearbeitung freigeben. Andere Benutzer können dann ebenfalls Fotos hinzufügen und löschen.',
+        DESC_UPGRADE_ALLOW_FOREIGN_UPLOADS: 'Nach diesem Upgrade können Sie Fotorahmen für die gemeinsame Bearbeitung freigeben. Andere Benutzer dürfen dann ebenfalls Fotos hinzufügen und löschen.',
+
+        MSG_PHOTOS_LIMIT_REACHED: 'Sie haben die max. Anzahl von {{maxPhotos}} Fotos je Rahmen erreicht. Löschen Sie vorhandene Fotos oder erhöhen Sie das Foto-Limit im Premium-Bereich.',
+        MSG_SELECTED_PHOTOS_OVER_LIMIT: 'Ihre Auswahl übersteigt das vorhandene Foto-Limit. Bitte wählen Sie max. {{nPhotos}} weitere(s) Fotos aus oder erhöhen das Foto-Limit im Premium-Bereich.',
+        MSG_LOGIN_NEEDED_BEFORE_UPGRADE: 'Bitte melden Sie sich zuerst an, bevor Sie ein Upgrade kaufen.',
 
         MISC_: '',
         SHARING_SEND_CREDENTIALS_VIA_EMAIL: 'Zugangsdaten per E-Mail versenden',
         SHARING_SEND_CREDENTIALS_VIA_SMS: 'Zugangsdaten per SMS versenden',
+
+
 
 
       });

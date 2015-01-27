@@ -1,0 +1,23 @@
+
+<h2 data-translate="LABEL_FEATURE_UPGRADE"></h2>
+<p data-translate="DESC_UPGRADE_ALLOW_FOREIGN_UPLOADS"></p>
+<table>
+  <tr>
+    <th class="text-left" data-translate="LABEL_DETAILS"></th>
+    <th class="text-center" data-translate="LABEL_FROM"></th>
+    <th class="text-center" data-translate="LABEL_TO"></th>
+  </tr>
+  <tr>
+    <td>Feature: Gemeinsames bearbeiten</td>
+    <td class="text-center">
+      <span data-ng-if="appSettings.allowForeignUploads == false" data-translate="LABEL_OFF"></span>
+      <span data-ng-if="appSettings.allowForeignUploads == true" data-translate="LABEL_ON"></span>
+    </td>
+    <td class="text-center" data-translate="LABEL_ON"></td>
+  </tr>
+</table>
+
+<p data-ng-if="appSettings.allowForeignUploads == false">
+  <button class="btn--blue" data-ng-click="onUpgrade2BtnClick()">Buy upgrade for 1.00 €</button>
+</p>
+<p data-ng-if="appSettings.allowForeignUploads == true" data-translate="SUCCESS_THANKS_FOR_UPGRADE"></p>

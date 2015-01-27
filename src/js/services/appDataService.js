@@ -15,7 +15,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       photos: [],
       settings: {
         allowForeignUploads: false,
-        maxPhotos: 5
+        maxPhotos: 10
       }
     };
 
@@ -31,7 +31,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       settings: {
         allowForeignUploads: false,
         maxGalleries: 1,
-        maxPhotos: 5,
+        maxPhotos: 10,
         slideshowTransitionEffect: 0,
         slideshowTransitionDelay:10000,
         language: 'de'
@@ -266,7 +266,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
   function getPhotosLimit(_galleryId) {
     var galleryId = _galleryId || appData.activeGalleryId;
 
-    return appData.galleries[galleryId].settings.maxPhotos;
+      return appData.galleries[galleryId].settings.maxPhotos;
   }
 
   function getSyncId(_galleryId) {

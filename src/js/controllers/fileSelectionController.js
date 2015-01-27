@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($scope,
+                                                                              $rootScope,
                                                                               $q,
                                                                               $log,
+                                                                              $filter,
                                                                               appDataService,
                                                                               localImageImportService,
                                                                               eventService,
@@ -37,12 +39,18 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
             }
           });
       } else {
-        console.log("reached photos limit");
-          messageService.showMessage({
-            title: 'Sorry, you selected too many photos.',
-            content: 'You can only add ' + (maxPhotos - nPhotosInGallery) + ' more photos to this gallery. ' +
-            'Please select less photos, delete already loaded photos or upgrade.'
-          });
+
+        messageService.showMessage({
+          title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
+          content: $filter('translate')('MSG_SELECTED_PHOTOS_OVER_LIMIT', {nPhotos: (maxPhotos - nPhotosInGallery)}),
+          button: {
+            label: $filter('translate')('NAVI_GO_UPGRADE'),
+            action: function () {
+              $rootScope.go('settings/upgrade', 'slide-left');
+              messageService.closeMessage();
+            }
+          }
+        });
 
       }
     }
@@ -50,10 +58,17 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
 
   // called by fileSelectionDirective
   $scope.showLimitReachedMessage = function () {
+
     messageService.showMessage({
-      title: 'Limit reached',
-      content: 'The number of photos is limited to ' + appDataService.getPhotosLimit() + '. ' +
-      'Remove already loaded photos or upgrade to be able to add new ones.'
+      title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
+      content: $filter('translate')('MSG_PHOTOS_LIMIT_REACHED', {maxPhotos: appDataService.getPhotosLimit()}),
+      button: {
+        label: $filter('translate')('NAVI_GO_UPGRADE'),
+        action: function () {
+          $rootScope.go('settings/upgrade', 'slide-left');
+          messageService.closeMessage();
+        }
+      }
     });
   };
 

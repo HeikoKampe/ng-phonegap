@@ -136,7 +136,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
   }
 
   function loadPhotoInBuffer(photoId) {
-    storageService.loadImage(photoId).then(function (imageDataSrc) {
+    imageCachingService.loadImage(photoId).then(function (imageDataSrc) {
       checkBufferLimit();
       // check buffer again because of loading delay
       if (!$scope.photoBuffer[photoId]) {
@@ -176,7 +176,7 @@ angular.module(_CONTROLLERS_).controller('slideshowController', function (
 
   function loadPhotoAndBufferNeighbours(photoId) {
     if (!$scope.photoBuffer[photoId]) {
-      storageService.loadImage(photoId).then(function (imageDataSrc) {
+      imageCachingService.loadImage(photoId).then(function (imageDataSrc) {
         // check again because of race condition
         if (!$scope.photoBuffer[photoId]) {
           $scope.photoBuffer[photoId] = imageDataSrc;

@@ -44,10 +44,10 @@ angular.module(_APP_).run([
     storageService.initStorage();
 
 
-    console.log('*** dataDirectory ***', $window.cordova.file.dataDirectory);
-    console.log('*** cacheDirectory ***', $window.cordova.file.cacheDirectory);
-    console.log('*** syncedDataDirectory ***', $window.cordova.file.syncedDataDirectory);
-
+    //console.log('*** dataDirectory ***', $window.cordova.file.dataDirectory);
+    //console.log('*** cacheDirectory ***', $window.cordova.file.cacheDirectory);
+    //console.log('*** syncedDataDirectory ***', $window.cordova.file.syncedDataDirectory);
+    //
 
 
 

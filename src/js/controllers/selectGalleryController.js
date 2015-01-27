@@ -19,6 +19,7 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   $scope.pageClass = 'page--select-gallery';
   $scope.showCtrls = true;
   $scope.galleries = {};
+  $scope.numberOfGalleries = undefined;
   $scope.previewThumbnails = {};
   $scope.showNoGalleriesMessage = false;
 
@@ -167,7 +168,8 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
   function init() {
     if ($rootScope.appDataReady && appDataService.getActiveGalleryId() !== -1) {
       $scope.galleries = appDataService.getGalleries();
-      if (_.size($scope.galleries)) {
+      $scope.numberOfGalleries = _.size($scope.galleries);
+      if ($scope.numberOfGalleries) {
         syncService.checkForRemoteChanges().then(createPreviews);
       } else {
         $scope.showNoGalleriesMessage = true;

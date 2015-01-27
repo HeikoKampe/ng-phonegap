@@ -1,8 +1,14 @@
 <div data-ng-switch="settingsSection2" data-ng-controller="upgradeController">
   <div data-ng-switch-default>
-    <div data-ng-include="'html/partials/settings/upgrade/option1.html'"></div>
+    <div data-ng-include="'html/partials/settings/upgrade/landing.html'"></div>
   </div>
-  <div data-ng-switch-when="option1">
-    <div data-ng-include="'html/partials/settings/upgrade/option1.html'"></div>
+  <div data-ng-switch-when="landing">
+    <div data-ng-include="'html/partials/settings/upgrade/landing.html'"></div>
+  </div>
+  <div data-ng-switch-when="limits-1">
+    <div data-ng-include="'html/partials/settings/upgrade/limits-1.html'"></div>
+  </div>
+  <div data-ng-switch-when="feature-1">
+    <div data-ng-include="'html/partials/settings/upgrade/feature-1.html'"></div>
   </div>
 </div>

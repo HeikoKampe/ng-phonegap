@@ -3,7 +3,7 @@
   <div class="message__inner">
     <button class="message__close-btn btn"><i class="icon--close"></i></button>
     <div class="message__header">
-      <h2 class="message__title">{{message.title}}</h2>
+      <h2 class="message__title" data-ng-bind="message.title"></h2>
     </div>
     <div class="message__body">
       <div class="message__body-inner">
@@ -11,7 +11,12 @@
       </div>
     </div>
     <div class="message__footer">
-      <button class="close-btn">Close</button>
+      <button class="btn--blue"
+              data-ng-if="message.button"
+              data-ng-bind="message.button.label"
+              data-ng-click="message.button.action()">
+      </button>
+      <button class="close-btn btn--blue" data-translate="ACTION_CLOSE">Close</button>
     </div>
   </div>
 </section>

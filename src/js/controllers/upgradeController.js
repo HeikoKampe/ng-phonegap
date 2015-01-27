@@ -1,6 +1,8 @@
 angular.module(_CONTROLLERS_).controller('upgradeController', function (
   $scope,
+  $rootScope,
   $routeParams,
+  $filter,
   serverAPI,
   appDataService,
   eventService,
@@ -15,6 +17,20 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
     allowForeignUploads: true,
     maxPhotos: 15
   };
+
+  function showLoginNeededMessage () {
+    messageService.showMessage({
+      title: $filter('translate')('TITLE_LOGIN_NEEDED'),
+      content: $filter('translate')('MSG_LOGIN_NEEDED_BEFORE_UPGRADE'),
+      button: {
+        label: $filter('translate')('NAVI_GO_SIGNIN'),
+        action: function () {
+          $rootScope.go('signin', 'slide-left');
+          messageService.closeMessage();
+        }
+      }
+    });
+  }
 
   function onUpgradeSuccess(data){
     console.log('upgrade success', data);
@@ -33,17 +49,25 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
   }
 
   $scope.onUpgrade1BtnClick = function () {
-
-    serverAPI.upgrade(appDataService.getUserId(), $scope.upgrade1)
-      .then(updateLocalSettings)
-      .then(onUpgradeSuccess)
+    // if logged in
+    if (appDataService.getUserToken()) {
+      serverAPI.upgrade(appDataService.getUserId(), $scope.upgrade1)
+        .then(updateLocalSettings)
+        .then(onUpgradeSuccess);
+    } else {
+      showLoginNeededMessage();
+    }
   };
 
   $scope.onUpgrade2BtnClick = function () {
-
-    serverAPI.upgrade(appDataService.getUserId(), $scope.upgrade2)
-      .then(updateLocalSettings)
-      .then(onUpgradeSuccess)
+    // if logged in
+    if (appDataService.getUserToken()) {
+      serverAPI.upgrade(appDataService.getUserId(), $scope.upgrade2)
+        .then(updateLocalSettings)
+        .then(onUpgradeSuccess);
+    } else {
+      showLoginNeededMessage();
+    }
   };
 
   function init() {
