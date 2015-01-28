@@ -45,6 +45,7 @@ angular.module(_APP_).config([
         TITLE_ACCOUNT: 'Benutzerkonto',
         TITLE_PHOTOS_LIMIT_REACHED: 'Foto-Limit',
         TITLE_LOGIN_NEEDED: 'Anmeldung erforderlich',
+        TITLE_SEND_INVITATION: 'Einladung schicken',
 
 
         ACTION_SHARE: 'Teilen',
@@ -83,19 +84,22 @@ angular.module(_APP_).config([
 
         LABEL_OPTIONS: 'Optionen',
         LABEL_GALLERY: 'Fotorahmen: ',
+        LABEL_PHOTOS: 'Fotos',
         LABEL_GALLERY_TITLE: 'Name des Fotorahmens',
         LABEL_YES: 'ja',
         LABEL_NO: 'nein',
         LABEL_ON: 'an',
         LABEL_OFF: 'aus',
         LABEL_FROM: 'von',
+        LABEL_OF: 'von',
         LABEL_TO: 'auf',
+        LABEL_MAX_ABBR: 'max.',
         LABEL_ENABLED: 'aktiviert',
         LABEL_DISABLED: 'deaktiviert',
         LABEL_YOUR_USERNAME: 'Ihr Benutzernahme',
         LABEL_USERNAME_AUTHOR: 'Benutzername des Autors',
-        LABEL_ACCESS_CODE: 'Zugangs-Code (6-Ziffern)',
-        LABEL_INVALID_ACCESS_CODE: 'Zugangs-Code ist ungültig',
+        LABEL_ACCESS_CODE: 'Zugangs-Code',
+        LABEL_ACCESS_CODE_LONG: 'Zugangs-Code (6-Ziffern)',
         LABEL_ACCESS_CODE_FOTOFRAME: 'Zugangs-Code zu diesem Fotorahmen',
         LABEL_ALLOW_FOREIGN_UPLOADS: 'Gemeinsames bearbeiten',
         LABEL_PASSWORD: 'Passwort',
@@ -103,7 +107,10 @@ angular.module(_APP_).config([
         LABEL_PIC_PASSWORD: 'Wählen Sie ein Password (min. 8 Zeichen)',
         LABEL_PIC_NEW_PASSWORD: 'Wählen Sie ein neues Password',
         LABEL_EMAIL: 'Ihre E-Mail Adresse',
+        LABEL_EMAIL_RECIPIENT: 'E-Mail Adresse des Empfängers',
         LABEL_USERNAME_OR_EMAIL: 'Ihr Benutzername oder Ihre E-Mail',
+        LABEL_REALNAME: 'Ihr Name',
+        LABEL_YOUR_MESSAGE: 'Ihre Nachricht',
         LABEL_MAX_GALLERIES: 'Max. Anzahl eigener Fotorahmen',
         LABEL_MAX_PHOTOS: 'Max. Anzahl Fotos pro Fotorahmen',
         LABEL_ALLOW_FOREIGN_UPLOADS_DESCRIPTION: 'Foto-Uploads für andere erlauben.',
@@ -128,6 +135,7 @@ angular.module(_APP_).config([
         ERROR_INVALID: 'ungültig',
         ERROR_EMAIL_NOT_FOUND: 'Diese E-Mail Adresse wurde nicht gefunden!',
         ERROR_EMAIL_REQUIRED: 'Geben Sie Ihre E-Mail Adresse ein!',
+        ERROR_EMAIL_RECIPIENT_REQUIRED: 'Geben Sie die E-Mail Adresse des Empfängers ein!',
         ERROR_EMAIL_INVALID_FORMAT: 'Kein gültiges E-Mail format!',
         ERROR_PASSWORD_REQUIRED: 'Ein Passwort wird wird benötigt!!',
         ERROR_USERNAME_REQUIRED: 'Geben Sie einen Benutzernamen ein!',
@@ -135,6 +143,7 @@ angular.module(_APP_).config([
         ERROR_USERNAME_TOO_LONG: 'Der Benutzername ist zu lang!',
         ERROR_USERNAME_INVALID: 'Dieser Benutzername wurde nicht gefunden!',
         ERROR_USERNAME_NOT_AVAILABLE: 'Dieser Benutzername ist schon vergeben!',
+        ERROR_INVALID_ACCESS_CODE: 'Zugangs-Code ist ungültig',
 
 
         SUCCESS_THANKS_FOR_UPGRADE: 'Vielen Dank für dieses Upgrade!',
@@ -156,10 +165,12 @@ angular.module(_APP_).config([
         INFO_NOT_LOGGED_IN: 'Sie sind zur Zeit nicht angemeldet.',
         INFO_NO_GALLERIES: '<p>Hier finden Sie eine Übersicht über Ihre importierten und eigenen Fotorahmen.</p>' +
         '<p>Klicken Sie auf "Neu" um einen eigenen Fotorahmen anzulegen oder auf "Import", um den Fotorahmen eines Bekannten zu importieren.</p>',
+        INFO_SEND_EMAIL_INVITATION: 'Einladung zum Fotorahmen <span class="text-yellow text-weight-medium">{{galleryTitle}}</span> per Email versenden',
+
 
         DESC_ALLOW_FOREIGN_UPLOADS: 'Das Hinzufügen und Löschen von Fotos für alle Benutzer des Fotorahmens erlauben.',
         DESC_SHARING: 'Sie können den Fotorahmen mit anderen teilen, indem Sie ihnen den Zugangs-Code (s.u.) und Ihren Benutzernahmen geben.',
-        DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel):<br/><br/>Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code.<br/><br/>Sie geben zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig!',
+        DESC_SUBSCRIBE_STEP_1: 'So gehts (Beispiel):<br/><br/>Eine Bekannte von Ihnen hat einen Fotorahmen angelegt und möchte diesen mit Ihnen teilen. Dafür gibt Sie Ihnen Ihren Benutzernamen und einen Zugangs-Code.<br/><br/>Sie geben hier zuerst den Benutzernahmen Ihrer Bekannten ein und dann den Zugangs-Code. Fertig!',
         DESC_SUBSCRIBE_STEP_2: 'Geben Sie nun den Zugangs-Code ein, den Sie vom Autoren des Fotorahmens erhalten haben.',
         DESC_LOGIN: 'Sie haben sich schon einmal angemeldet und einen Fotorahmen angelegt? Dann können Sie sich hier mit Ihren Zugangsdaten anmelden um Ihre existierenden Fotorahmen zu importieren.',
         DESC_CHANGE_PASSWORD: 'Geben Sie dafür zuerst Ihre E-Mail Adresse ein, mit der Sie sich angemeldet haben und ein neues Passwort. Sie erhalten danach einen Sicherheits-Code per E-Mail, mit dem Sie im nächsten Schritt die Änderung authorisieren können.',
@@ -168,6 +179,7 @@ angular.module(_APP_).config([
         MSG_PHOTOS_LIMIT_REACHED: 'Sie haben die max. Anzahl von {{maxPhotos}} Fotos je Rahmen erreicht. Löschen Sie vorhandene Fotos oder erhöhen Sie das Foto-Limit im Premium-Bereich.',
         MSG_SELECTED_PHOTOS_OVER_LIMIT: 'Ihre Auswahl übersteigt das vorhandene Foto-Limit. Bitte wählen Sie max. {{nPhotos}} weitere(s) Fotos aus oder erhöhen das Foto-Limit im Premium-Bereich.',
         MSG_LOGIN_NEEDED_BEFORE_UPGRADE: 'Bitte melden Sie sich zuerst an, bevor Sie ein Upgrade kaufen.',
+        MSG_DEFAULT_EMAIL_INVITATION: 'DEFAULT EMAIL MESSAGE',
 
         MISC_: '',
         SHARING_SEND_CREDENTIALS_VIA_EMAIL: 'Zugangsdaten per E-Mail versenden',

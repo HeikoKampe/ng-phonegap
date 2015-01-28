@@ -87,8 +87,6 @@ angular.module(_SERVICES_).service('storageService', function (
 
       fileSystemAPI.writeFile(appSettingsService.SETTINGS.IMAGES_DIR + '/' + importObj.photoObj.id, importObj.photoObj.mainDataURI, 7)
         .then(function () {
-          console.log('saved main image', importObj.photoObj.id);
-          console.log('saved main image', importObj.photoObj.mainDataURI);
           // release memory
           delete importObj.photoObj.mainDataURI;
           deferred.resolve(importObj);
@@ -250,7 +248,6 @@ angular.module(_SERVICES_).service('storageService', function (
       fileSystemAPI.listDir(dirPath, fileSystemId).then(function(fileEntries) {
         angular.forEach(fileEntries, function (fileEntry){
           if (fileEntry.isFile) {
-            console.log('fileEntry: ', fileEntry);
             promises.push(fileSystemAPI.removeFile(fileEntry.fullPath, fileSystemId));
           }
         });

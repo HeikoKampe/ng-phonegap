@@ -1,33 +1,36 @@
 <h2>{{'LABEL_GALLERY' | translate}} {{gallery.title}}</h2>
 
-<p>{{'DESC_ALLOW_FOREIGN_UPLOADS_DESCRIPTION' | translate}}</p>
+<p data-translate="DESC_ALLOW_FOREIGN_UPLOADS"></p>
 
 <div class="settings__block">
-  <div class="settings__item" data-ng-click="onAllowForeignUploadsClick()">
-    <span class="settings__item-label">{{'LABEL_ALLOW_FOREIGN_UPLOADS' | translate}}</span>
+  <div class="settings__item">
+    <span class="settings__item-label" data-translate="LABEL_ALLOW_FOREIGN_UPLOADS"></span>
+
     <span class="settings__item-value" data-ng-if="appSettings.allowForeignUploads">
       <input type="radio"
              data-ng-model="gallery.settings.allowForeignUploads"
              data-ng-value="true"
-             data-ng-click="onAllowForeignUploadsClick()"
              data-ng-change="onUploadPermissionChange()">
-      <span>{{'LABEL_ON' | translate}}</span>
+      <span data-translate="LABEL_ON"></span>
       <input type="radio"
              data-ng-model="gallery.settings.allowForeignUploads"
              data-ng-value="false"
              data-ng-change="onUploadPermissionChange()">
-      <span>{{'LABEL_OFF' | translate}}</span> <br/>
+      <span data-translate="LABEL_OFF"></span><br/>
     </span>
+
     <span class="settings__item-action"
-          data-ng-if="!appSettings.allowForeignUploads">
-      {{'LABEL_OFF' | translate}}
+          data-ng-if="!appSettings.allowForeignUploads"
+          data-ng-click="onAllowForeignUploadsClick()"
+          data-translate="LABEL_OFF">
     </span>
-    
+
     <div class="settings__item-info" data-ng-if="showAllowForeignUploadUpgradeInfo && !appSettings.allowForeignUploads">
-      <p class="settings__item-info-label">{{'INFO_FEATURE_UPGRADE' | translate}}
+      <p class="settings__item-info-label" data-translate="INFO_FEATURE_UPGRADE">
       </p>
       <span class="settings__item-info-action"
-            data-ng-click="go('settings/upgrade/options.html', 'slide-left', true)">{{'NAVI_GO_UPGRADE' | translate}}</span>
+            data-ng-click="go('settings/upgrade/options.html', 'slide-left', true)"
+            data-translate="NAVI_GO_UPGRADE"></span>
     </div>
 
   </div>

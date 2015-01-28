@@ -12,7 +12,7 @@
   <div class="center__inner">
     <h1 class="gallery-title" data-ng-bind="gallery.title"></h1>
 
-    <div class="status"><span>{{gallery.photos.length}} of {{gallery.settings.maxPhotos}}</span></div>
+    <div class="edit-thumbs__status"><span>{{gallery.photos.length}} {{'LABEL_OF' | translate}} {{'LABEL_MAX_ABBR' | translate}} {{gallery.settings.maxPhotos}} {{'LABEL_PHOTOS' | translate}}</span></div>
 
     <div class="edit-thumbs">
       <div

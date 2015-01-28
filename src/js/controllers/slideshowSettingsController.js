@@ -2,7 +2,7 @@ angular.module(_CONTROLLERS_).controller('slideshowSettingsController', function
 
 var
   prevTransitionEffect = undefined,
-  KENBURNS_TRANSITION_DELAY = 14000;
+  KENBURNS_TRANSITION_DELAY = 20000;
 
 
  function init() {

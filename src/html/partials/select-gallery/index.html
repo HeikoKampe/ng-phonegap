@@ -11,7 +11,7 @@
 <div class="center center--show-top">
   <div class="center__inner">
 
-    <div data-ng-if="numberOfGalleries > 0" class="">
+    <div data-ng-if="numberOfGalleries" class="">
 
       <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
 
@@ -119,7 +119,7 @@
 
     </div>
 
-    <div data-ng-if="numberOfGalleries == 0" class="center__box">
+    <div data-ng-if="!numberOfGalleries" class="center__box">
 
       <h1 data-translate="TITLE_ALL_GALLERIES"></h1>
 

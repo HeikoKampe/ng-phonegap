@@ -5,7 +5,62 @@
 </div>
 
 <div class="center center--show-top">
-  <div class="center__inner text-center">
+  <div class="center__inner">
+
+    <div class="center__box">
+
+      <form class="form" name="inviteForm" data-ng-if="showForm" data-ng-submit="invitationSubmit(inviteForm.$valid)"
+            novalidate="novalidate">
+        <h1 data-translate="TITLE_SEND_INVITATION"></h1>
+
+        <p class="push--bottom" data-translate="INFO_SEND_EMAIL_INVITATION"
+           data-translate-values="{'galleryTitle': gallery.title}"></p>
+
+        <div class="form__group">
+          <p class="form__label">{{'LABEL_EMAIL_RECIPIENT' | translate}}<sup>*</sup></p>
+
+          <div class="form__text-input-outer">
+            <input class="form__text-input"
+                   type="text"
+                   name="email"
+                   data-ng-model="formData.email"
+                   data-ng-pattern="/^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/"
+                   placeholder=""
+                   required="required"/>
+          </div>
+          <span class="form__error-msg"
+                data-ng-show="(showFormErrors || inviteForm.email.$blurred) && inviteForm.email.$error.required"
+                data-translate="ERROR_EMAIL_RECIPIENT_REQUIRED"></span>
+          <span class="form__error-msg"
+                data-ng-show="(showFormErrors || inviteForm.email.$blurred) && inviteForm.email.$error.pattern"
+                data-translate="ERROR_EMAIL_INVALID_FORMAT"></span>
+        </div>
+
+        <div class="form__group">
+          <p class="form__label" data-translate="LABEL_REALNAME"></p>
+
+          <div class="form__text-input-outer">
+            <input class="form__text-input"
+                   type="text"
+                   data-ng-model="formData.ownerClearName"
+                   placeholder=""/>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <p class="form__label" data-translate="LABEL_YOUR_MESSAGE"></p>
+          <div class="form__text-input-outer">
+          <textarea class="form__textarea"
+                    data-ng-model="formData.message"></textarea>
+          </div>
+        </div>
+
+        <p class="text-right push--top clear">
+          <button class="btn--blue" type="submit" data-translate="ACTION_SEND_EMAIL"></button>
+        </p>
+
+    </form>
+
 
     <div data-ng-show="showSuccessMessage">
       <p>Your invitation was successfully send!</p>
@@ -26,45 +81,8 @@
       </p>
     </div>
 
-    <form class="form" name="inviteForm" data-ng-if="showForm" data-ng-submit="invitationSubmit(inviteForm.$valid)">
-      <h1>Invite</h1>
-
-      <p class="push--bottom">Send an email invitation for your gallery.</p>
-
-      <div class="form__fieldset">
-
-        <p class="form__label">Recipient´s email<sup>*</sup></p>
-
-        <div class="form__text-input-outer push--bottom">
-          <input class="form__text-input"
-                 type="email"
-                 data-ng-model="formData.email"
-                 placeholder=""/>
-        </div>
-
-        <p class="form__label">Your real name</p>
-
-        <div class="form__text-input-outer push--bottom">
-          <input class="form__text-input"
-                 type="text"
-                 data-ng-model="formData.ownerClearName"
-                 placeholder=""/>
-        </div>
-
-        <p class="form__label">Your message</p>
-
-        <div class="form__text-input-outer push--bottom">
-      <textarea class="form__textarea"
-                data-ng-model="formData.message">Default message</textarea>
-        </div>
-
-        <p class="text-right push--top clear">
-          <button class="btn--blue" type="submit">Send</button>
-        </p>
-
-      </div>
-
-    </form>
 
   </div>
+
+</div>
 </div>

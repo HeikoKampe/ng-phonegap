@@ -171,10 +171,12 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
       $scope.numberOfGalleries = _.size($scope.galleries);
       if ($scope.numberOfGalleries) {
         syncService.checkForRemoteChanges().then(createPreviews);
+        $scope.numberOfGalleries = _.size($scope.galleries);
       } else {
         $scope.showNoGalleriesMessage = true;
       }
     }
+
   }
 
   $scope.$on('APP-DATA-READY', function () {

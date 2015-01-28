@@ -34,9 +34,14 @@
                 data-ng-maxlength="30"
                 data-ng-change="onUsernameChange()"
                 class="form__text-input"
-                placeholder="magic"
+                placeholder=""
                 required/>
           </span>
+          <span
+              class="form__validation-icon form__validation-icon--error icon-attention"
+              data-ng-show="signinForm.username.$error.taken && signinForm.username.$blurred">
+          </span>
+
           <span class="form__validation-icon icon-check"
                 data-ng-show="signinForm.username.$valid && !signinForm.username.$error.taken"></span>
         </div>
@@ -71,22 +76,22 @@
               data-ng-model="signinCredentials.email"
               data-ng-pattern="/^([0-9a-zA-Z]([-\.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/"
               class="form__text-input"
-              placeholder="mike@somedomain.com"
+              placeholder=""
               required/>
           </span>
           <span class="form__validation-icon icon-check" data-ng-show="signinForm.email.$valid"></span>
           <span
               class="form__validation-icon form__validation-icon--error icon-attention"
-              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.pattern"></span>
+              data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && (signinForm.email.$error.pattern || signinForm.email.$error.required)"></span>
         </div>
 
 
         <span class="form__error-msg"
               data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.required"
-            data-translate="ERROR_EMAIL_REQUIRED"></span>
+              data-translate="ERROR_EMAIL_REQUIRED"></span>
         <span class="form__error-msg"
               data-ng-show="(showSigninFormErrors || signinForm.email.$blurred) && signinForm.email.$error.pattern"
-            data-translate="ERROR_EMAIL_INVALID_FORMAT"></span>
+              data-translate="ERROR_EMAIL_INVALID_FORMAT"></span>
 
       </div>
 
@@ -99,7 +104,7 @@
                 name="password"
                 data-ng-model="signinCredentials.password"
                 class="form__text-input"
-                placeholder="a!s,F2l0"
+                placeholder=""
                 required/>
           </span>
           <span class="form__validation-icon icon-check" data-ng-show="signinForm.password.$valid"></span>
@@ -107,7 +112,7 @@
 
         <span class="form__error-msg"
               data-ng-show="(showSigninFormErrors || signinForm.password.$blurred) && signinForm.password.$error.required"
-            data-translate="ERROR_PASSWORD_REQUIRED">A password is required!</span>
+              data-translate="ERROR_PASSWORD_REQUIRED">A password is required!</span>
       </div>
 
       <div class="form__ctrl text-right">
