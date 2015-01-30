@@ -22,7 +22,7 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
     
     $scope.onShareGalleryBtnClick = function () {
       if (authService.isAuthorized()) {
-        //exportService.uploadGallery();
+        exportService.uploadGallery();
       } else {
         $rootScope.go('signin', 'slide-left');
       }

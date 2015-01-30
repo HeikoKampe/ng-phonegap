@@ -52,7 +52,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     var
       deferred = $q.defer();
 
-    $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/'  + galleryKey)
+    $http.get(API_BASE_URL + 'users/' + galleryOwnerName + '/galleries/' + galleryKey)
       .success(function (data, status, headers, config) {
         deferred.resolve(data);
       })
@@ -63,11 +63,20 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function getGalleryById(galleryId) {
+  function getGalleryById(galleryId, accessToken) {
     var
+      httpConfig = {},
       deferred = $q.defer();
 
-    $http.get(API_BASE_URL + 'galleries/' + galleryId)
+    // set access token in header manually when importing a foreign gallery for the first time (gallery signin)
+    // in all other case header ist set by the tokenInterceptor service
+    if (accessToken) {
+      httpConfig.headers = {
+        'x-access-token2': accessToken
+      };
+    }
+
+    $http.get(API_BASE_URL + 'galleries/' + galleryId, httpConfig)
       .success(function (data, status, headers, config) {
         deferred.resolve(data);
       })
@@ -108,7 +117,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function getSignedImageUrl (galleryId, photoId, httpConfig) {
+  function getSignedImageUrl(galleryId, photoId, httpConfig) {
     return $http.get(API_BASE_URL + 'galleries/' + galleryId + '/photos/' + photoId, httpConfig)
       .success(function (data, status, headers, config) {
         return data;
@@ -154,11 +163,26 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   /**
    * @returns
    */
-  function uploadAuth(credentials) {
+  //function uploadAuth(credentials) {
+  //  var
+  //    deferred = $q.defer();
+  //
+  //  $http.post(API_BASE_URL + 'auth/upload', credentials)
+  //    .success(function (data, status, headers, config) {
+  //      deferred.resolve(data);
+  //    })
+  //    .error(function (data, status, headers, config) {
+  //      deferred.reject(data);
+  //    });
+  //
+  //  return deferred.promise;
+  //}
+
+  function gallerySignin(data) {
     var
       deferred = $q.defer();
 
-    $http.post(API_BASE_URL + 'auth/upload', credentials)
+    $http.post(API_BASE_URL + 'gallery-signin', data)
       .success(function (data, status, headers, config) {
         deferred.resolve(data);
       })
@@ -170,7 +194,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
   }
 
 
-  function updateUploadPermission (galleryId, permissionSettings) {
+  function updateUploadPermission(galleryId, permissionSettings) {
     var
       deferred = $q.defer();
 
@@ -185,7 +209,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function logErrorToServer (errorObj) {
+  function logErrorToServer(errorObj) {
 
     return $http.post(API_BASE_URL + 'logs/', errorObj)
       .success(function (data, status, headers, config) {
@@ -196,7 +220,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function sendInvitation (data) {
+  function sendInvitation(data) {
 
     return $http.post(API_BASE_URL + 'emails/invitation', data)
       .success(function (data, status, headers, config) {
@@ -207,7 +231,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function checkUsername (username) {
+  function checkUsername(username) {
     var
       deferred = $q.defer();
 
@@ -222,7 +246,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function getGalleriesOfOwner (userId) {
+  function getGalleriesOfOwner(userId) {
     var
       deferred = $q.defer();
 
@@ -237,7 +261,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
-  function requestPasswordPin (userEmail) {
+  function requestPasswordPin(userEmail) {
     return $http.post(API_BASE_URL + 'reset-pwd-req', userEmail)
       .success(function (data, status, headers, config) {
         return data;
@@ -247,7 +271,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function resetPassword (credentials) {
+  function resetPassword(credentials) {
     return $http.post(API_BASE_URL + 'reset-pwd', credentials)
       .success(function (data, status, headers, config) {
         return data;
@@ -257,7 +281,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       });
   }
 
-  function upgrade (userId, settingsUpgrade) {
+  function upgrade(userId, settingsUpgrade) {
     var
       deferred = $q.defer();
 
@@ -282,7 +306,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     deleteGallery: deleteGallery,
     signin: signin,
     login: login,
-    uploadAuth: uploadAuth,
+    gallerySignin: gallerySignin,
     getGalleryStatus: getGalleryStatus,
     updateUploadPermission: updateUploadPermission,
     logErrorToServer: logErrorToServer,

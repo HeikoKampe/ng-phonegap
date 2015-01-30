@@ -10,7 +10,7 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
   $scope.getGalleryStep = 1;
   $scope.galleryCredentials = {
     ownerName: '',
-    galleryKey: ''
+    galleryAccessPassword: ''
   };
   $scope.showForm1Errors = false;
   $scope.showForm2Errors = false;
@@ -52,12 +52,19 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
   };
 
   $scope.onGetGalleryStep2Submit = function () {
-
-    galleryImportService.importGalleryByUsernameAndKey($scope.galleryCredentials.ownerName, $scope.galleryCredentials.galleryKey)
+    serverAPI.gallerySignin($scope.galleryCredentials)
+      .then(function (apiResult) {
+        console.log('gallerySignin success', apiResult);
+        return apiResult;
+      }, onGalleryKeyError)
+      .then(function (apiResult) {
+        return galleryImportService.importGalleryAfterGallerySignin(apiResult.galleryId, apiResult.token);
+      })
       .then(function () {
         $scope.showErrorMessage = false;
         $rootScope.go('select-gallery', 'slide-left');
-      }, onGalleryKeyError);
+      });
+
   };
 
 

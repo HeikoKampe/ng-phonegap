@@ -5,7 +5,7 @@ angular.module(_SERVICES_).factory('tokenInterceptor', function ($q, appDataServ
     request: function (config) {
       var
         userToken = appDataService.getUserToken(),
-        uploadToken = appDataService.getUploadToken();
+        galleryToken = appDataService.getGalleryToken();
 
       config.headers = config.headers || {};
 
@@ -13,8 +13,8 @@ angular.module(_SERVICES_).factory('tokenInterceptor', function ($q, appDataServ
         config.headers['x-access-token1'] = userToken;
       }
 
-      if (uploadToken) {
-        config.headers['x-access-token2'] = uploadToken;
+      if (galleryToken) {
+        config.headers['x-access-token2'] = galleryToken;
       }
 
       return config;

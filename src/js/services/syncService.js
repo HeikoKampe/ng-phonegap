@@ -170,7 +170,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     return deferred.promise;
   }
 
-  function  updatePhotoStatusToUploaded(photoObj) {
+  function updatePhotoStatusToUploaded(photoObj) {
     var
       deferred = $q.defer();
 
@@ -209,7 +209,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     return deferred.promise;
   }
 
-  function importNewPhotos(data) {
+  function  importNewPhotos(data) {
     var
       deferred = $q.defer(),
       newPhotos = [];
@@ -219,9 +219,15 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
       newPhotos.push(photoObj)
     });
 
+    // todo: global batchCancelObj feels wrong --> refactor
+    if (!batchCancelObj.deferredHttpTimeout) {
+      batchCancelObj.isCancelled = false;
+      batchCancelObj.deferredHttpTimeout = $q.defer();
+    }
+
     if (newPhotos.length) {
       remoteImageImportService.importRemoteImages(newPhotos, data.comparisonObj.galleryId, batchCancelObj)
-        .then(function(){
+        .then(function () {
           deferred.resolve(data)
         });
     } else {
@@ -233,7 +239,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
   function compareGallerySettings(apiResult) {
     // update local gallery settings in case the have changed remotely
-    if (! _.isEqual(apiResult.settings, appDataService.getGallerySettings(apiResult._id))){
+    if (!_.isEqual(apiResult.settings, appDataService.getGallerySettings(apiResult._id))) {
       appDataService.setGallerySettings(apiResult.settings);
     }
 
@@ -242,7 +248,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
   // updateSyncId needs to be at the end of the "get remote updates" promise chain
   // to be only called if there were no errors in the chain
-  function updateSyncId (data) {
+  function updateSyncId(data) {
     appDataService.setSyncId(data.apiResult.syncId, data.apiResult._id);
   }
 
@@ -311,7 +317,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     batchCancelObj.isCancelled = false;
     batchCancelObj.deferredHttpTimeout = $q.defer();
 
-    batchCancelObj.deferredHttpTimeout.promise.then(function(){
+    batchCancelObj.deferredHttpTimeout.promise.then(function () {
         console.log('deferredHttpTimeout resolved!!!!!!');
       }
     );
@@ -322,7 +328,7 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
 
     batchObject.deferred.promise
       .then(deferred.resolve, deferred.reject)
-      .finally(function(){
+      .finally(function () {
         messageService.endProgressMessage();
         eventService.broadcast('GALLERY-UPDATE');
         console.log('syncing done');
@@ -332,31 +338,27 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
   }
 
   function uploadLocalChanges() {
-    if (authService.hasUploadPermission()) {
-      messageService.startProgressMessage({title: 'Uploading photos'});
-      exportService.uploadGalleryPhotos()
-        .then(removeLocallyDeletedPhotos)
-        .catch(function (error) {
-          // on error
-          if (error.message === 'cancel batch') {
-            messageService.updateProgressMessage({suffix: 'cancelling ...'});
-          } else {
-            throw error;
-          }
-        })
-        .finally(function(){
-          messageService.endProgressMessage();
-          eventService.broadcast('GALLERY-UPDATE');
-        });
-    }
-    else {
-      $rootScope.go('upload-auth', 'slide-left');
-    }
+    messageService.startProgressMessage({title: 'Uploading photos'});
+    exportService.uploadGalleryPhotos()
+      .then(removeLocallyDeletedPhotos)
+      .catch(function (error) {
+        // on error
+        if (error.message === 'cancel batch') {
+          messageService.updateProgressMessage({suffix: 'cancelling ...'});
+        } else {
+          throw error;
+        }
+      })
+      .finally(function () {
+        messageService.endProgressMessage();
+        eventService.broadcast('GALLERY-UPDATE');
+      });
+
   }
 
   return {
     getRemoteUpdatesForGallery: getRemoteUpdatesForGallery,
-    checkForRemoteChangesOfGallery:checkForRemoteChangesOfGallery,
+    checkForRemoteChangesOfGallery: checkForRemoteChangesOfGallery,
     checkForRemoteChanges: checkForRemoteChanges,
     uploadLocalChanges: uploadLocalChanges,
     removeLocallyDeletedPhotos: removeLocallyDeletedPhotos

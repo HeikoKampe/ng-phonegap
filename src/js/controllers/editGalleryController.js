@@ -54,7 +54,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
     //    if ($scope.gallery.dateOfUpload) {
     //      // to avoid conflict in case of broken uploads
     //      // always check remote before updating remote
-    //      syncService.checkForRemoteChangesOfGallery($scope.gallery.galleryId)
+    //      syncService.checkForRemoteChangesOfGallery($scope.gallery)
     //        .then(syncService.uploadLocalChanges);
     //    } else {
     //      syncService.removeLocallyDeletedPhotos();
@@ -69,7 +69,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if ($scope.gallery.dateOfUpload) {
         // to avoid conflict in case of broken uploads
         // always check remote before updating remote
-        syncService.checkForRemoteChangesOfGallery($scope.gallery.galleryId)
+        syncService.checkForRemoteChangesOfGallery($scope.gallery)
           .then(syncService.uploadLocalChanges);
       } else {
         syncService.removeLocallyDeletedPhotos();

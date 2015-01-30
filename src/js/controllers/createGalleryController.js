@@ -16,8 +16,7 @@ angular.module(_CONTROLLERS_).controller('createGalleryController', function (
     if (isValid) {
       console.log('galleryTitle', $scope.createGalleryFormData.galleryTitle);
       appDataService.addGallery({
-        title: $scope.createGalleryFormData.galleryTitle,
-        uploadPassword: keyGeneratorService.generateKey()
+        title: $scope.createGalleryFormData.galleryTitle
       });
       $rootScope.go('edit-gallery', 'slide-left');
     }

@@ -10,8 +10,8 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
       title: "Default Title",
       dateOfUpload: null,
       syncId: 0,
-      uploadPassword: '',
-      uploadToken: '',
+      accessPassword: '',
+      accessToken: '',
       photos: [],
       settings: {
         allowForeignUploads: false,
@@ -116,13 +116,12 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     }
 
     newGallery.galleryId = (confObj != undefined && confObj._id != undefined) ? confObj._id : createGalleryId();
-    newGallery.galleryKey = (confObj != undefined && confObj.shortId != undefined) ? confObj.shortId : undefined;
+    newGallery.accessPassword = (confObj != undefined && confObj.accessPassword != undefined) ? confObj.accessPassword : undefined;
     newGallery.ownerId = (confObj != undefined && confObj.ownerId != undefined) ? confObj.ownerId : appData.userId;
     newGallery.ownerName = (confObj != undefined && confObj.ownerName != undefined) ? confObj.ownerName : appData.userName;
     newGallery.title = (confObj != undefined && confObj.title != undefined) ? confObj.title : undefined;
     newGallery.dateOfUpload = (confObj != undefined && confObj.dateOfUpload != undefined) ? confObj.dateOfUpload : undefined;
     newGallery.syncId = (confObj != undefined && confObj.syncId != undefined) ? confObj.syncId : 0;
-    newGallery.uploadPassword = (confObj != undefined && confObj.uploadPassword != undefined) ? confObj.uploadPassword : undefined;
     newGallery.photos = [];
     newGallery.settings = (confObj != undefined && confObj.settings) ? confObj.settings : galleryModel.settings;
 
@@ -155,7 +154,7 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     if (appData.galleries[resultData.localGalleryId] && !appData.galleries[resultData.remoteGalleryId]) {
       appData.galleries[resultData.remoteGalleryId] = appData.galleries[resultData.localGalleryId];
       appData.galleries[resultData.remoteGalleryId].galleryId = resultData.remoteGalleryId;
-      appData.galleries[resultData.remoteGalleryId].galleryKey = resultData.shortId;
+      appData.galleries[resultData.remoteGalleryId].accessPassword = resultData.galleryAccessPassword;
       appData.galleries[resultData.remoteGalleryId].dateOfUpload = resultData.dateOfUpload;
       appData.galleries[resultData.remoteGalleryId].syncId = resultData.syncId;
       appData.activeGalleryId = resultData.remoteGalleryId;
@@ -320,21 +319,21 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     return appData.userToken;
   }
 
-  function setUploadToken(uploadToken, _galleryId) {
+  function setGalleryToken(accessToken, _galleryId) {
     var galleryId = _galleryId || appData.activeGalleryId;
 
-    appData.galleries[galleryId].uploadToken = uploadToken;
+    appData.galleries[galleryId].accessToken = accessToken;
     eventService.broadcast("GALLERY-UPDATE");
   }
 
-  function getUploadToken(_galleryId) {
+  function getGalleryToken(_galleryId) {
     var galleryId = _galleryId || appData.activeGalleryId;
 
     if (!galleryId || galleryId === -1) {
       return '';
     }
 
-    return appData.galleries[galleryId].uploadToken;
+    return appData.galleries[galleryId].accessToken;
   }
 
   function setUserName(username) {
@@ -416,8 +415,8 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     isOwner: isOwner,
     setUserToken: setUserToken,
     getUserToken: getUserToken,
-    setUploadToken: setUploadToken,
-    getUploadToken: getUploadToken,
+    setGalleryToken: setGalleryToken,
+    getGalleryToken: getGalleryToken,
     setUserName: setUserName,
     getUserName: getUserName,
     setUserData: setUserData

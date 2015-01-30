@@ -38,17 +38,18 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     return deferred.promise;
   }
 
-  function importGalleryByUsernameAndKey(ownerName, galleryKey) {
+  function importGalleryAfterGallerySignin(galleryId, accessToken) {
     var
       deferred = $q.defer();
 
-    serverAPI.getGalleryByOwnerNameAndKey(ownerName, galleryKey)
+    serverAPI.getGalleryById(galleryId, accessToken)
       .then(function (apiResult){
         messageService.startProgressMessage({title: 'Importing foreign gallery'});
         return importGallery(apiResult);
       })
       .then(function () {
         // on success
+        appDataService.setGalleryToken(accessToken, galleryId);
         deferred.resolve();
       }, function (error) {
         // on error
@@ -158,7 +159,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
   }
 
   return {
-    importGalleryByUsernameAndKey: importGalleryByUsernameAndKey,
+    importGalleryAfterGallerySignin: importGalleryAfterGallerySignin,
     importAllGalleriesOfUser: importAllGalleriesOfUser
   }
 
