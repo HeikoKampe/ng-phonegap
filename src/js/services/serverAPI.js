@@ -68,8 +68,11 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
       httpConfig = {},
       deferred = $q.defer();
 
-    // set access token in header manually when importing a foreign gallery for the first time (gallery signin)
-    // in all other case header ist set by the tokenInterceptor service
+    // Access tokens are saved as a property of a gallery object and added to the http header
+    // by the tokenInterceptor service.
+    // When importing a foreign gallery there is no gallery object yet available to save the token to.
+    // In this case the token has to be added manually to the header and saved to the gallery object later.
+
     if (accessToken) {
       httpConfig.headers = {
         'x-access-token2': accessToken

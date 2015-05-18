@@ -14,8 +14,7 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function (
   };
 
   $scope.upgrade2 = {
-    allowForeignUploads: true,
-    maxPhotos: 15
+    allowForeignUploads: true
   };
 
   function showLoginNeededMessage () {

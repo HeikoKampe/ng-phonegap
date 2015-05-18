@@ -22,12 +22,13 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     eventService.broadcast('GALLERY-UPDATE');
   }
 
-  function importGallery(apiResult) {
+  function importGallery(apiResult, accessToken) {
     var
       deferred = $q.defer(),
       galleryObj = apiResult;
 
     appDataService.addGallery(galleryObj);
+    appDataService.setGalleryToken(accessToken, galleryObj.galleryId);
 
     remoteImageImportService.importRemoteImages(galleryObj.photos, galleryObj._id)
       .then(deferred.resolve, function (error) {
@@ -45,13 +46,9 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     serverAPI.getGalleryById(galleryId, accessToken)
       .then(function (apiResult){
         messageService.startProgressMessage({title: 'Importing foreign gallery'});
-        return importGallery(apiResult);
+        return importGallery(apiResult, accessToken);
       })
-      .then(function () {
-        // on success
-        appDataService.setGalleryToken(accessToken, galleryId);
-        deferred.resolve();
-      }, function (error) {
+      .then(deferred.resolve, function (error) {
         // on error
         if (error.message === 'cancel batch') {
           messageService.updateProgressMessage({content: 'cancelling ...'});

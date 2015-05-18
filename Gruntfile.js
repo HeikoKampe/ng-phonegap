@@ -54,7 +54,8 @@ module.exports = function(grunt) {
           '<%= bowerDir %>/lodash/dist/lodash.js',
           '<%= bowerDir %>/ngCordova/dist/ng-cordova.js',
           '<%= bowerDir %>/stacktrace-js/stacktrace.js',
-          '<%= bowerDir %>/moment/moment.js'
+          '<%= bowerDir %>/moment/moment.js',
+          '<%= bowerDir %>/fastclick/lib/fastclick.js'
         ],
         // shouldn't need to touch this.
         src: [

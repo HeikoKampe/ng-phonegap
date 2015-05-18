@@ -38,9 +38,11 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
 
   $scope.onGetGalleryStep1Submit = function (isFormValid) {
     if (isFormValid) {
+      // check if username exists
       serverAPI.checkUsername($scope.galleryCredentials.ownerName)
         .then(function (apiResult) {
           if (apiResult.foundUserByName) {
+            // proceed
             $scope.getGalleryStep = 2;
           } else {
             onGalleryOwnerError();
@@ -55,11 +57,8 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
     serverAPI.gallerySignin($scope.galleryCredentials)
       .then(function (apiResult) {
         console.log('gallerySignin success', apiResult);
-        return apiResult;
-      }, onGalleryKeyError)
-      .then(function (apiResult) {
         return galleryImportService.importGalleryAfterGallerySignin(apiResult.galleryId, apiResult.token);
-      })
+      }, onGalleryKeyError)
       .then(function () {
         $scope.showErrorMessage = false;
         $rootScope.go('select-gallery', 'slide-left');

@@ -238,9 +238,16 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
   }
 
   function compareGallerySettings(apiResult) {
+    var
+      gallerySettings = appDataService.getGallerySettings(apiResult._id);
     // update local gallery settings in case the have changed remotely
-    if (!_.isEqual(apiResult.settings, appDataService.getGallerySettings(apiResult._id))) {
+    if (!_.isEqual(apiResult.settings, gallerySettings)) {
+      if (gallerySettings.allowForeignUploads === true && apiResult.settings.allowForeignUploads === false) {
+        console.log('edit permission was revoced by owner!');
+        // todo: show message to user
+      }
       appDataService.setGallerySettings(apiResult.settings);
+
     }
 
     return apiResult;

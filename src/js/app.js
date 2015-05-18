@@ -38,6 +38,7 @@ angular.module(_APP_).run([
   '$window',
   'storageService',
   function($log, $window, storageService) {
+    FastClick.attach(document.body);
 
     // initial run code here
     console.log('angular app ready');
