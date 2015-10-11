@@ -25,7 +25,8 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
   }
 
   $scope.signinSubmit = function (isValid) {
-    var credentials = {};
+    var
+      credentials = {};
 
     if (isValid) {
       $scope.showSigninFormErrors = false;
@@ -35,7 +36,8 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
       serverAPI.signin(credentials).then(function (result) {
         console.log("signin result:", result);
         setUserData(result);
-        exportService.uploadGallery();
+        exportService.uploadGalleries();
+        exportService.addForeignGallerySubscriptionsToUser();
         $rootScope.go('share-gallery', 'slide-left');
       }, error);
     } else {

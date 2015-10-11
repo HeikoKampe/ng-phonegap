@@ -25,8 +25,8 @@ angular.module(_CONTROLLERS_).controller('createGalleryController', function (
   function init() {
     if ($rootScope.appDataReady) {
       $scope.appData = appDataService.getAppData();
-      $scope.galleriesLimitReached = appDataService.getNumberOfGalleries() >= appDataService.getGalleriesLimit();
-      console.log(appDataService.getNumberOfGalleries(), appDataService.getGalleriesLimit());
+      $scope.galleriesLimitReached = appDataService.getNumberOfOwnGalleries() >= appDataService.getGalleriesLimit();
+      console.log("check limit: ", appDataService.getNumberOfOwnGalleries(), appDataService.getGalleriesLimit());
     }
   }
 

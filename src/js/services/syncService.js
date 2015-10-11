@@ -344,9 +344,9 @@ angular.module(_SERVICES_).factory('syncService', function ($rootScope,
     return deferred.promise;
   }
 
-  function uploadLocalChanges() {
+  function uploadLocalChanges(galleryId) {
     messageService.startProgressMessage({title: 'Uploading photos'});
-    exportService.uploadGalleryPhotos()
+    exportService.uploadGalleryPhotos(galleryId)
       .then(removeLocallyDeletedPhotos)
       .catch(function (error) {
         // on error

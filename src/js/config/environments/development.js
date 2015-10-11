@@ -10,5 +10,5 @@
 
 
 var
-  //API_BASE_URL = 'http://localhost:33000/api/';
-  API_BASE_URL = 'http://heikosmac.local:33000/api/';
+  API_BASE_URL = 'http://localhost:33000/api/';
+  //API_BASE_URL = 'http://heikosmac.local:33000/api/';

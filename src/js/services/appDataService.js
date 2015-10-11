@@ -90,12 +90,31 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
     return appData.galleries;
   }
 
+  function getOwnGalleries () {
+    return _.filter(appData.galleries, function (n) {
+      return n.ownerId === appData.userId;
+    });
+  }
+
+  function getForeignGalleries () {
+    return _.filter(appData.galleries, function (n) {
+      return n.ownerId !== appData.userId;
+    });
+  }
+
   function setGalleries(galleriesData) {
     appData.galleries = galleriesData;
   }
 
   function getNumberOfGalleries () {
     return _.size(appData.galleries);
+  }
+
+  function getNumberOfOwnGalleries () {
+    var
+      ownGalleries = getOwnGalleries();
+
+    return _.size(ownGalleries);
   }
 
   function getGalleriesLimit () {
@@ -382,7 +401,10 @@ angular.module(_SERVICES_).service('appDataService', function ($rootScope, $log,
 
     getGalleries: getGalleries,
     setGalleries: setGalleries,
+    getOwnGalleries: getOwnGalleries,
+    getForeignGalleries: getForeignGalleries,
     getNumberOfGalleries: getNumberOfGalleries,
+    getNumberOfOwnGalleries: getNumberOfOwnGalleries,
     getGalleriesLimit: getGalleriesLimit,
     getGallery: getGallery,
     setActiveGallery: setActiveGallery,

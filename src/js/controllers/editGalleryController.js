@@ -49,28 +49,14 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       updateGalleryStatus();
     };
 
-    //$scope.onUpdateBtnClick = function () {
-    //  if (authService.hasUploadPermission()) {
-    //    if ($scope.gallery.dateOfUpload) {
-    //      // to avoid conflict in case of broken uploads
-    //      // always check remote before updating remote
-    //      syncService.checkForRemoteChangesOfGallery($scope.gallery)
-    //        .then(syncService.uploadLocalChanges);
-    //    } else {
-    //      syncService.removeLocallyDeletedPhotos();
-    //    }
-    //    updateGalleryStatus();
-    //  } else {
-    //    $rootScope.go('upload-auth', 'slide-left');
-    //  }
-    //};
-
     $scope.onUpdateBtnClick = function () {
       if ($scope.gallery.dateOfUpload) {
         // to avoid conflict in case of broken uploads
         // always check remote before updating remote
         syncService.checkForRemoteChangesOfGallery($scope.gallery)
-          .then(syncService.uploadLocalChanges);
+          .then(function () {
+            syncService.uploadLocalChanges($scope.gallery.galleryId);
+          });
       } else {
         syncService.removeLocallyDeletedPhotos();
       }
@@ -90,7 +76,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         // check if gallery is uploaded
         if (!$scope.gallery.dateOfUpload) {
           // upload gallery to server
-          exportService.uploadGallery().then(function () {
+          exportService.uploadGallery($scope.gallery.galleryId).then(function () {
             $rootScope.go('share-gallery', 'slide-left');
           });
         } else {
