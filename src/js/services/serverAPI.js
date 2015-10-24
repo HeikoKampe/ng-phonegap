@@ -264,6 +264,21 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     return deferred.promise;
   }
 
+  function getSubscribedGalleriesOfOwner(userId) {
+    var
+      deferred = $q.defer();
+
+    $http.get(API_BASE_URL + 'users/' + userId + '/subscribed-galleries')
+      .success(function (data, status, headers, config) {
+        deferred.resolve(data);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject({'status': false, 'message': data});
+      });
+
+    return deferred.promise;
+  }
+
   function requestPasswordPin(userEmail) {
     return $http.post(API_BASE_URL + 'reset-pwd-req', userEmail)
       .success(function (data, status, headers, config) {
@@ -303,6 +318,7 @@ angular.module(_SERVICES_).factory('serverAPI', function ($http, $q) {
     getGalleryByOwnerNameAndKey: getGalleryByOwnerNameAndKey,
     getGalleryById: getGalleryById,
     getGalleriesOfOwner: getGalleriesOfOwner,
+    getSubscribedGalleriesOfOwner: getSubscribedGalleriesOfOwner,
     uploadPhoto: uploadPhoto,
     removePhoto: removePhoto,
     createGallery: createGallery,

@@ -57,7 +57,7 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
     serverAPI.gallerySignin($scope.galleryCredentials)
       .then(function (apiResult) {
         console.log('gallerySignin success', apiResult);
-        return galleryImportService.importGalleryAfterGallerySignin(apiResult.galleryId, apiResult.token);
+        return galleryImportService.importForeignGallery(apiResult.galleryId, apiResult.token);
       }, onGalleryKeyError)
       .then(function () {
         $scope.showErrorMessage = false;

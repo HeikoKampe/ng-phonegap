@@ -182,24 +182,20 @@ angular.module(_SERVICES_).service('exportService', function ($q,
             });
     }
 
+    // Todo: upload user´s galleries after sign in
     function uploadGalleries() {
         var
             galleries = appDataService.getOwnGalleries();
 
+        console.log('Upload galleries after signin needs to be implemented!');
 
-    }
-
-    function addForeignGallerySubscriptionsToUser() {
-        var
-            foreignGalleries = appDataService.getForeignGalleries();
     }
 
     return {
         uploadGalleryPhotos: uploadGalleryPhotos,
         uploadGallery: uploadGallery,
         updateUploadPermission: updateUploadPermission,
-        uploadGalleries: uploadGalleries,
-        addForeignGallerySubscriptionsToUser: addForeignGallerySubscriptionsToUser
+        uploadGalleries: uploadGalleries
     };
 
 });

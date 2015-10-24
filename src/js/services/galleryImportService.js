@@ -39,7 +39,7 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     return deferred.promise;
   }
 
-  function importGalleryAfterGallerySignin(galleryId, accessToken) {
+  function importForeignGallery(galleryId, accessToken) {
     var
       deferred = $q.defer();
 
@@ -155,8 +155,27 @@ angular.module(_SERVICES_).service('galleryImportService', function (
     return deferred.promise;
   }
 
+
+  function importAllForeignGalleries () {
+    var
+        deferred = $q.defer();
+
+
+    // todo: this needs to be implemented
+    serverAPI.getSubscribedGalleriesOfOwner(userId)
+        .then(batchImportOfGalleries)
+        .then(function () {
+          deferred.resolve();
+        }, function (error) {
+          console.log('importAllForeignGalleriesOfUser', error);
+        });
+
+    return deferred.promise;
+  }
+
   return {
-    importGalleryAfterGallerySignin: importGalleryAfterGallerySignin,
+    importForeignGallery: importForeignGallery,
+    //importAllForeignGallery: importAllForeignGallery,
     importAllGalleriesOfUser: importAllGalleriesOfUser
   }
 
