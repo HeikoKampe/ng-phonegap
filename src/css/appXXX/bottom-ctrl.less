@@ -1,0 +1,51 @@
+
+.bottom-ctrl {
+  position:relative;
+  z-index:1;
+  width:100%;
+  list-style:none;
+  margin:0;
+  padding:0;
+  color:@white;
+  text-align:center;
+}
+
+
+.bottom-ctrl__item {
+  position:relative;
+  overflow:hidden;
+  width:140px;
+  height:@height-bottom;
+  display:inline-block;
+  padding:16px 6px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.bottom-ctrl__item--left {
+  position:absolute;
+  left:0;
+}
+
+.bottom-ctrl__item--right {
+  float:right;
+}
+
+.bottom-ctrl__icon {
+  color:@white;
+  font-size:30px;
+}
+
+.bottom-ctrl__label {
+  font-size:14px;
+  font-weight:500;
+  padding:6px 0;
+}
+
+
+.bottom-ctrl__item--highlighted {
+  .bottom-ctrl__icon,
+  .bottom-ctrl__label {
+    color:#03AD5A;
+  }
+}

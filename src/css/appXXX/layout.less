@@ -1,0 +1,135 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left:0;
+  right:0;
+  overflow-y: auto;
+}
+
+.center__inner {
+  margin:@spacing-half @spacing-regular;
+}
+
+.center__box {
+  max-width:600px;
+  margin:0 auto;
+}
+
+.center--show-top {
+  top: @height-top;
+}
+
+.center--show-bottom {
+  bottom: @height-bottom;
+}
+
+.page--overlay-ctrls {
+  .center {
+    top: 0 !important;
+    bottom: 0 !important;
+  }
+}
+
+.bottom {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: @height-bottom;
+  bottom: 0;
+  color: @white;
+  z-index: 1;
+
+//  &:before {
+//    content: '';
+//    position: absolute;
+//    top: 0;
+//    bottom: 0;
+//    width: 100%;
+//    background: @white;
+//    opacity: 0.3;
+//    z-index: -1;
+//  }
+}
+
+.bottom--dark {
+  &:before {
+    .opacity(0.7);
+    background-color: #333;
+  }
+}
+
+.show-ctrls {
+
+  .top,
+  .bottom {
+    .transform(none);
+  }
+
+}
+
+.top,
+.bottom {
+  .transition(.3s cubic-bezier(0.5, 1, 0.5, 1));
+  .transform(translate3d(-100%, 0, 0));
+}
+
+.top {
+  .transform(translate3d(0, -@height-top, 0));
+}
+
+.bottom {
+  .transform(translate3d(0, @height-bottom, 0));
+}
+
+.messages {
+  position: absolute;
+  z-index: 10;
+}
+
+.vertical-center {
+  position: relative;
+  top: 40%;
+  .transform(translateY(-40%));
+}
+
+.push { margin: 24px!important; }
+.push--top { margin-top: 24px!important; }
+.push--left { margin-left: 24px!important; }
+.push--right { margin-right: 24px!important; }
+.push--bottom { margin-bottom: 24px!important; }
+
+.soft { padding: 24px!important; }
+.soft--top { padding-top: 24px!important; }
+.soft--left { padding-left: 24px!important; }
+.soft--right { padding-right: 24px!important; }
+.soft--bottom { padding-bottom: 24px!important; }
+
+.clear {
+  clear:both;
+}
+
+.full-height { height:100%; }
+
+.status {
+
+}
+
+.full-height {
+  height:100%;
+}

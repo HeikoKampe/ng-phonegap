@@ -1,0 +1,49 @@
+.logo-start {
+  width:30%;
+  display:block;
+  position: absolute;
+  top: 50%;
+  left:50%;
+  .transform(translate(-50%, -50%));
+  margin:-20px auto 0 auto;
+  color:@white;
+}
+
+
+.message2 {
+  text-align: right;
+  padding:4px 10px;
+//  background:@white;
+//  opacity: 0.5;
+}
+
+
+.file-input {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  .opacity(0);
+  cursor:pointer;
+}
+
+.number-pad-input {
+  color:white;
+  width:200px;
+  text-align:center;
+}
+
+.number-pad-input.success {
+  color:@success-green;
+}
+
+.number-pad-input.error {
+  color:@error-red;
+  .animation(1s tripple-blink linear);
+}
+
+.access-code {
+  color:@text-yellow;
+  letter-spacing: 0.25em;
+}
