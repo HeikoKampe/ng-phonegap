@@ -1,7 +1,6 @@
 angular.module(_CONTROLLERS_).controller('upgradeController', function (
   $scope,
   $rootScope,
-  $routeParams,
   $filter,
   serverAPI,
   appDataService,

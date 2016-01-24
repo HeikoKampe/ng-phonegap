@@ -1,29 +1,29 @@
-angular.module(_CONTROLLERS_).controller('settingsController', function (
-  $scope,
-  $routeParams,
-  appDataService) {
+//TODO: check if this controller is still needed
 
-  $scope.pageClass = 'page--settings';
-  $scope.settingsSection1 = $routeParams.section1;
-  $scope.settingsSection2 = $routeParams.section2;
-  $scope.showUpgradeInfo = [false, false, false];
+angular.module(_CONTROLLERS_).controller('settingsController', function ($scope,
+                                                                         $state,
+                                                                         appDataService) {
 
-
-  $scope.showUpgradeInfo = function (infoIndex){
-    $scope.showUpgradeInfo[infoIndex] = true;
-  };
+    $scope.pageClass = 'page--settings';
+    $scope.$state = $state;
+    $scope.showUpgradeInfo = [false, false, false];
 
 
-  function init() {
-    $scope.appSettings = appDataService.getAppSettings();
-    $scope.userName = appDataService.getUserName();
-    console.log('init settings controller', $routeParams);
-  }
+    $scope.showUpgradeInfo = function (infoIndex) {
+        $scope.showUpgradeInfo[infoIndex] = true;
+    };
 
-  $scope.$on('APP-DATA-READY', function () {
+
+    function init() {
+        $scope.appSettings = appDataService.getAppSettings();
+        $scope.userName = appDataService.getUserName();
+        console.log('init settings controller', $state);
+    }
+
+    $scope.$on('APP-DATA-READY', function () {
+        init();
+    });
+
     init();
-  });
-
-  init();
 
 });

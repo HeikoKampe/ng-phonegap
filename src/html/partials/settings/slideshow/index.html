@@ -1,8 +1,112 @@
-<div data-ng-switch="settingsSection2" data-ng-controller="slideshowSettingsController">
-  <div data-ng-switch-default>
-    <div data-ng-include="'html/partials/settings/slideshow/slideshow.html'"></div>
+<h2 data-translate="NAVI_SLIDESHOW"></h2>
+<div class="settings__block">
+  <div class="settings__item">
+    <div class="settings__item-label" data-translate="LABEL_TRANS_KENBURNS"></div>
+    <div class="settings__item-value">
+      <input type="radio"
+             data-ng-model="appSettings.slideshowTransitionEffect"
+             data-ng-value="0"
+             data-ng-change="onSettingsChange()"/>
+    </div>
   </div>
-  <div data-ng-switch-when="slideshow">
-    <div data-ng-include="'html/partials/settings/slideshow/slideshow.html'"></div>
+  <div class="settings__item">
+    <div class="settings__item-label" data-translate="LABEL_TRANS_CROSSFADE"></div>
+    <div class="settings__item-value">
+      <input type="radio"
+             data-ng-model="appSettings.slideshowTransitionEffect"
+             data-ng-value="1"
+             data-ng-change="onSettingsChange()"/>
+    </div>
   </div>
+  <div class="settings__item">
+    <div class="settings__item-label" data-translate="LABEL_TRANS_SLIDE"></div>
+    <div class="settings__item-value">
+      <input type="radio"
+             data-ng-model="appSettings.slideshowTransitionEffect"
+             data-ng-value="2"
+             data-ng-change="onSettingsChange()"/>
+    </div>
+  </div>
+</div>
+
+<div class="settings__block" data-ng-if="appSettings.slideshowTransitionEffect != 0">
+  <div class="settings__item">
+    <div class="settings__item-label" data-translate="LABEL_SLIDESHOW_DELAY"></div>
+    <div class="settings__item-value"></div>
+
+    <div class="settings__item-info">
+      <!-- if not ken burns transition -->
+      <div class="grid">
+        <div class="grid__item one-third">
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="5000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>5 sec.</span>
+          </p>
+
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="10000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>10 sec.</span>
+          </p>
+
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="30000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>30 sec.</span>
+          </p>
+        </div>
+        <div class="grid__item one-third">
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="60000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>1 min.</span>
+          </p>
+
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="1800000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>30 min.</span>
+          </p>
+
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="3600000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>60 min.</span>
+          </p>
+        </div>
+        <div class="grid__item one-third">
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="43200000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>12 h</span>
+          </p>
+
+          <p>
+            <input type="radio"
+                   data-ng-model="appSettings.slideshowTransitionDelay"
+                   data-ng-value="518400000"
+                   data-ng-change="onSettingsChange()"/>
+            <span>24 h</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>

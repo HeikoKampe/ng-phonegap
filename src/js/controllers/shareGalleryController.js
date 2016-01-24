@@ -1,14 +1,12 @@
 angular.module(_CONTROLLERS_).controller('shareGalleryController', function (
     $rootScope,
     $scope,
-    $routeParams,
     appDataService,
     exportService,
     authService) {
 
 
     $scope.pageClass = 'page--share-gallery';
-    $scope.sharingSection1 = $routeParams.section1;
     $scope.showAccessKey = false;
     $scope.showAllowForeignUploadUpgradeInfo = false;
 

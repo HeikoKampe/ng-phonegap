@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         vendor: [
           // add any Bower components here.
           '<%= bowerDir %>/angular/angular.js',
-          '<%= bowerDir %>/angular-route/angular-route.js',
+          '<%= bowerDir %>/angular-ui-router/release/angular-ui-router.js',
           '<%= bowerDir %>/angular-touch/angular-touch.js',
           '<%= bowerDir %>/angular-animate/angular-animate.js',
           '<%= bowerDir %>/angular-translate/angular-translate.js',
