@@ -122,9 +122,9 @@
             <div class="push--bottom" data-translate="INFO_NO_GALLERIES"></div>
             <p>
                 <button class="btn--blue push--right" data-translate="ACTION_NEW"
-                        data-ng-click="go('create-gallery', 'slide-left')"></button>
+                        data-ng-click="navigationService.go(appConstants.STATES.CREATEGALLERY, 'slide-left')"></button>
                 <button class="btn--blue" data-translate="ACTION_IMPORT"
-                        data-ng-click="go('get-gallery', 'slide-left')"></button>
+                        data-ng-click="navigationService.go(appConstants.STATES.GETGALLERY, 'slide-left')"></button>
             </p>
         </div>
 

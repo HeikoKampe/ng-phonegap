@@ -17,7 +17,7 @@
         <div class="settings__item">
             <span class="settings__item-label" data-translate="LABEL_LOGIN_WITH_DIFFERENT_USER"></span>
             <a class="settings__item-action"
-               data-ng-click="go('login', 'slide-left')" data-translate="NAVI_GO_LOGIN"></a>
+               data-ng-click="navigationService.go(appConstants.STATES.LOGIN, 'slide-left')" data-translate="NAVI_GO_LOGIN"></a>
         </div>
     </div>
 
@@ -30,18 +30,18 @@
     <div class="settings__block">
         <div class="settings__item">
             <span class="settings__item-label" data-translate="LABEL_SIGNIN"></span>
-            <a class="settings__item-action" data-ng-click="go('signin', 'slide-left')"
+            <a class="settings__item-action" data-ng-click="navigationService.go(appConstants.STATES.SIGNIN, 'slide-left')"
                data-translate="NAVI_GO_SIGNIN"></a>
         </div>
         <div class="settings__item">
             <span class="settings__item-label" data-translate="LABEL_LOGIN"></span>
-            <a class="settings__item-action" data-ng-click="go('login', 'slide-left')"
+            <a class="settings__item-action" data-ng-click="navigationService.go(appConstants.STATES.LOGIN, 'slide-left')"
                data-translate="NAVI_GO_LOGIN"></a>
         </div>
         <div class="settings__item">
             <span class="settings__item-label" data-translate="LABEL_PASSWORD_FORGOTTEN"></span>
             <a class="settings__item-action"
-               data-ng-click="go('settings/account/reset-pwd', '')"
+               data-ng-click="navigationService.go(appConstants.STATES.RESETPWD, '')"
                data-translate="ACTION_CHANGE_PASSWORD"></a>
         </div>
     </div>

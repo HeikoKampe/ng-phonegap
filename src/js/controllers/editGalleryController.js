@@ -3,12 +3,14 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
                                                                             $log,
                                                                             $filter,
                                                                             $q,
+                                                                            appConstants,
                                                                             appDataService,
                                                                             storageService,
                                                                             exportService,
                                                                             eventService,
                                                                             syncService,
                                                                             authService,
+                                                                            navigationService,
                                                                             serverAPI) {
 
     $scope.pageClass = 'page--edit-gallery';
@@ -67,7 +69,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       if (authService.isAuthorized()) {
         uploadGallery();
       } else {
-        $rootScope.go('signin', 'slide-left', true);
+        navigationService.go(appConstants.STATES.SIGNIN, 'slide-left', true);
       }
     };
 
@@ -77,20 +79,20 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         if (!$scope.gallery.dateOfUpload) {
           // upload gallery to server
           exportService.uploadGallery($scope.gallery.galleryId).then(function () {
-            $rootScope.go('share-gallery', 'slide-left');
+            navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
           });
         } else {
-          $rootScope.go('share-gallery', 'slide-left');
+          navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
         }
 
       } else {
-        $rootScope.go('signin', 'slide-left', true);
+        navigationService.go(appConstants.STATES.SIGNIN, 'slide-left', true);
       }
     };
 
     $scope.onSlideshowBtnClick = function () {
       if ($scope.gallery.photos.length) {
-        $rootScope.go('slideshow', 'slide-left');
+        navigationService.go(appConstants.STATES.SLIDESHOW, 'slide-left');
       }
     };
 
@@ -99,9 +101,9 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         serverAPI.deleteGallery($scope.gallery.galleryId).then(function () {
           appDataService.deleteGallery();
           if (Object.keys(appDataService.getAppData().galleries).length > 0) {
-            $rootScope.go('select-gallery', 'slide-right');
+            navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
           } else {
-            $rootScope.go('/home', 'slide-right');
+            navigationService.go(appConstants.STATES.HOME, 'slide-right');
           }
         }, function () {
           throw new Error('could not delete gallery from server');
@@ -109,9 +111,9 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
       } else {
         appDataService.deleteGallery();
         if (Object.keys(appDataService.getAppData().galleries).length > 0) {
-          $rootScope.go('select-gallery', 'slide-right');
+          navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
         } else {
-          $rootScope.go('/home', 'slide-right');
+          navigationService.go(appConstants.STATES.HOME, 'slide-right');
         }
       }
 

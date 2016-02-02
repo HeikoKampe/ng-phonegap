@@ -1,16 +1,18 @@
 angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope,
                                                                       $scope,
+                                                                      appConstants,
                                                                       serverAPI,
                                                                       appDataService,
                                                                       galleryImportService,
                                                                       eventService,
-                                                                      storageService) {
+                                                                      storageService,
+                                                                      navigationService) {
 
     $scope.pageClass = 'page--login';
     $scope.loginCredentials = {};
 
 
-    function setUserData(userData) {
+    function setUserData (userData) {
         appDataService.setUserData({
             userToken: userData.token,
             userId: userData.id,
@@ -18,24 +20,24 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
         });
     }
 
-    function onLoginError() {
+    function onLoginError () {
         console.log('LOGIN FAILED');
     }
 
-    function isLoggedInAsDifferentUser(newUserId) {
+    function isLoggedInAsDifferentUser (newUserId) {
         var
             currentUserId = appDataService.getUserId();
 
         return currentUserId !== newUserId;
     }
 
-    function switchToNewUser(apiResult) {
+    function switchToNewUser (apiResult) {
         storageService.deleteAllImages().then(function () {
             appDataService.resetAppData();
             setUserData(apiResult);
             galleryImportService.importAllGalleriesOfUser(apiResult.id)
                 .then(function () {
-                    $rootScope.go('select-gallery', 'slide-right');
+                    navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
                 }, function (error) {
                     console.log('importAllGalleriesOfUser was canceled');
                 });
@@ -71,7 +73,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
             .then(function () {
                 storageService.deleteAllImages();
                 storageService.initStorage();
-                $rootScope.go('home', 'slide-right');
+                navigationService.go(appConstants.STATES.HOME, 'slide-right');
             }, function (err) {
                 console.log('error deleting app data file!');
             });

@@ -30,8 +30,8 @@
 
   <div data-ng-if="message.title" data-message-directive data-message="message" data-message-type="{{message.type}}"></div>
 
-  <div id="container" class="container">
-    <div data-ng-class="{'show-ctrls': showCtrls}" class="page {{ animationClass }} {{ pageClass }}  " data-ui-view data-ng-animate-children></div>
+  <div id="container" class="container {{ navigationService.data.animationClass }}">
+    <div data-ng-class="{'show-ctrls': showCtrls}" class="page {{ pageClass }}  " data-ui-view data-ng-animate-children></div>
   </div>
 
   <script type="text/javascript">

@@ -1,76 +1,75 @@
-angular.module(_CONTROLLERS_).controller('authController', function (
-  $rootScope,
-  $scope,
-  $q,
-  $timeout,
-  serverAPI,
-  appDataService) {
+angular.module(_CONTROLLERS_).controller('authController', function ($rootScope,
+                                                                     $scope,
+                                                                     $q,
+                                                                     $timeout,
+                                                                     appConstants,
+                                                                     serverAPI,
+                                                                     appDataService,
+                                                                     navigationService) {
 
-  $scope.pageClass = 'page--signin';
-  $scope.showCtrls = true;
+    $scope.pageClass = 'page--signin';
+    $scope.showCtrls = true;
 
-  $scope.uploadPassword = '';
-  $scope.uploadAuthSuccess = false;
-  $scope.uploadAuthError = false;
+    $scope.uploadPassword = '';
+    $scope.uploadAuthSuccess = false;
+    $scope.uploadAuthError = false;
 
-  $scope.signinCredentials = {};
-  $scope.showSigninFormErrors = false;
+    $scope.signinCredentials = {};
+    $scope.showSigninFormErrors = false;
 
-  $scope.loginCredentials = {};
-  $scope.showLoginFormErrors = false;
+    $scope.loginCredentials = {};
+    $scope.showLoginFormErrors = false;
 
 
-  function error(e) {
-    console.log("error: ", e.data);
-  }
-
-  function onUploadAuthError(){
-    $scope.uploadAuthError = true;
-    $timeout(function(){
-      $scope.uploadAuthError = false;
-      $scope.uploadPassword = '';
-    }, 1000)
-  }
-
-  function onUploadAuthSuccess(apiResult){
-    $scope.uploadAuthSuccess = true;
-    appDataService.setUploadToken(apiResult.uploadToken);
-    $rootScope.back();
-  }
-
-  $scope.signinSubmit = function (isValid) {
-    var credentials = {};
-
-    if (isValid) {
-      $scope.showSigninFormErrors = false;
-      credentials.username = $scope.signinCredentials.username;
-      credentials.email = $scope.signinCredentials.email;
-      credentials.password = $scope.signinCredentials.password;
-      serverAPI.signin(credentials).then(function (result) {
-        console.log("signin result:", result);
-        setUserData(result);
-        $rootScope.go('share-gallery', 'slide-left');
-      }, error);
-    } else {
-      $scope.showSigninFormErrors = true;
+    function error (e) {
+        console.log("error: ", e.data);
     }
-  };
+
+    function onUploadAuthError () {
+        $scope.uploadAuthError = true;
+        $timeout(function () {
+            $scope.uploadAuthError = false;
+            $scope.uploadPassword = '';
+        }, 1000)
+    }
+
+    function onUploadAuthSuccess (apiResult) {
+        $scope.uploadAuthSuccess = true;
+        appDataService.setUploadToken(apiResult.uploadToken);
+        $rootScope.back();
+    }
+
+    $scope.signinSubmit = function (isValid) {
+        var credentials = {};
+
+        if (isValid) {
+            $scope.showSigninFormErrors = false;
+            credentials.username = $scope.signinCredentials.username;
+            credentials.email = $scope.signinCredentials.email;
+            credentials.password = $scope.signinCredentials.password;
+            serverAPI.signin(credentials).then(function (result) {
+                console.log("signin result:", result);
+                setUserData(result);
+                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
+            }, error);
+        } else {
+            $scope.showSigninFormErrors = true;
+        }
+    };
 
 
+    $scope.uploadAuthSubmit = function () {
+        var
+            galleryId = appDataService.getActiveGalleryId();
 
-  $scope.uploadAuthSubmit = function () {
-    var
-      galleryId = appDataService.getActiveGalleryId();
+        serverAPI.uploadAuth({'uploadPassword': $scope.uploadPassword, 'galleryId': galleryId})
+            .then(onUploadAuthSuccess, onUploadAuthError);
 
-    serverAPI.uploadAuth({'uploadPassword': $scope.uploadPassword, 'galleryId': galleryId})
-      .then(onUploadAuthSuccess, onUploadAuthError);
+    };
 
-  };
-
-  $scope.test = function () {
-    console.log('onNumberPadSubmit');
-  };
-
+    $scope.test = function () {
+        console.log('onNumberPadSubmit');
+    };
 
 
 });

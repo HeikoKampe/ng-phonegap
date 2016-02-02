@@ -1,8 +1,10 @@
 angular.module(_CONTROLLERS_).controller('signinController', function ($rootScope,
                                                                        $scope,
+                                                                       appConstants,
                                                                        serverAPI,
                                                                        appDataService,
-                                                                       exportService) {
+                                                                       exportService,
+                                                                       navigationService) {
 
     var USERNAME_MIN_LENGTH = 8;
 
@@ -12,11 +14,11 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
     $scope.showSigninFormErrors = false;
 
 
-    function error(e) {
+    function error (e) {
         console.log("error: ", e.data);
     }
 
-    function setUserData(userData) {
+    function setUserData (userData) {
         appDataService.setUserData({
             userToken: userData.data.token,
             userId: userData.data.id,
@@ -38,7 +40,7 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
                 console.log("signin result:", result);
                 setUserData(result);
                 exportService.uploadGalleries();
-                $rootScope.go('share-gallery', 'slide-left');
+                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
             }, error);
         } else {
             $scope.showSigninFormErrors = true;

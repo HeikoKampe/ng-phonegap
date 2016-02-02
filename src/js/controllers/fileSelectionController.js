@@ -5,74 +5,76 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
                                                                               $q,
                                                                               $log,
                                                                               $filter,
+                                                                              appConstants,
                                                                               appDataService,
                                                                               localImageImportService,
                                                                               eventService,
-                                                                              messageService) {
+                                                                              messageService,
+                                                                              navigationService) {
 
 
-  function onFileSelection() {
-    var
-      nPhotosInGallery,
-      maxPhotos;
+    function onFileSelection () {
+        var
+            nPhotosInGallery,
+            maxPhotos;
 
-    if ($scope.selectedFiles && $scope.selectedFiles.length) {
+        if ($scope.selectedFiles && $scope.selectedFiles.length) {
 
-      nPhotosInGallery = appDataService.getNumberOfPhotos();
-      maxPhotos = appDataService.getPhotosLimit();
+            nPhotosInGallery = appDataService.getNumberOfPhotos();
+            maxPhotos = appDataService.getPhotosLimit();
 
-      if (($scope.selectedFiles.length + nPhotosInGallery) <= maxPhotos) {
+            if (($scope.selectedFiles.length + nPhotosInGallery) <= maxPhotos) {
 
-        localImageImportService.importLocalImages($scope.selectedFiles)
-          .then(function () {
-            console.log('import done');
-            eventService.broadcast('GALLERY-UPDATE');
-            // reset fileList in case user selects the same files again
-            // because in that case onFileSelection would not been called
-            $scope.selectedFiles = undefined;
-          })
-          .catch(function (error) {
-            if (error.message === 'cancel batch') {
-              eventService.broadcast('GALLERY-UPDATE');
+                localImageImportService.importLocalImages($scope.selectedFiles)
+                    .then(function () {
+                        console.log('import done');
+                        eventService.broadcast('GALLERY-UPDATE');
+                        // reset fileList in case user selects the same files again
+                        // because in that case onFileSelection would not been called
+                        $scope.selectedFiles = undefined;
+                    })
+                    .catch(function (error) {
+                        if (error.message === 'cancel batch') {
+                            eventService.broadcast('GALLERY-UPDATE');
+                        } else {
+                            throw error;
+                        }
+                    });
             } else {
-              throw error;
+
+                messageService.showMessage({
+                    title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
+                    content: $filter('translate')('MSG_SELECTED_PHOTOS_OVER_LIMIT', {nPhotos: (maxPhotos - nPhotosInGallery)}),
+                    button: {
+                        label: $filter('translate')('NAVI_GO_UPGRADE'),
+                        action: function () {
+                            navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, 'slide-left');
+                            messageService.closeMessage();
+                        }
+                    }
+                });
+
             }
-          });
-      } else {
+        }
+    }
+
+    // called by fileSelectionDirective
+    $scope.showLimitReachedMessage = function () {
 
         messageService.showMessage({
-          title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
-          content: $filter('translate')('MSG_SELECTED_PHOTOS_OVER_LIMIT', {nPhotos: (maxPhotos - nPhotosInGallery)}),
-          button: {
-            label: $filter('translate')('NAVI_GO_UPGRADE'),
-            action: function () {
-              $rootScope.go('settings/upgrade', 'slide-left');
-              messageService.closeMessage();
+            title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
+            content: $filter('translate')('MSG_PHOTOS_LIMIT_REACHED', {maxPhotos: appDataService.getPhotosLimit()}),
+            button: {
+                label: $filter('translate')('NAVI_GO_UPGRADE'),
+                action: function () {
+                    navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, 'slide-left');
+                    messageService.closeMessage();
+                }
             }
-          }
         });
+    };
 
-      }
-    }
-  }
-
-  // called by fileSelectionDirective
-  $scope.showLimitReachedMessage = function () {
-
-    messageService.showMessage({
-      title: $filter('translate')('TITLE_PHOTOS_LIMIT_REACHED'),
-      content: $filter('translate')('MSG_PHOTOS_LIMIT_REACHED', {maxPhotos: appDataService.getPhotosLimit()}),
-      button: {
-        label: $filter('translate')('NAVI_GO_UPGRADE'),
-        action: function () {
-          $rootScope.go('settings/upgrade', 'slide-left');
-          messageService.closeMessage();
-        }
-      }
-    });
-  };
-
-  // changed by fileSelectionDirective
-  $scope.$watch('selectedFiles', onFileSelection);
+    // changed by fileSelectionDirective
+    $scope.$watch('selectedFiles', onFileSelection);
 
 });

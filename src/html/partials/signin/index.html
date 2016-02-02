@@ -1,8 +1,8 @@
 <div class="top">
   <div class="top__inner">
     <h1 class="top__title" data-translate="TITLE_SIGNIN"></h1>
-    <span class="top__icon-back icon-back" data-ng-click="back(true)"></span>
-    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left', true)">
+    <span class="top__icon-back icon-back" data-ng-click="navigationService.back(true)"></span>
+    <span class="top__icon-settings" data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_INTRO, 'slide-left', true)">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
@@ -19,7 +19,7 @@
 
       <p class="push--bottom">
         <span data-translate="INFO_SIGNIN_ALREADY"></span>
-        <span class="link" data-ng-click="go('login', 'slide-left')" data-translate="NAVI_GO_LOGIN"></span>
+        <span class="link" data-ng-click="navigationService.go(appConstants.STATES.LOGIN, 'slide-left')" data-translate="NAVI_GO_LOGIN"></span>
       </p>
 
       <div class="form__group">

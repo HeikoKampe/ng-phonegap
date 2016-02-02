@@ -9,7 +9,7 @@
       <div class="settings__item-info" data-ng-if="showUpgradeInfo[0]">
         <span class="settings__item-info-label" data-translate="INFO_LIMIT_UPGRADE"></span>
         <span class="settings__item-info-action"
-              data-ng-click="go('settings/upgrade', '')"
+              data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, '')"
               data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>
@@ -20,7 +20,7 @@
       <div class="settings__item-info" data-ng-if="showUpgradeInfo[1]">
         <span class="settings__item-info-label" data-translate="INFO_LIMIT_UPGRADE"></span>
         <span class="settings__item-info-action"
-              data-ng-click="go('settings/upgrade', '')"
+              data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, '')"
               data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>
@@ -35,7 +35,7 @@
         <span data-translate="DESC_ALLOW_FOREIGN_UPLOADS"></span><br>
         <span class="settings__item-info-label" data-translate="INFO_FEATURE_UPGRADE"></span>
         <span class="settings__item-info-action"
-              data-ng-click="go('settings/upgrade', '')"
+              data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, '')"
               data-translate="NAVI_GO_UPGRADE"></span>
       </div>
     </div>

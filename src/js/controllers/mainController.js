@@ -1,38 +1,30 @@
 angular.module(_CONTROLLERS_).controller('mainController', function ($rootScope,
                                                                      $scope,
-                                                                     $location,
-                                                                     $window) {
+                                                                     $window,
+                                                                     appConstants,
+                                                                     navigationService) {
 
-  var returnLocation = '';
 
-  $rootScope.appDataReady = false;
-  $scope.animationClass = '';
-  $scope.ctrlsVisible = true;
+    $rootScope.showCtrls = function () {
+        $scope.showCtrls = true;
+    };
 
-  $rootScope.go = function (path, animationClass, noHistoryEntry) {
-    $scope.animationClass = animationClass;
-    $location.url(path);
-    if (noHistoryEntry) {
-      $location.replace();
+    $rootScope.hideCtrls = function () {
+        $scope.showCtrls = false;
+    };
+
+    $rootScope.toggleCtrls = function () {
+        $scope.showCtrls = !$scope.ctrlsVisible;
+    };
+
+    function init () {
+        $scope.navigationService = navigationService;
+        //$scope.test = navigationService.data;
+        $rootScope.appConstants = appConstants;
+        $rootScope.appDataReady = false;
+        $scope.ctrlsVisible = true;
     }
 
-  };
-
-  $rootScope.back = function () {
-    $scope.animationClass = 'slide-right';
-    $window.history.back();
-  };
-
-  $rootScope.showCtrls = function () {
-    $scope.showCtrls = true;
-  };
-
-  $rootScope.hideCtrls = function () {
-    $scope.showCtrls = false;
-  };
-
-  $rootScope.toggleCtrls = function () {
-    $scope.showCtrls = !$scope.ctrlsVisible;
-  };
+    init();
 
 });

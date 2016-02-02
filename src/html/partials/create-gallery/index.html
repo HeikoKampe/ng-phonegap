@@ -1,7 +1,7 @@
 <div class="top">
   <div class="top__inner">
-    <span class="top__icon-back icon-back" data-ng-click="go('home', 'slide-right')"></span>
-    <span class="top__icon-settings" data-ng-click="go('/settings', 'slide-left')">
+    <span class="top__icon-back icon-back" data-ng-click="navigationService.go(appConstants.STATES.HOME, 'slide-right')"></span>
+    <span class="top__icon-settings" data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_INTRO, 'slide-left')">
     <img style="width:30px;" src="img/settings.png"/>
   </span>
   </div>
@@ -47,7 +47,7 @@
 
         <p data-translate="INFO_NEED_MORE"></p>
 
-        <button class="btn--blue" data-ng-click="go('settings/upgrade/option1', 'slide-left', true)"
+        <button class="btn--blue" data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_LIMITS1, 'slide-left', true)"
            data-translate="NAVI_GO_UPGRADE"></button>
 
       </div>
