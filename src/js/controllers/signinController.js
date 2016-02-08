@@ -39,8 +39,7 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
             serverAPI.signin(credentials).then(function (result) {
                 console.log("signin result:", result);
                 setUserData(result);
-                exportService.uploadGalleries();
-                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
+                navigationService.returnToState();
             }, error);
         } else {
             $scope.showSigninFormErrors = true;

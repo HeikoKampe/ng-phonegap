@@ -57,15 +57,14 @@ angular.module(_APP_).config([
                 url: '/sharing',
                 templateUrl: 'html/partials/share-gallery/sharing.html'
             })
+            .state(appConstants.STATES.SHAREGALLERY_NOTAUTHORIZED, {
+                url: '/not-authorized',
+                templateUrl: 'html/partials/share-gallery/not-authorized.html'
+            })
             .state(appConstants.STATES.SHAREGALLERY_OPTIONS, {
                 url: '/options',
                 templateUrl: 'html/partials/share-gallery/options.html'
             })
-            //.state('share-gallery', {
-            //    url: '/share-gallery/:section1',
-            //    templateUrl: 'html/partials/share-gallery/index.html',
-            //    controller: 'shareGalleryController'
-            //})
             .state(appConstants.STATES.SETTINGS, {
                 url: '/settings',
                 abstract: true,

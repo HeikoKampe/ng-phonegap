@@ -22,8 +22,6 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
         $scope.onShareGalleryBtnClick = function () {
             if (authService.isAuthorized()) {
                 exportService.uploadGallery();
-            } else {
-                navigationService.go(appConstants.STATES.SIGNIN, 'slide-left');
             }
         };
 
@@ -37,6 +35,7 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
 
         function init () {
             if ($rootScope.appDataReady) {
+                $scope.isAuthorized = authService.isAuthorized();
                 $scope.gallery = appDataService.getGallery();
                 $scope.appSettings = appDataService.getAppSettings();
                 $scope.userName = appDataService.getUserName();

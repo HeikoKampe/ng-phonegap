@@ -19,7 +19,6 @@ angular.module(_CONTROLLERS_).controller('mainController', function ($rootScope,
 
     function init () {
         $scope.navigationService = navigationService;
-        //$scope.test = navigationService.data;
         $rootScope.appConstants = appConstants;
         $rootScope.appDataReady = false;
         $scope.ctrlsVisible = true;

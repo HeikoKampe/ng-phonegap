@@ -14,7 +14,7 @@
         <div class="grid full-height">
             <div class="grid__item one-third full-height soft--right">
 
-                <ul class="settings-menu">
+                <ul class="settings-menu" data-ng-class="{'settings-menu--disabled': !isAuthorized}">
                     <li class="settings-menu__item"
                         data-ng-class="{'active': sharingSection1 == 'sharing' || !sharingSection1}"
                         data-ng-click="navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, '')">{{'NAVI_SHARING_CREDENTIALS' | translate}}

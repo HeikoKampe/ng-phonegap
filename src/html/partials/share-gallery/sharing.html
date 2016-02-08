@@ -1,10 +1,11 @@
 <h2>{{'LABEL_GALLERY' | translate}} {{gallery.title}}</h2>
 
-<p>{{'DESC_SHARING' | translate}}</p>
+<div data-ng-if="gallery.dateOfUpload">
+  <p>{{'DESC_SHARING' | translate}}</p>
 
-<div class="settings__block">
-  <div class="settings__item">
-    <span class="settings__item-label" data-translate="LABEL_ACCESS_CODE"></span>
+  <div class="settings__block">
+    <div class="settings__item">
+      <span class="settings__item-label" data-translate="LABEL_ACCESS_CODE"></span>
     <span class="settings__item-action"
           data-ng-if="!showAccessKey"
           data-ng-click="toggleShowAccessKey()"
@@ -13,24 +14,30 @@
           data-ng-click="toggleShowAccessKey()"
           data-translate="ACTION_HIDE_ACCESS_CODE"></span>
 
-    <div class="settings__item-info" data-ng-if="showAccessKey">
-      <span class="settings__item-info-label">&nbsp;</span>
+      <div class="settings__item-info" data-ng-if="showAccessKey">
+        <span class="settings__item-info-label">&nbsp;</span>
     <span
         class="settings__item-info-value access-code" data-ng-bind="gallery.accessPassword"></span>
 
+      </div>
+    </div>
+    <div class="settings__item">
+      <span class="settings__item-label" data-translate="LABEL_USERNAME_AUTHOR"></span>
+      <span class="settings__item-value" data-ng-bind="gallery.ownerName"></span>
     </div>
   </div>
-  <div class="settings__item">
-    <span class="settings__item-label" data-translate="LABEL_USERNAME_AUTHOR"></span>
-    <span class="settings__item-value" data-ng-bind="gallery.ownerName"></span>
+
+  <p>Einladung mit Zugangsdaten verschicken:</p>
+
+  <div class="settings__block">
+    <div class="settings__item">
+      <span class="settings__item-label">{{'SHARING_SEND_CREDENTIALS_VIA_EMAIL' | translate}}</span>
+      <a class="settings__item-action" data-ng-click="navigationService.go(appConstants.STATES.INVITE, 'slide-left')">{{'ACTION_SEND_EMAIL' | translate}}</a>
+    </div>
   </div>
 </div>
 
-<p>Einladung mit Zugangsdaten verschicken:</p>
 
-<div class="settings__block">
-  <div class="settings__item">
-    <span class="settings__item-label">{{'SHARING_SEND_CREDENTIALS_VIA_EMAIL' | translate}}</span>
-    <a class="settings__item-action" data-ng-click="navigationService.go(appConstants.STATES.INVITE, 'slide-left')">{{'ACTION_SEND_EMAIL' | translate}}</a>
-  </div>
+<div data-ng-if="!gallery.dateOfUpload">
+  <button data-ng-click="onShareGalleryBtnClick()">Upload Gallery</button>
 </div>

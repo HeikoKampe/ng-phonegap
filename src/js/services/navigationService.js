@@ -19,6 +19,7 @@ angular.module(_SERVICES_).factory('navigationService', function ($window,
 
         if (_stateToReturnTo) {
             stateToReturnTo = _stateToReturnTo;
+            console.log('stateToReturnTo: ', _stateToReturnTo);
         }
 
         console.log('animationClass', animationClass);
@@ -37,10 +38,21 @@ angular.module(_SERVICES_).factory('navigationService', function ($window,
         }
     }
 
+    function returnToState () {
+        if (stateToReturnTo) {
+            data.animationClass = 'slide-right';
+            $state.go(stateToReturnTo);
+            stateToReturnTo = '';
+        } else {
+            console.log('no state was set to return to');
+        }
+    }
+
     return {
         data: data,
         go: go,
-        back: back
+        back: back,
+        returnToState: returnToState
     }
 
 });

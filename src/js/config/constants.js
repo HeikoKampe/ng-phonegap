@@ -9,6 +9,7 @@ angular.module(_APP_).constant('appConstants', {
         'SELECTGALLERY': 'select-gallery',
         'SHAREGALLERY': 'share-gallery',
         'SHAREGALLERY_SHARING': 'share-gallery.sharing',
+        'SHAREGALLERY_NOTAUTHORIZED': 'share-gallery.not-authorized',
         'SHAREGALLERY_OPTIONS': 'share-gallery.options',
         'SETTINGS': 'settings',
         'SETTINGS_INTRO': 'settings.intro',
