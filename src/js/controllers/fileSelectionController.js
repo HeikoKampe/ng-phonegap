@@ -48,7 +48,7 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
                     button: {
                         label: $filter('translate')('NAVI_GO_UPGRADE'),
                         action: function () {
-                            navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, 'slide-left');
+                            navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, {animationClass: 'forward'});
                             messageService.closeMessage();
                         }
                     }
@@ -67,7 +67,7 @@ angular.module(_CONTROLLERS_).controller('fileSelectionController', function ($s
             button: {
                 label: $filter('translate')('NAVI_GO_UPGRADE'),
                 action: function () {
-                    navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, 'slide-left');
+                    navigationService.go(appConstants.STATES.SETTINGS_UPGRADE_INTRO, {animationClass: 'forward'});
                     messageService.closeMessage();
                 }
             }

@@ -3,21 +3,21 @@
 
   <div class="grid home-menu">
     <div class="grid__item one-whole desk-one-third home-menu__item home-menu__item--create"
-         data-ng-click="navigationService.go(appConstants.STATES.CREATEGALLERY, 'slide-left')">
+         data-ng-click="navigationService.go(appConstants.STATES.CREATEGALLERY, {animationClass: 'forward'})">
       <div class="home-menu__item-inner">
         <span class="home-menu__item-title" data-translate="TITLE_NEW"></span>
         <span class="home-menu__item-icon icon-add"></span>
       </div>
     </div>
     <div class="grid__item one-whole desk-one-third home-menu__item home-menu__item--import"
-         data-ng-click="navigationService.go(appConstants.STATES.GETGALLERY, 'slide-left')">
+         data-ng-click="navigationService.go(appConstants.STATES.GETGALLERY, {animationClass: 'forward'})">
       <div class="home-menu__item-inner">
         <span class="home-menu__item-title" data-translate="TITLE_IMPORT"></span>
         <span class="home-menu__item-icon icon-download"></span>
       </div>
     </div>
     <div class="grid__item one-whole desk-one-third home-menu__item home-menu__item--select"
-         data-ng-click="navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-left')">
+         data-ng-click="navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'forward'})">
       <div class="home-menu__item-inner">
         <span class="home-menu__item-title" data-translate="TITLE_SHOW_GALLERIES"></span>
         <span class="home-menu__item-icon icon-select"></span>

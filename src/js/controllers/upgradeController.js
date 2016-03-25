@@ -24,7 +24,7 @@ angular.module(_CONTROLLERS_).controller('upgradeController', function ($scope,
             button: {
                 label: $filter('translate')('NAVI_GO_SIGNIN'),
                 action: function () {
-                    navigationService.go(appConstants.STATES.SIGNIN, 'slide-left');
+                    navigationService.go(appConstants.STATES.SIGNIN, {animationClass: 'forward'});
                     messageService.closeMessage();
                 }
             }

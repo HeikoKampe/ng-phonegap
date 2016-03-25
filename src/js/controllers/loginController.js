@@ -35,9 +35,10 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
         storageService.deleteAllImages().then(function () {
             appDataService.resetAppData();
             setUserData(apiResult);
+            appDataService.setAppSettings(apiResult.userSettings);
             galleryImportService.importAllGalleriesOfUser(apiResult.id)
                 .then(function () {
-                    navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
+                    navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'backward'});
                 }, function (error) {
                     console.log('importAllGalleriesOfUser was canceled');
                 });
@@ -73,7 +74,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
             .then(function () {
                 storageService.deleteAllImages();
                 storageService.initStorage();
-                navigationService.go(appConstants.STATES.HOME, 'slide-right');
+                navigationService.go(appConstants.STATES.HOME, {animationClass: 'backward'});
             }, function (err) {
                 console.log('error deleting app data file!');
             });

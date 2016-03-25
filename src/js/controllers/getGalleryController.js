@@ -63,7 +63,7 @@ angular.module(_CONTROLLERS_).controller('getGalleryController', function ($scop
             }, onGalleryKeyError)
             .then(function () {
                 $scope.showErrorMessage = false;
-                navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-left');
+                navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'forward'});
             });
 
     };

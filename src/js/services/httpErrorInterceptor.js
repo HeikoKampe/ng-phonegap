@@ -7,7 +7,7 @@ angular.module(_SERVICES_).factory('httpErrorInterceptor', function ($q, $rootSc
 
       if (response.status === 401 && response.data === 'invalid token') {
         console.log('INVALID TOKEN');
-        $rootScope.go(appConstants.STATES.LOGIN, 'slide-left');
+        $rootScope.go(appConstants.STATES.LOGIN, {animationClass: 'forward'});
         return $q.reject(response);
       }
 

@@ -1,7 +1,7 @@
 <div class="top">
   <div class="top__inner">
     <span class="top__icon-back icon-back" data-ng-click="navigationService.back(true)"></span>
-    <span class="top__icon-settings" data-ng-click="go(appConstants.STATES.SETTINGS_INTRO, 'slide-left', true)">
+    <span class="top__icon-settings" data-ng-click="go(appConstants.STATES.SETTINGS_INTRO, 'forward', true)">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>
@@ -15,7 +15,7 @@
 
       <p class="push--bottom">
         <span data-translate="INFO_LOGIN_NO_SIGNIN"></span>
-        <span class="link" data-ng-click="go(appConstants.STATES.SIGNIN, 'slide-left')" data-translate="NAVI_GO_SIGNIN"></span>
+        <span class="link" data-ng-click="go(appConstants.STATES.SIGNIN, {animationClass: 'forward'})" data-translate="NAVI_GO_SIGNIN"></span>
       </p>
 
       <div class="form__group">
@@ -72,7 +72,7 @@
       <br>
       <p class="push--top">
         <span data-translate="LABEL_PASSWORD_FORGOTTEN"></span>
-        <span class="link" data-ng-click="go(appConstants.STATES.RESETPWD, 'slide-left', true)" data-translate="ACTION_CHANGE_PASSWORD"></span>
+        <span class="link" data-ng-click="go(appConstants.STATES.RESETPWD, 'forward', true)" data-translate="ACTION_CHANGE_PASSWORD"></span>
       </p>
     </form>
 

@@ -28,5 +28,8 @@ angular.module(_APP_).constant('appConstants', {
         'UPLOADAUTH': 'upload-auth',
         'INVITE': 'invite',
         'RESETPWD': 'reset-pwd'
+    },
+    'STATE_PARAMS': {
+        'SHARING': 'sharing'
     }
 });

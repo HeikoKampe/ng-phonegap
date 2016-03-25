@@ -18,7 +18,7 @@ angular.module(_CONTROLLERS_).controller('createGalleryController', function ($s
             appDataService.addGallery({
                 title: $scope.createGalleryFormData.galleryTitle
             });
-            navigationService.go(appConstants.STATES.EDITGALLERY, 'slide-left');
+            navigationService.go(appConstants.STATES.EDITGALLERY, {animationClass: 'forward'});
         }
     };
 

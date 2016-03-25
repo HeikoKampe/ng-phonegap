@@ -1,8 +1,8 @@
 <!--edit-gallery view-->
 <div class="top">
   <div class="top__inner">
-    <span class="top__icon-back icon-back" data-ng-click="navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right')"></span>
-    <span class="top__icon-settings" data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_INTRO, 'slide-left')">
+    <span class="top__icon-back icon-back" data-ng-click="navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'backward'})"></span>
+    <span class="top__icon-settings" data-ng-click="navigationService.go(appConstants.STATES.SETTINGS_INTRO, {animationClass: 'forward'})">
     <img style="width:30px; position:relative; top:-12px; cursor:pointer;" src="img/settings.png"/>
   </span>
   </div>

@@ -174,9 +174,9 @@ angular.module(_CONTROLLERS_).controller('selectGalleryController', function ($s
         appDataService.setActiveGallery(galleryId);
         setPhotosViewStatus(galleryId);
         if (authService.hasEditPermission(galleryId)) {
-            navigationService.go(appConstants.STATES.EDITGALLERY, 'slide-left');
+            navigationService.go(appConstants.STATES.EDITGALLERY, {animationClass: 'forward'});
         } else {
-            navigationService.go(appConstants.STATES.SLIDESHOW, 'slide-left');
+            navigationService.go(appConstants.STATES.SLIDESHOW, {animationClass: 'forward'});
         }
 
     };

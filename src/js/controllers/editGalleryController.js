@@ -40,6 +40,7 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
                 $scope.showDeleteBtn = false;
                 $scope.showDeleteGalleryBtn = false;
                 $scope.gallery = appDataService.getGallery();
+                $scope.isOwner = appDataService.isOwner();
                 updateThumbnails();
                 updateGalleryStatus();
             }
@@ -69,16 +70,12 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
         };
 
         $scope.onShareBtnClick = function () {
-            if (authService.isAuthorized()) {
-                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
-            } else {
-                navigationService.go(appConstants.STATES.SHAREGALLERY_NOTAUTHORIZED, 'slide-left', appConstants.STATES.SHAREGALLERY_SHARING);
-            }
+            navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, {animationClass: 'forward'});
         };
 
         $scope.onSlideshowBtnClick = function () {
             if ($scope.gallery.photos.length) {
-                navigationService.go(appConstants.STATES.SLIDESHOW, 'slide-left');
+                navigationService.go(appConstants.STATES.SLIDESHOW, {animationClass: 'forward'});
             }
         };
 
@@ -87,9 +84,9 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
                 serverAPI.deleteGallery($scope.gallery.galleryId).then(function () {
                     appDataService.deleteGallery();
                     if (Object.keys(appDataService.getAppData().galleries).length > 0) {
-                        navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
+                        navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'backward'});
                     } else {
-                        navigationService.go(appConstants.STATES.HOME, 'slide-right');
+                        navigationService.go(appConstants.STATES.HOME, {animationClass: 'backward'});
                     }
                 }, function () {
                     throw new Error('could not delete gallery from server');
@@ -97,9 +94,9 @@ angular.module(_CONTROLLERS_).controller('editGalleryController', function ($roo
             } else {
                 appDataService.deleteGallery();
                 if (Object.keys(appDataService.getAppData().galleries).length > 0) {
-                    navigationService.go(appConstants.STATES.SELECTGALLERY, 'slide-right');
+                    navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'backward'});
                 } else {
-                    navigationService.go(appConstants.STATES.HOME, 'slide-right');
+                    navigationService.go(appConstants.STATES.HOME, {animationClass: 'backward'});
                 }
             }
         };

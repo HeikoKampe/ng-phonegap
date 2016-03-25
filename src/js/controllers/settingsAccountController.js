@@ -49,7 +49,7 @@ angular.module(_CONTROLLERS_).controller('settingsAccountController', function (
             // clear user token
             appDataService.setUserToken("");
             eventService.broadcast('GALLERY-UPDATE');
-            navigationService.go(appConstants.STATES.LOGIN, 'slide-right');
+            navigationService.go(appConstants.STATES.LOGIN, {animationClass: 'backward'});
         }, onSecurityPinError);
     };
 

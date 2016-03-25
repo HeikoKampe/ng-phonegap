@@ -39,7 +39,7 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
             serverAPI.signin(credentials).then(function (result) {
                 console.log("signin result:", result);
                 setUserData(result);
-                navigationService.returnToState();
+                navigationService.goToReturnState();
             }, error);
         } else {
             $scope.showSigninFormErrors = true;

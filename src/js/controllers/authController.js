@@ -50,7 +50,7 @@ angular.module(_CONTROLLERS_).controller('authController', function ($rootScope,
             serverAPI.signin(credentials).then(function (result) {
                 console.log("signin result:", result);
                 setUserData(result);
-                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, 'slide-left');
+                navigationService.go(appConstants.STATES.SHAREGALLERY_SHARING, {animationClass: 'forward'});
             }, error);
         } else {
             $scope.showSigninFormErrors = true;

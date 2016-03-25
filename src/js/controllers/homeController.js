@@ -32,7 +32,7 @@ angular.module(_CONTROLLERS_).controller('homeController', function ($scope,
 
     $scope.editGallery = function (galleryId) {
         appDataService.setActiveGallery(galleryId);
-        navigationService.go(appConstants.STATES.EDITGALLERY, 'slide-left');
+        navigationService.go(appConstants.STATES.EDITGALLERY, {animationClass: 'forward'});
     };
 
     $scope.createGallery = function (galleryTitle) {
@@ -41,7 +41,7 @@ angular.module(_CONTROLLERS_).controller('homeController', function ($scope,
             title: galleryTitle,
             uploadKey: keyGeneratorService.generateKey()
         });
-        navigationService.go(appConstants.STATES.EDITGALLERY, 'slide-left');
+        navigationService.go(appConstants.STATES.EDITGALLERY, {animationClass: 'forward'});
     };
 
     $scope.$on('GALLERY-UPDATE', function () {

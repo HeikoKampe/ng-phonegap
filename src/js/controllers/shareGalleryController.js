@@ -1,5 +1,6 @@
 angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($rootScope,
                                                                              $scope,
+                                                                             $state,
                                                                              appConstants,
                                                                              appDataService,
                                                                              exportService,
@@ -20,8 +21,18 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
         };
 
         $scope.onShareGalleryBtnClick = function () {
-            if (authService.isAuthorized()) {
-                exportService.uploadGallery();
+            if ($scope.isAuthorized) {
+                if (!$scope.gallery.dateOfUpload) {
+                    console.log('uploading Gallery ...');
+                    exportService.uploadGallery().then(function () {
+                        console.log('upload finished');
+                    });
+                }
+            } else {
+                navigationService.go(appConstants.STATES.SIGNIN, {
+                    animationClass: 'forward',
+                    returnState: appConstants.STATES.SHAREGALLERY_SHARING
+                });
             }
         };
 
@@ -34,11 +45,22 @@ angular.module(_CONTROLLERS_).controller('shareGalleryController', function ($ro
         });
 
         function init () {
+            var prevState;
+
             if ($rootScope.appDataReady) {
                 $scope.isAuthorized = authService.isAuthorized();
                 $scope.gallery = appDataService.getGallery();
                 $scope.appSettings = appDataService.getAppSettings();
                 $scope.userName = appDataService.getUserName();
+                prevState = navigationService.getPrevState();
+            }
+
+            // upload gallery immediately after successful login or signin
+            if ($scope.isAuthorized && !$scope.gallery.dateOfUpload && (prevState === appConstants.STATES.SIGNIN || prevState === appConstants.STATES.LOGIN)) {
+                console.log('uploading Gallery ...');
+                exportService.uploadGallery().then(function () {
+                    console.log('upload finished');
+                });
             }
         }
 

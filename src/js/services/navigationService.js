@@ -1,58 +1,64 @@
 angular.module(_SERVICES_).factory('navigationService', function ($window,
-                                                                  $state,
-                                                                  $rootScope) {
+                                                                  $state) {
 
     'use strict';
 
-    var animationClass = {},
-        stateToReturnTo = '',
+    var HISTORY_MAX_LENGTH = 10,
+        history = [],
+        stateParams = {},
         data = {};
 
-    function go (state, _animationClass, _stateToReturnTo) {
-        data.animationClass = _animationClass;
-
-
-        //$location.url(path);
-        //if (noHistoryEntry) {
-        //    $location.replace();
-        //}
-
-        if (_stateToReturnTo) {
-            stateToReturnTo = _stateToReturnTo;
-            console.log('stateToReturnTo: ', _stateToReturnTo);
+    function addCurrentStateToHistory () {
+        history.push($state.current.name);
+        if (history.length > HISTORY_MAX_LENGTH) {
+            history.shift();
         }
+    }
 
-        console.log('animationClass', animationClass);
-
+    function go (state, params) {
+        addCurrentStateToHistory();
+        if (params) {
+            stateParams.animationClass = params.animationClass || 'forward';
+            if (params.returnState) {
+                stateParams.returnState = params.returnState;
+            }
+        }
+        console.log('stateParams', stateParams);
         $state.go(state);
     }
 
     function back () {
-        data.animationClass = 'slide-right';
+        var prevState = history.pop();
 
-        if (stateToReturnTo) {
-            $state.go(stateToReturnTo);
-            stateToReturnTo = '';
+        stateParams.animationClass = 'backward';
+        if (prevState) {
+            go(prevState);
         } else {
-            $window.history.back();
+            console.log('history is empty!');
         }
     }
 
-    function returnToState () {
-        if (stateToReturnTo) {
-            data.animationClass = 'slide-right';
-            $state.go(stateToReturnTo);
-            stateToReturnTo = '';
+    function goToReturnState () {
+        addCurrentStateToHistory();
+        if (stateParams.returnState) {
+            data.animationClass = 'backward';
+            $state.go(stateParams.returnState);
+            stateParams.returnState = '';
         } else {
             console.log('no state was set to return to');
         }
     }
 
+    function getPrevState () {
+        return history[history.length - 1];
+    }
+
     return {
-        data: data,
+        stateParams: stateParams,
         go: go,
         back: back,
-        returnToState: returnToState
+        goToReturnState: goToReturnState,
+        getPrevState: getPrevState
     }
 
 });
