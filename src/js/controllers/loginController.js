@@ -15,7 +15,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
     function setUserData (userData) {
         appDataService.setUserData({
             userToken: userData.token,
-            userId: userData.id,
+            userId: userData.userId,
             userName: userData.username
         });
     }
@@ -36,7 +36,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
             appDataService.resetAppData();
             setUserData(apiResult);
             appDataService.setAppSettings(apiResult.userSettings);
-            galleryImportService.importAllGalleriesOfUser(apiResult.id)
+            galleryImportService.importAllGalleriesOfUser(apiResult.userId)
                 .then(function () {
                     navigationService.go(appConstants.STATES.SELECTGALLERY, {animationClass: 'backward'});
                 }, function (error) {
@@ -57,7 +57,7 @@ angular.module(_CONTROLLERS_).controller('loginController', function ($rootScope
             credentials.password = $scope.loginCredentials.password;
             serverAPI.login(credentials).then(function (apiResult) {
                 console.log("login result:", apiResult);
-                if (isLoggedInAsDifferentUser(apiResult.id)) {
+                if (isLoggedInAsDifferentUser(apiResult.userId)) {
                     switchToNewUser(apiResult);
                 } else {
                     appDataService.setUserToken(apiResult.token);

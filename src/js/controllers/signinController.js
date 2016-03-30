@@ -21,7 +21,7 @@ angular.module(_CONTROLLERS_).controller('signinController', function ($rootScop
     function setUserData (userData) {
         appDataService.setUserData({
             userToken: userData.data.token,
-            userId: userData.data.id,
+            userId: userData.data.userId,
             userName: userData.data.username
         });
     }
